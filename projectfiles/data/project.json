@@ -667,7 +667,7 @@
 "parts": [
 [
 "Text",
-"Robot Raspberry Pi 01"
+"Robotics Telescope REMPI Raspberry Pi"
 ],
 [
 "Widget",
@@ -857,7 +857,7 @@
 "name": "home",
 "brief": "Button link to home page",
 "fields": {
-"button_text": "Pi 01 Home",
+"button_text": "REMPI Home",
 "clear_error": false,
 "error_class": "",
 "force_ident": false,
@@ -1084,7 +1084,7 @@
 "parts": [
 [
 "Text",
-"You are connected to Raspberry Pi 01.  This device is sited with the robot telescope, and accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
+"You are connected to the REMPI Raspberry Pi.  This device is sited with the robot telescope, and accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
 ],
 [
 "ClosedPart",
@@ -1388,7 +1388,7 @@
 "parts": [
 [
 "Text",
-"Robot Raspberry Pi 01"
+"Robotics Telescope REMPI Raspberry Pi"
 ],
 [
 "Widget",
@@ -1621,7 +1621,7 @@
 "name": "home",
 "brief": "Button link to home page",
 "fields": {
-"button_text": "Pi 01 Home",
+"button_text": "REMPI Home",
 "clear_error": false,
 "error_class": "",
 "force_ident": false,
@@ -2039,7 +2039,7 @@
 "parts": [
 [
 "Text",
-"Robot Raspberry Pi 01"
+"Robotics Telescope REMPI Raspberry Pi"
 ],
 [
 "Widget",
@@ -2176,7 +2176,7 @@
 "name": "home",
 "brief": "Button link to home page",
 "fields": {
-"button_text": "Pi 01 Home",
+"button_text": "REMPI Home",
 "clear_error": false,
 "error_class": "",
 "force_ident": false,
@@ -3150,7 +3150,7 @@
 "parts": [
 [
 "Text",
-"Robot Raspberry Pi 01"
+"Robotics Telescope REMPI Raspberry Pi"
 ],
 [
 "Widget",
@@ -3630,7 +3630,7 @@
 "name": "home",
 "brief": "Button link to home page",
 "fields": {
-"button_text": "Pi 01 Home",
+"button_text": "REMPI Home",
 "clear_error": false,
 "error_class": "",
 "force_ident": false,
