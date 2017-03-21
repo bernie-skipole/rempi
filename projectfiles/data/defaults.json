@@ -1,0 +1,17 @@
+{
+"backcol": "#ffffff",
+"css_links": [
+"simple_css"
+],
+"js_links": [
+"jquery_core",
+"skipole_js"
+],
+"widgets": {
+"links": {
+"ButtonLink1": {
+"widget_class": "ast_leftbutton"
+}
+}
+}
+}

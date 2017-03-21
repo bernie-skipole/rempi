@@ -1,0 +1,4041 @@
+{
+"url": "/",
+"default_language": "en",
+"brief": "Robotics Telescope REMPI Raspberry Pi",
+"version": "0.0.1",
+"skipole": "0.0.9",
+"subprojects": {
+"lib": "/lib/"
+},
+"specialpages": {
+"control": 3,
+"control_results_json": 13,
+"general_json": 570,
+"home": 1,
+"information": 4,
+"jquery_core": "lib,jquery_core",
+"no_javascript": 540,
+"redirector": 530,
+"sensor_table01_json": 12,
+"sensors": 2,
+"server_error": 520,
+"set_output01": 3001,
+"set_output01_json": 3002,
+"setup": 5,
+"simple_css": 1001,
+"ski_basic": "lib,ski_basic",
+"ski_checkbox": "lib,ski_checkbox",
+"ski_confirm": "lib,ski_confirm",
+"ski_debug_tools": "lib,ski_debug_tools",
+"ski_dropdown": "lib,ski_dropdown",
+"ski_error_messages": "lib,ski_error_messages",
+"ski_footers": "lib,ski_footers",
+"ski_headers": "lib,ski_headers",
+"ski_info": "lib,ski_info",
+"ski_inputforms": "lib,ski_inputforms",
+"ski_inputtables": "lib,ski_inputtables",
+"ski_inputtext": "lib,ski_inputtext",
+"ski_links": "lib,ski_links",
+"ski_logins": "lib,ski_logins",
+"ski_paras": "lib,ski_paras",
+"ski_paths": "lib,ski_paths",
+"ski_radio": "lib,ski_radio",
+"ski_svgarrows": "lib,ski_svgarrows",
+"ski_svgbasics": "lib,ski_svgbasics",
+"ski_tables": "lib,ski_tables",
+"ski_textarea": "lib,ski_textarea",
+"ski_upload": "lib,ski_upload",
+"skipole_js": "lib,skipole_js",
+"url_not_found": 500,
+"validate_error": 510
+},
+"sections": {},
+"RootFolder": {
+"brief": "Site root",
+"default_page_name": "index",
+"folders": {
+"css": {
+"ident": 1000,
+"brief": "Holds CSS pages",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"simple.css": {
+"ident": 1001,
+"brief": "A simple CSS page",
+"CSS": {
+"enable_cache": false,
+"style": {
+"*": [
+[
+"font-size",
+"12px"
+],
+[
+"margin",
+"0"
+],
+[
+"padding",
+"0"
+]
+],
+"body": [
+[
+"background-color",
+"#ced2c6"
+],
+[
+"color",
+"#000000"
+],
+[
+"font-family",
+"\"Arial Black\", Gadget, sans-serif"
+]
+],
+"h1": [
+[
+"background",
+"#b6bcaa"
+],
+[
+"border",
+"solid black 2px"
+],
+[
+"padding",
+"4px"
+],
+[
+"margin-top",
+"10px"
+],
+[
+"margin-bottom",
+"10px"
+]
+],
+"table": [
+[
+"border-style",
+"solid"
+],
+[
+"border-width",
+"1px"
+],
+[
+"margin",
+"10px"
+],
+[
+"width",
+"100%"
+]
+],
+".ast_container": [
+[
+"margin-bottom",
+"10px"
+],
+[
+"margin-left",
+"auto"
+],
+[
+"margin-right",
+"auto"
+],
+[
+"margin-top",
+"10px"
+],
+[
+"max-width",
+"1250px"
+],
+[
+"min-width",
+"400px"
+],
+[
+"position",
+"relative"
+],
+[
+"width",
+"90%"
+]
+],
+".ast_top": [
+[
+"background",
+"#b6bcaa"
+],
+[
+"margin-bottom",
+"20px"
+],
+[
+"padding",
+"2px"
+],
+[
+"width",
+"100%"
+]
+],
+".ast_centre": [
+[
+"margin-left",
+"1%"
+],
+[
+"margin-right",
+"1%"
+]
+],
+".ast_midbutton": [
+[
+"-webkit-border-radius",
+"8"
+],
+[
+"background",
+"#b6c2b2"
+],
+[
+"border",
+"solid blue 2px"
+],
+[
+"border-radius",
+"8px"
+],
+[
+"color",
+"blue"
+],
+[
+"display",
+"block"
+],
+[
+"margin-bottom",
+"10px"
+],
+[
+"margin-left",
+"30%"
+],
+[
+"margin-right",
+"auto"
+],
+[
+"margin-top",
+"10px"
+],
+[
+"padding",
+"4px 6px 6px 4px"
+],
+[
+"text-align",
+"center"
+],
+[
+"text-decoration",
+"none"
+],
+[
+"width",
+"20%"
+]
+],
+".ast_midbutton:hover": [
+[
+"background",
+"#b6bcaa"
+],
+[
+"border",
+"solid black 2px"
+]
+],
+".ast_leftbutton": [
+[
+"-moz-border-radius",
+"8"
+],
+[
+"-webkit-border-radius",
+"8"
+],
+[
+"background",
+"#b6c2b2"
+],
+[
+"border",
+"solid blue 2px"
+],
+[
+"border-radius",
+"8px"
+],
+[
+"color",
+"blue"
+],
+[
+"display",
+"block"
+],
+[
+"margin-bottom",
+"10px"
+],
+[
+"margin-left",
+"5%"
+],
+[
+"margin-right",
+"auto"
+],
+[
+"margin-top",
+"10px"
+],
+[
+"padding",
+"4px 6px 6px 4px"
+],
+[
+"text-align",
+"center"
+],
+[
+"text-decoration",
+"none"
+],
+[
+"width",
+"20%"
+]
+],
+".ast_leftbutton:hover": [
+[
+"background",
+"#b6bcaa"
+],
+[
+"border",
+"solid black 2px"
+]
+],
+".ast_table_header": [
+[
+"background-color",
+"#abbcaa"
+],
+[
+"text-align",
+"left"
+]
+],
+".ast_table_even": [
+[
+"background-color",
+"#c4cbbd"
+]
+],
+".ast_table_odd": [
+[
+"background-color",
+"#b6c2b2"
+]
+],
+".ast_left_label": [
+[
+"display",
+"inline-block"
+],
+[
+"font-weight",
+"bold"
+],
+[
+"margin-right",
+"1%"
+],
+[
+"padding-bottom",
+"3px"
+],
+[
+"padding-top",
+"3px"
+],
+[
+"text-align",
+"right"
+],
+[
+"vertical-align",
+"top"
+],
+[
+"width",
+"59%"
+]
+],
+".ast_output": [
+[
+"-webkit-border-radius",
+"8"
+],
+[
+"background",
+"#b6c2b2"
+],
+[
+"border",
+"solid black 2px"
+],
+[
+"border-radius",
+"8px"
+],
+[
+"margin-bottom",
+"10px"
+],
+[
+"margin-left",
+"5%"
+],
+[
+"margin-right",
+"5%"
+],
+[
+"margin-top",
+"10px"
+],
+[
+"padding",
+"4px 6px 6px 4px"
+]
+],
+".ast_errorcol": [
+[
+"color",
+"red"
+]
+],
+".ast_spacer": [
+[
+"margin-top",
+"10px"
+],
+[
+"margin-bottom",
+"5px"
+]
+]
+}
+}
+}
+}
+},
+"outputs": {
+"ident": 3000,
+"brief": "Folder holding set output responders",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"set_output01": {
+"ident": 3001,
+"brief": "Sets output 01 and returns control page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "control",
+"submit_list": [
+"control",
+"set_output_from_browser"
+],
+"submit_option": true,
+"target_ident": "control",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01:radio_checked": ""
+}
+}
+},
+"set_output01_json": {
+"ident": 3002,
+"brief": "Sets output 01 and returns results JSON file",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"control",
+"set_output_from_browser"
+],
+"submit_option": true,
+"target_ident": "control_results_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01:radio_checked": ""
+}
+}
+}
+}
+},
+"restricted": {
+"ident": 2000,
+"brief": "Holds pages not accessable directly via URL",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"control_template": {
+"ident": 2003,
+"brief": "The template for the control page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Control"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robot Raspberry Pi 01"
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Control heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Control"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This page activates control outputs:"
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For output 01",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_output"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "output01 heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Output 01"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "outputform01",
+"brief": "Form for setting boolian option output 01",
+"fields": {
+"action": "set_output01",
+"action_json": "set_output01_json",
+"button_class": "",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ast_left_label",
+"left_label": "Set output 01",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": ""
+},
+"container_0": [
+"Widget",
+{
+"class": "radio.BooleanRadio",
+"name": "output01",
+"brief": "Radio buttons for output 01",
+"fields": {
+"div_class1": "",
+"div_class2": "",
+"left_class1": "ast_left_label",
+"left_class2": "ast_left_label",
+"left_label1": "On",
+"left_label2": "Off",
+"radio_checked": true,
+"right_class1": "",
+"right_class2": "",
+"right_label1": "",
+"right_label2": "",
+"show": true,
+"widget_class": ""
+}
+}
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "output01_result",
+"brief": "Shows result of output 01",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "",
+"para_text": "The result of output 01 is :",
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for home button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "home",
+"brief": "Button link to home page",
+"fields": {
+"button_text": "Pi 01 Home",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"general_json": {
+"ident": 570,
+"brief": "General purpose JSON file",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
+},
+"index_template": {
+"ident": 2001,
+"brief": "The template for the index page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Index"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robotics Telescope REMPI Raspberry Pi"
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"You are connected to Raspberry Pi 01.  This device is sited with the robot telescope, and accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the sensors button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "sensors",
+"brief": "Button link to sensors page",
+"fields": {
+"button_text": "Sensors",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "sensors",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_midbutton"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the control button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "contol",
+"brief": "Button link to control page",
+"fields": {
+"button_text": "Control",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "control",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_midbutton"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the information button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "information",
+"brief": "Button link to information page",
+"fields": {
+"button_text": "Information",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "information",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_midbutton"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the setup page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "setup",
+"brief": "Button link to setup page",
+"fields": {
+"button_text": "Setup",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "setup",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_midbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"information_template": {
+"ident": 2004,
+"brief": "The template for the information page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Information"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robot Raspberry Pi 01"
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Information text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "information.01",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds link to control results",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_spacer"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "control_json",
+"brief": "Links to control results json file",
+"fields": {
+"content": "/controls.json",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": 6,
+"new_window": true,
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "holds link to sensors results",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_spacer"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "sensors_json",
+"brief": "Links to sensors table json file",
+"fields": {
+"content": "/sensors.json",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": 7,
+"new_window": true,
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Remote control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_spacer"
+},
+"parts": [
+[
+"Text",
+"Remote Control"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About set_output",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "information.03",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Software",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_spacer"
+},
+"parts": [
+[
+"Text",
+"The software"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Information text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "information.02",
+"failmessage": "TextBlock not found",
+"show": true,
+"escape": false,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Choose a page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
+[
+"Text",
+"Choose a page:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the home button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "home",
+"brief": "Button link to home page",
+"fields": {
+"button_text": "Pi 01 Home",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the sensors button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "sensors",
+"brief": "Button link to sensors page",
+"fields": {
+"button_text": "Sensors",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "sensors",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for the control button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "contol",
+"brief": "Button link to control page",
+"fields": {
+"button_text": "Control",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "control",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"login": {
+"ident": 2010,
+"brief": "Basic Authentication",
+"RespondPage": {
+"class": "SubmitPlainText",
+"original_args": {
+"fail_ident": "home",
+"submit_list": [
+"login",
+"request_login"
+]
+},
+"original_fields": {}
+}
+},
+"redirector": {
+"ident": 530,
+"brief": "Redirect to an external url.",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Redirector"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "info.Redirector",
+"name": "redirect_to",
+"brief": "Redirector",
+"fields": {
+"show": true,
+"text_refnotfound": "",
+"text_replaceblock": "If this page does not redirect automatically, follow this link:",
+"textblock_ref": "",
+"url": "http://www.bbc.co.uk",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+},
+"return_output": {
+"ident": 2005,
+"brief": "Returns JSON file of required output",
+"RespondPage": {
+"class": "SubmitJSON",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"control",
+"return_output"
+]
+},
+"original_fields": {}
+}
+},
+"sensors_template": {
+"ident": 2002,
+"brief": "The template for the sensors page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robot Raspberry Pi 01"
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Sensors heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This page displays sensor inputs. Choose 'Refresh' to update:"
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for refresh button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.JSONButtonLink",
+"name": "refresh",
+"brief": "Refreshes sensor values",
+"fields": {
+"button_text": "Refresh",
+"button_wait_text": "Please wait...",
+"clear_error": false,
+"error_class": "",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "sensor_table01_json",
+"link_ident": "sensors",
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "tables.TwoColTable1",
+"name": "table01",
+"brief": "Table of sensor values",
+"fields": {
+"col0": [],
+"col1": [],
+"even_class": "ast_table_even",
+"header_class": "ast_table_header",
+"odd_class": "ast_table_odd",
+"show": true,
+"title1": "Sensor name",
+"title2": "value",
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for home button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "home",
+"brief": "Button link to home page",
+"fields": {
+"button_text": "Pi 01 Home",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"server_error": {
+"ident": 520,
+"brief": "The server error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"diagnostic"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Server Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds diagnostic message heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "diagnostic",
+"brief": "Shows the error message",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "No error message available",
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "debug_tools.ShowEnviron",
+"name": "se1",
+"brief": "ShowEnviron",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"para_class": "",
+"show": true,
+"show_error": "",
+"toptext": "Environmental variables for this call:",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+},
+"url_not_found": {
+"ident": 500,
+"brief": "The url not found error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"url"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"URL not found"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robot Raspberry Pi 01"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h1",
+"brief": "404 Not Found",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"404 Not Found"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Holds introduction text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The page:"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds called URL",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "paras.TextBlockPara",
+"name": "url",
+"brief": "TextBlockPara",
+"fields": {
+"clear_error": false,
+"error_class": "errorcol",
+"linebreaks": true,
+"project_ident": "",
+"replace_strings": [],
+"show": true,
+"show_error": "",
+"text_refnotfound": "",
+"text_replaceblock": "",
+"textblock_ref": "",
+"widget_class": ""
+},
+"set_names": {
+"text_replaceblock": "message_text"
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Not found paragraph",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Has not been found at this site"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "home",
+"brief": "Button link to home page",
+"fields": {
+"button_text": "Pi 01 Home",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"validate_error": {
+"ident": 510,
+"brief": "The validation error page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": false,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"diagnostic"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "meta for viewport",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Validation Error"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds diagnostic message heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Diagnostic message:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "diagnostic",
+"brief": "Shows the error message",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "No error message available",
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph holds home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+},
+"system_setup": {
+"ident": 4000,
+"brief": "Folder holding setup templates",
+"default_page_name": "index",
+"restricted": false,
+"folders": {
+"restricted": {
+"ident": 4500,
+"brief": "Holds restricted pages",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"get_pwr_output01": {
+"ident": 4504,
+"brief": "Gets power option for output01 for json",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"setup",
+"get_pwr_output01"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+}
+}
+}
+},
+"pages": {
+"access_pwd": {
+"ident": 4002,
+"brief": "Sets the access password",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4001
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_password"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"newpassword1:input_text": "",
+"newpassword2:input_text": "",
+"oldpassword:input_text": ""
+}
+}
+},
+"pwr_output01": {
+"ident": 4003,
+"brief": "Sets power option for output01",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4001
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_pwr_output01"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01_check:checkbox": "",
+"output01_default:radio_checked": ""
+}
+}
+},
+"pwr_output01_json": {
+"ident": 4004,
+"brief": "Sets power option for output01 for json",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4001
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"setup",
+"set_pwr_output01"
+],
+"submit_option": true,
+"target_ident": 4504,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01_check:checkbox": "",
+"output01_default:radio_checked": ""
+}
+}
+},
+"setup_template": {
+"ident": 4001,
+"brief": "The template for the setup page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Setup"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "top",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_top"
+},
+"parts": [
+[
+"Text",
+"Robot Raspberry Pi 01"
+],
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_centre"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Setup heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"System setup"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This page sets system parameters for this pi01 unit."
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For access password",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_output"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "access password",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Set access password"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "accesspassword",
+"brief": "Sets new access password",
+"fields": {
+"action": 4002,
+"action_json": "",
+"button_class": "",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ast_left_label",
+"left_label": "Submit new access password:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "div holding input fields",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "oldpassword",
+"brief": "Type the current password",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "",
+"label": "Type the current password:",
+"label_class": "ast_left_label",
+"maxlength": "30",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "newpassword1",
+"brief": "Type the new password",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "",
+"label": "Type the new password:",
+"label_class": "ast_left_label",
+"maxlength": "30",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "newpassword2",
+"brief": "Type the new password again",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "",
+"label": "Type the new password again:",
+"label_class": "ast_left_label",
+"maxlength": "30",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ShowPara",
+"name": "passwordset",
+"brief": "shows the result of setting the paragraph",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "ast_output",
+"para_text": "The new password has been set.",
+"show": true,
+"show_error": "",
+"show_para": false,
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "about reverting to default.",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Note: If the password is lost, then the 'setup' directory and contents should be deleted, and the pi powered off and on."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "defaults",
+"brief": "Shows default username and password.",
+"fields": {
+"para_text": "",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Setup location",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"The setup directory can be found at:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "setup",
+"brief": "location of setup directory",
+"fields": {
+"para_text": "",
+"show": true,
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Outputs heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "Line break",
+"show": true
+}
+],
+[
+"Text",
+"Outputs - power up values"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About power up values",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"When the Raspberry pi is powered up, outputs can either take the values last set, or can take default 'on power-up' values set here."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "for output 01",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_output"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "output01 heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"output01"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "set_output01",
+"brief": "Sets power up options for output01",
+"fields": {
+"action": 4003,
+"action_json": 4004,
+"button_class": "",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ast_left_label",
+"left_label": "Submit to set power-up option:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "submit container",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "checkbox.CheckBox1",
+"name": "output01_check",
+"brief": "Set to enable power up value",
+"fields": {
+"checkbox": "True",
+"checked": false,
+"clear_error": false,
+"div_class": "",
+"error_class": "",
+"left_class": "ast_left_label",
+"left_label": "Check to set this value on power-up:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "radio.BooleanRadio",
+"name": "output01_default",
+"brief": "power on value for output 01",
+"fields": {
+"div_class1": "",
+"div_class2": "",
+"left_class1": "ast_left_label",
+"left_class2": "ast_left_label",
+"left_label1": "On",
+"left_label2": "Off",
+"radio_checked": true,
+"right_class1": "",
+"right_class2": "",
+"right_label1": "",
+"right_label2": "",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "output01_result",
+"brief": "Text of current power setting for output 01",
+"fields": {
+"para_text": "",
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "div for home button",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.ButtonLink1",
+"name": "home",
+"brief": "Button link to home page",
+"fields": {
+"button_text": "Pi 01 Home",
+"clear_error": false,
+"error_class": "",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"show_error": "",
+"widget_class": "ast_leftbutton"
+}
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+}
+},
+"pages": {
+"control": {
+"ident": 3,
+"brief": "Responder to fill in control_template fields",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "home",
+"submit_list": [
+"control",
+"control_page"
+],
+"target_ident": 2003
+},
+"original_fields": {}
+}
+},
+"control_results.json": {
+"ident": 13,
+"brief": "Returns JSON file to refresh the results on the control page",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"control",
+"refresh_results"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
+"controls.json": {
+"ident": 6,
+"brief": "Returns JSON dictionary of sensors as external api",
+"RespondPage": {
+"class": "SubmitJSON",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"control",
+"controls_json_api"
+]
+},
+"original_fields": {}
+}
+},
+"index": {
+"ident": 1,
+"brief": "Responder to fill in index_template fields",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": 2001
+},
+"original_fields": {}
+}
+},
+"information": {
+"ident": 4,
+"brief": "Responder to fill in information_template fields",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "home",
+"submit_list": [
+"information",
+"information_page"
+],
+"target_ident": 2004
+},
+"original_fields": {}
+}
+},
+"no_javascript": {
+"ident": 540,
+"brief": "javascript disabled page",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"lang": "en",
+"backcol": "#ffffff",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"New page"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to simple_css",
+"show": true,
+"attribs": {
+"href": "{simple_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Comment",
+{
+"text": "HTML5shiv - included as a TextBlock"
+}
+],
+[
+"TextBlock",
+{
+"textref": "html5shiv",
+"failmessage": "failed to read textblocks database with ref html5shiv",
+"show": true,
+"escape": false,
+"linebreaks": false
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "ErrorDiv",
+"fields": {
+"clear_error": false,
+"error_class": "ski_errorcol",
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph containing no javascript textblock",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"TextBlock",
+{
+"textref": "no_javascript_text",
+"failmessage": "Javascript failure - This page requires javascript to be enabled in your browser.",
+"show": true,
+"escape": true,
+"linebreaks": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Home link",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "links.Link",
+"name": "homelink",
+"brief": "Link to site home",
+"fields": {
+"content": "Return to home page",
+"force_ident": false,
+"get_field1": "",
+"get_field2": "",
+"link_ident": "home",
+"new_window": false,
+"show": true,
+"widget_class": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+},
+"sensor_table01.json": {
+"ident": 12,
+"brief": "Returns JSON file to fill in sensors table01 values",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"sensors",
+"sensor_table01_values"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+},
+"sensors": {
+"ident": 2,
+"brief": "Responder to fill in sensors_template fields",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "home",
+"submit_list": [
+"sensors",
+"sensor_table01"
+],
+"target_ident": 2002
+},
+"original_fields": {}
+}
+},
+"sensors.json": {
+"ident": 7,
+"brief": "Returns JSON dictionary of sensors as external api",
+"RespondPage": {
+"class": "SubmitJSON",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"sensors",
+"sensors_json_api"
+]
+},
+"original_fields": {}
+}
+},
+"set_output": {
+"ident": 8,
+"brief": "Responder to set an output",
+"RespondPage": {
+"class": "Accept",
+"original_args": {
+"fail_ident": 2005,
+"submit_list": [
+"control",
+"set_output"
+],
+"target_ident": 2005
+},
+"original_fields": {}
+}
+},
+"setup": {
+"ident": 5,
+"brief": "Responder to fill in setup_template fields",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "home",
+"submit_list": [
+"setup",
+"setup_page"
+],
+"target_ident": 4001
+},
+"original_fields": {}
+}
+},
+"show_server_error": {
+"ident": 560,
+"brief": "Displays the server error page",
+"RespondPage": {
+"class": "PageData",
+"original_args": {
+"target_ident": "server_error"
+},
+"original_fields": {
+"show_error": "Example server error message"
+}
+}
+},
+"show_validate_error": {
+"ident": 550,
+"brief": "Displays the validate error page",
+"RespondPage": {
+"class": "PageData",
+"original_args": {
+"target_ident": "validate_error"
+},
+"original_fields": {
+"show_error": "Example validate error message"
+}
+}
+}
+}
+}
+}
