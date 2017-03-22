@@ -23,25 +23,18 @@ def start_project(project, projectfiles, path, option):
        'proj_data' to subsequent start_call functions."""
     proj_data = {}
 
-    # The RaspberryPi option should be True if this is running on a raspberry pi
-    # which indicates gpio pins should be set, False indicates it is being run on
-    # a development machine, and gpio pins should not be set.
-    if option and ("RaspberryPi" in option):
-        raspberrypi = option["RaspberryPi"]
-    else:
-        raspberrypi = False
-
     # checks database exists, if not create it
     database_ops.start_database(project, projectfiles)
 
-    # get dictionary of output values
+    # get dictionary of initial start-up output values from database
     output_dict = database_ops.power_up_values()
     if not output_dict:
         print("Invalid read of database, delete setup directory to revert to defaults")
         sys.exit(1)
 
-    control.set_raspberrypi(raspberrypi)
+    # set the initial start-up values
     control.set_multi_outputs(output_dict)
+
     return proj_data
 
 

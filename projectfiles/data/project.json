@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Robotics Telescope REMPI Raspberry Pi",
 "version": "0.0.1",
-"skipole": "0.0.9",
+"skipole": "0.0.10",
 "subprojects": {
 "lib": "/lib/"
 },

@@ -27,3 +27,9 @@ def get_output_names():
 def get_outputs():
     global _OUTPUTS
     return _OUTPUTS.copy()
+
+
+def get_output_type(name):
+    "Given an output name, returns the output type, or None if the name is not found"
+    if name in _OUTPUTS:
+        return _OUTPUTS[name][0] 
