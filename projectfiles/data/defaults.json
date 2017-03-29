@@ -12,6 +12,16 @@
 "ButtonLink1": {
 "widget_class": "ast_leftbutton"
 }
+},
+"inputforms": {
+"SubmitForm1": {
+"left_class": "ast_left_label"
+}
+},
+"inputtext": {
+"TextInput2": {
+"label_class": "ast_left_label"
+}
 }
 }
 }

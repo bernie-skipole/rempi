@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Robotics Telescope REMPI Raspberry Pi",
 "version": "0.0.1",
-"skipole": "0.0.10",
+"skipole": "0.0.13",
 "subprojects": {
 "lib": "/lib/"
 },
@@ -16,6 +16,7 @@
 "jquery_core": "lib,jquery_core",
 "no_javascript": 540,
 "redirector": 530,
+"redis_setup": 4400,
 "sensor_table01_json": 12,
 "sensors": 2,
 "server_error": 520,
@@ -2149,8 +2150,8 @@
 "name": "table01",
 "brief": "Table of sensor values",
 "fields": {
-"col0": [],
 "col1": [],
+"col2": [],
 "even_class": "ast_table_even",
 "header_class": "ast_table_header",
 "odd_class": "ast_table_odd",
@@ -3001,6 +3002,34 @@
 }
 }
 },
+"redis_setup": {
+"ident": 4400,
+"brief": "Set redis settings",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4001
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_redis"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"redis_auth:input_text": "",
+"redis_db:input_text": "",
+"redis_ip:input_text": "",
+"redis_port:input_text": ""
+}
+}
+},
 "setup_template": {
 "ident": 4001,
 "brief": "The template for the setup page",
@@ -3610,6 +3639,220 @@
 "show": true,
 "widget_class": ""
 }
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Sensor logs heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "br",
+"brief": "New Tag",
+"show": true
+}
+],
+[
+"Text",
+"Sensor Logs"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About redis",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This unit logs sensor data to a Redis server. The IP address, port, password and database number of the server should be set here."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For redis server",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "ast_output"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "redis heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Redis Server"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "redissetup",
+"brief": "Form holding redis settings",
+"fields": {
+"action": "redis_setup",
+"action_json": "",
+"button_class": "",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"error_class": "",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ast_left_label",
+"left_label": "Submit server settings:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "container for redis server settings",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_ip",
+"brief": "Redis IP address",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "",
+"label": "IP address:",
+"label_class": "ast_left_label",
+"maxlength": "15",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "15",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_port",
+"brief": "Port of the redis server",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "6379",
+"label": "Port:",
+"label_class": "ast_left_label",
+"maxlength": "6",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "6",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_auth",
+"brief": "Redis auth password",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "",
+"label": "Password:",
+"label_class": "ast_left_label",
+"maxlength": "20",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"widget_class": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_db",
+"brief": "Database number",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "",
+"input_accepted_class": "",
+"input_errored_class": "",
+"input_text": "0",
+"label": "Database Number:",
+"label_class": "ast_left_label",
+"maxlength": "2",
+"redstar": false,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "2",
+"widget_class": ""
+}
+}
+]
+]
+}
+]
 }
 ]
 ]

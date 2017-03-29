@@ -18,6 +18,15 @@ def setup_page(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     page_data['setup', 'para_text'] = setup_directory
     # the power up values for each output - further functions to be added for each output
     get_pwr_output01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+    # redis server settings
+    redis_values = database_ops.get_redis()
+    if not redis_values:
+        raise FailPage(message = "Error: Failed to access database.")
+    page_data['redis_ip', 'input_text'] = redis_values[0]
+    page_data['redis_port', 'input_text'] = str(redis_values[1])
+    page_data['redis_auth', 'input_text'] = redis_values[2]
+    page_data['redis_db', 'input_text'] = str(redis_values[3])
+    
 
 
 # Further get_pwr_outputnn functions to be provided for each output
@@ -94,4 +103,39 @@ def set_password(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 
 
+##########################################################
+#
+# Set Redis parameters, IP address, port, password and db
+#
+##########################################################
+
+def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Check values given, and set them into the database"""
+    ip = call_data['redis_ip', 'input_text']
+    port = call_data['redis_port', 'input_text']
+    auth = call_data['redis_auth', 'input_text']
+    db = call_data['redis_db', 'input_text']
+
+    if not port:
+        port = 6379
+    else:
+        try:
+            port = int(port)
+        except:
+            raise FailPage(message="Invalid port.", displaywidgetname='redissetup')
+
+    if not db:
+        db = 0
+    else:
+        try:
+            db = int(db)
+        except:
+            raise FailPage(message="Invalid database number.", displaywidgetname='redissetup')
+
+    if (db < 0) or (db > 16):
+        raise FailPage(message="Invalid database number.", displaywidgetname='redissetup') 
+
+
+    if not database_ops.set_redis(ip, port, auth, db):
+        raise FailPage(message="Sorry, database access failure.", displaywidgetname='redissetup')
 
