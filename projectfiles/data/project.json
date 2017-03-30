@@ -17,6 +17,7 @@
 "no_javascript": 540,
 "redirector": 530,
 "redis_setup": 4400,
+"redis_setup_json": 4401,
 "sensor_table01_json": 12,
 "sensors": 2,
 "server_error": 520,
@@ -3566,7 +3567,7 @@
 "parts": [
 [
 "Text",
-"This unit logs sensor data to a Redis server. The IP address, port, password and database number of the server should be set here."
+"This unit logs sensor data to a Redis server. The IP address, port, password and database number of the server should be set here. Set the IP address to empty if no server is available."
 ]
 ]
 }
@@ -3605,7 +3606,7 @@
 "brief": "Form holding redis settings",
 "fields": {
 "action": "redis_setup",
-"action_json": "",
+"action_json": "redis_setup_json",
 "button_class": "",
 "button_text": "Submit",
 "clear_error": false,
@@ -3648,7 +3649,7 @@
 "label_class": "ast_left_label",
 "maxlength": "15",
 "redstar": false,
-"required": true,
+"required": false,
 "set_input_accepted": false,
 "set_input_errored": false,
 "show": true,
@@ -3745,6 +3746,24 @@
 }
 ]
 ]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ShowPara",
+"name": "redisset",
+"brief": "Shows result of setting the redis server settings",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"para_class": "ast_output",
+"para_text": "Settings changed.",
+"show": true,
+"show_error": "",
+"show_para": false,
+"widget_class": ""
+}
 }
 ],
 [
@@ -3890,6 +3909,34 @@
 ],
 "submit_option": true,
 "target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"redis_auth:input_text": "",
+"redis_db:input_text": "",
+"redis_ip:input_text": "",
+"redis_port:input_text": ""
+}
+}
+},
+"redis_setup_json": {
+"ident": 4401,
+"brief": "Responder sets redis options, returns JSON",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"setup",
+"set_redis"
+],
+"submit_option": true,
+"target_ident": "general_json",
 "validate_fail_ident": null,
 "validate_option": false
 },

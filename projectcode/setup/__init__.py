@@ -115,7 +115,7 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
     port = call_data['redis_port', 'input_text']
     auth = call_data['redis_auth', 'input_text']
     db = call_data['redis_db', 'input_text']
-
+    # the redis port, default 6379
     if not port:
         port = 6379
     else:
@@ -123,7 +123,7 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
             port = int(port)
         except:
             raise FailPage(message="Invalid port.", displaywidgetname='redissetup')
-
+    # the redis database number, default 0
     if not db:
         db = 0
     else:
@@ -131,11 +131,16 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
             db = int(db)
         except:
             raise FailPage(message="Invalid database number.", displaywidgetname='redissetup')
-
     if (db < 0) or (db > 16):
         raise FailPage(message="Invalid database number.", displaywidgetname='redissetup') 
-
-
+    # set values
     if not database_ops.set_redis(ip, port, auth, db):
         raise FailPage(message="Sorry, database access failure.", displaywidgetname='redissetup')
+    if not ip:
+        page_data['redisset', 'para_text'] = "No IP address, redis disabled"
+    else:
+        page_data['redisset', 'para_text'] = "Redis server at: %s:%s db:%s" % (ip,port,db)
+    page_data['redisset', 'show_para'] = True
+    # clear any previous error (needed by JSON call, web call refreshes entire page anyway)
+    page_data['redissetup', 'clear_error'] = True
 

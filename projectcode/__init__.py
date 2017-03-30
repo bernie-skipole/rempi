@@ -7,11 +7,13 @@ from ...skilift import FailPage, GoTo, ValidateError, ServerError
 
 from . import sensors, control, information, login, setup, database_ops
 
-_PROTECTED_PAGES = [         8,       # external api call to set an output in named get field
+_PROTECTED_PAGES = [         8,      # external api call to set an output in named get field
                           3001,      # set output 01 returns web page, for none-jscript browsers
                           3002,      # set output 01 returns json page, for jscript browsers
                           4003,      # set output 01 power-up option, returns web page, for none-jscript browsers
-                          4004       # set output 01 power-up option, returns json page, for jscript browsers
+                          4004,      # set output 01 power-up option, returns json page, for jscript browsers
+                          4400,      # set redis options
+                          4401       # set redis option via json
                    ]
 
 
