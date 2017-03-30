@@ -2918,121 +2918,10 @@
 },
 "original_fields": {}
 }
-}
-}
-}
-},
-"pages": {
-"access_pwd": {
-"ident": 4002,
-"brief": "Sets the access password",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4001
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_password"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"newpassword1:input_text": "",
-"newpassword2:input_text": "",
-"oldpassword:input_text": ""
-}
-}
-},
-"pwr_output01": {
-"ident": 4003,
-"brief": "Sets power option for output01",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4001
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_pwr_output01"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"output01_check:checkbox": "",
-"output01_default:radio_checked": ""
-}
-}
-},
-"pwr_output01_json": {
-"ident": 4004,
-"brief": "Sets power option for output01 for json",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4001
-],
-"alternate_ident": "home",
-"fail_ident": "general_json",
-"submit_list": [
-"setup",
-"set_pwr_output01"
-],
-"submit_option": true,
-"target_ident": 4504,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"output01_check:checkbox": "",
-"output01_default:radio_checked": ""
-}
-}
-},
-"redis_setup": {
-"ident": 4400,
-"brief": "Set redis settings",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4001
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_redis"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"redis_auth:input_text": "",
-"redis_db:input_text": "",
-"redis_ip:input_text": "",
-"redis_port:input_text": ""
-}
-}
 },
 "setup_template": {
-"ident": 4001,
-"brief": "The template for the setup page",
+"ident": 4501,
+"brief": "Template setup page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -3905,6 +3794,117 @@
 }
 },
 "pages": {
+"access_pwd": {
+"ident": 4002,
+"brief": "Sets the access password",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_password"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"newpassword1:input_text": "",
+"newpassword2:input_text": "",
+"oldpassword:input_text": ""
+}
+}
+},
+"pwr_output01": {
+"ident": 4003,
+"brief": "Sets power option for output01",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_pwr_output01"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01_check:checkbox": "",
+"output01_default:radio_checked": ""
+}
+}
+},
+"pwr_output01_json": {
+"ident": 4004,
+"brief": "Sets power option for output01 for json",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"setup",
+"set_pwr_output01"
+],
+"submit_option": true,
+"target_ident": 4504,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"output01_check:checkbox": "",
+"output01_default:radio_checked": ""
+}
+}
+},
+"redis_setup": {
+"ident": 4400,
+"brief": "Set redis settings",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": "setup",
+"submit_list": [
+"setup",
+"set_redis"
+],
+"submit_option": true,
+"target_ident": "setup",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"redis_auth:input_text": "",
+"redis_db:input_text": "",
+"redis_ip:input_text": "",
+"redis_port:input_text": ""
+}
+}
+}
+}
+}
+},
+"pages": {
 "control": {
 "ident": 3,
 "brief": "Responder to fill in control_template fields",
@@ -4248,7 +4248,7 @@
 "setup",
 "setup_page"
 ],
-"target_ident": 4001
+"target_ident": 4501
 },
 "original_fields": {}
 }
