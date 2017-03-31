@@ -2,6 +2,7 @@
 This package will be called by the Skipole framework to access your data.
 """
 
+import os
 
 from ...skilift import FailPage, GoTo, ValidateError, ServerError
 
@@ -37,6 +38,20 @@ def start_project(project, projectfiles, path, option):
     # set the initial start-up values
     control.set_multi_outputs(output_dict)
 
+    # See
+    # www.modmypi.com/blog/ds18b20-one-wire-digital-temperature-sensor-and-the-raspberry-pi
+
+    # Using a DS18B20, and with one-wire enabled.
+    # my unit has address 28-000007e4291f -alter this in the temp_sensor line below to match your
+    # own sensor address
+
+    # If this system is running on a development PC, leave the following lines commented out
+    # and only un-comment them on the target raspberry pi
+
+    # os.system('modprobe w1-gpio')
+    # os.system('modprobe w1-therm')
+    # proj_data['temp_sensor'] = "/sys/bus/w1/devices/28-000007e4291f/w1_slave"
+
     return proj_data
 
 
@@ -46,9 +61,15 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     page_data = {}
     if not called_ident:
         return None, call_data, page_data, lang
+
+    # set temp_sensor into call_data
+    if 'temp_sensor' in proj_data:
+        call_data['temp_sensor'] = proj_data['temp_sensor']
+
     if 'HTTP_HOST' in environ:
         # This is used in the information page to insert the host into a displayed url
         call_data['HTTP_HOST'] = environ['HTTP_HOST']
+
     # password protected pages
     if called_ident[1] in _PROTECTED_PAGES:
         # check login
