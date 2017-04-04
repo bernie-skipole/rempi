@@ -8,14 +8,14 @@ _SENSORS = ["Temperature"]
 
 def sensor_table01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """sets two lists for sensor table 01 into page data"""
-    page_data['table01', 'col0'] = _SENSORS
+    page_data['table01', 'col1'] = _SENSORS
     # and set values
     sensor_table01_values(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
 
 def sensor_table01_values(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """sets values list for sensor table 01 into page data"""
-    page_data['table01', 'col1'] = _get_sensor_values(call_data)
+    page_data['table01', 'col2'] = _get_sensor_values(call_data)
 
 
 def sensors_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
