@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Robotics Telescope REMPI Raspberry Pi",
 "version": "0.0.1",
-"skipole": "0.0.13",
+"skipole": "0.0.15",
 "subprojects": {
 "lib": "/lib/"
 },
@@ -3299,7 +3299,7 @@
 [
 "Widget",
 {
-"class": "paras.ShowPara",
+"class": "paras.ShowPara1",
 "name": "passwordset",
 "brief": "shows the result of setting the paragraph",
 "fields": {
@@ -3751,7 +3751,7 @@
 [
 "Widget",
 {
-"class": "paras.ShowPara",
+"class": "paras.ShowPara1",
 "name": "redisset",
 "brief": "Shows result of setting the redis server settings",
 "fields": {

@@ -67,10 +67,13 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     if 'temp_sensor' in proj_data:
         call_data['temp_sensor'] = proj_data['temp_sensor']
 
-    if 'HTTP_HOST' in environ:
+    if environ.get('HTTP_HOST'):
         # This is used in the information page to insert the host into a displayed url
         call_data['HTTP_HOST'] = environ['HTTP_HOST']
-
+    else:
+        call_data['HTTP_HOST'] = environ['SERVER_NAME']
+    # ensure project is in call_data
+    call_data['project'] = project
     # password protected pages
     if called_ident[1] in _PROTECTED_PAGES:
         # check login
