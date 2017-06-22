@@ -1027,19 +1027,6 @@
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to simple_css",
-"show": true,
-"attribs": {
-"href": "{simple_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -2854,19 +2841,6 @@
 }
 ],
 [
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to simple_css",
-"show": true,
-"attribs": {
-"href": "{simple_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
 "Part",
 {
 "tag_name": "script",
@@ -2929,8 +2903,22 @@
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "h2",
+"brief": "Heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
 "Text",
 "Robotics Telescope REMPI Raspberry Pi"
+]
+]
+}
+]
+]
+}
 ],
 [
 "Widget",
@@ -2952,6 +2940,75 @@
 ""
 ]
 }
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left navigation",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1",
+"style": "width:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Home",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{home}"
+},
+"parts": [
+[
+"Text",
+"Home"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Sensors",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{sensors}"
+},
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{control}"
+},
+"parts": [
+[
+"Text",
+"Control"
+]
+]
+}
 ]
 ]
 }
@@ -2964,7 +3021,8 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-panel"
+"class": "w3-panel",
+"style": "margin-left:20%"
 },
 "parts": [
 [
@@ -2993,22 +3051,6 @@
 [
 "Text",
 "This page sets system parameters for this pi01 unit."
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
 ]
 ]
 }
@@ -3021,7 +3063,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_output"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -3272,14 +3314,6 @@
 "hide_if_empty": false,
 "parts": [
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
 "Text",
 "Outputs - power up values"
 ]
@@ -3309,7 +3343,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_output"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -3442,14 +3476,6 @@
 "hide_if_empty": false,
 "parts": [
 [
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "New Tag",
-"show": true
-}
-],
-[
 "Text",
 "Sensor Logs"
 ]
@@ -3479,7 +3505,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_output"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -3695,40 +3721,6 @@
 "widget_class": "w3-section",
 "widget_style": ""
 }
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for home button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "home",
-"brief": "Button link to home page",
-"fields": {
-"button_text": "REMPI Home",
-"clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "home",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "w3-button w3-block w3-theme-d4",
-"widget_style": ""
-}
-}
-]
-]
 }
 ]
 ]
