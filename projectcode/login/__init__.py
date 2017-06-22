@@ -2,7 +2,7 @@
 from base64 import b64decode
 
 
-from ....skilift import FailPage, GoTo, ValidateError, ServerError
+from ... import FailPage, GoTo, ValidateError, ServerError
 
 from .. import database_ops
 

@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Robotics Telescope REMPI Raspberry Pi",
 "version": "0.0.1",
-"skipole": "0.0.15",
+"skipole": "0.0.22",
 "subprojects": {
 "lib": "/lib/"
 },
@@ -24,10 +24,10 @@
 "set_output01": 3001,
 "set_output01_json": 3002,
 "setup": 5,
-"simple_css": 1001,
 "ski_basic": "lib,ski_basic",
 "ski_checkbox": "lib,ski_checkbox",
 "ski_confirm": "lib,ski_confirm",
+"ski_css": 1006,
 "ski_debug_tools": "lib,ski_debug_tools",
 "ski_dropdown": "lib,ski_dropdown",
 "ski_error_messages": "lib,ski_error_messages",
@@ -49,12 +49,15 @@
 "ski_upload": "lib,ski_upload",
 "skipole_js": "lib,skipole_js",
 "url_not_found": 500,
-"validate_error": 510
+"validate_error": 510,
+"w3_css": 1002,
+"w3_theme_ski_css": 1004
 },
 "sections": {},
 "RootFolder": {
 "brief": "Site root",
 "default_page_name": "index",
+"restricted": false,
 "folders": {
 "css": {
 "ident": 1000,
@@ -63,393 +66,31 @@
 "restricted": false,
 "folders": {},
 "pages": {
-"simple.css": {
-"ident": 1001,
-"brief": "A simple CSS page",
-"CSS": {
-"enable_cache": false,
-"style": {
-"*": [
-[
-"font-size",
-"12px"
-],
-[
-"margin",
-"0"
-],
-[
-"padding",
-"0"
-]
-],
-"body": [
-[
-"background-color",
-"#ced2c6"
-],
-[
-"color",
-"#000000"
-],
-[
-"font-family",
-"\"Arial Black\", Gadget, sans-serif"
-]
-],
-"h1": [
-[
-"background",
-"#b6bcaa"
-],
-[
-"border",
-"solid black 2px"
-],
-[
-"padding",
-"4px"
-],
-[
-"margin-top",
-"10px"
-],
-[
-"margin-bottom",
-"10px"
-]
-],
-"table": [
-[
-"border-style",
-"solid"
-],
-[
-"border-width",
-"1px"
-],
-[
-"margin",
-"10px"
-],
-[
-"width",
-"100%"
-]
-],
-".ast_container": [
-[
-"margin-bottom",
-"10px"
-],
-[
-"margin-left",
-"auto"
-],
-[
-"margin-right",
-"auto"
-],
-[
-"margin-top",
-"10px"
-],
-[
-"max-width",
-"1250px"
-],
-[
-"min-width",
-"400px"
-],
-[
-"position",
-"relative"
-],
-[
-"width",
-"90%"
-]
-],
-".ast_top": [
-[
-"background",
-"#b6bcaa"
-],
-[
-"margin-bottom",
-"20px"
-],
-[
-"padding",
-"2px"
-],
-[
-"width",
-"100%"
-]
-],
-".ast_centre": [
-[
-"margin-left",
-"1%"
-],
-[
-"margin-right",
-"1%"
-]
-],
-".ast_midbutton": [
-[
-"-webkit-border-radius",
-"8"
-],
-[
-"background",
-"#b6c2b2"
-],
-[
-"border",
-"solid blue 2px"
-],
-[
-"border-radius",
-"8px"
-],
-[
-"color",
-"blue"
-],
-[
-"display",
-"block"
-],
-[
-"margin-bottom",
-"10px"
-],
-[
-"margin-left",
-"30%"
-],
-[
-"margin-right",
-"auto"
-],
-[
-"margin-top",
-"10px"
-],
-[
-"padding",
-"4px 6px 6px 4px"
-],
-[
-"text-align",
-"center"
-],
-[
-"text-decoration",
-"none"
-],
-[
-"width",
-"20%"
-]
-],
-".ast_midbutton:hover": [
-[
-"background",
-"#b6bcaa"
-],
-[
-"border",
-"solid black 2px"
-]
-],
-".ast_leftbutton": [
-[
-"-moz-border-radius",
-"8"
-],
-[
-"-webkit-border-radius",
-"8"
-],
-[
-"background",
-"#b6c2b2"
-],
-[
-"border",
-"solid blue 2px"
-],
-[
-"border-radius",
-"8px"
-],
-[
-"color",
-"blue"
-],
-[
-"display",
-"block"
-],
-[
-"margin-bottom",
-"10px"
-],
-[
-"margin-left",
-"5%"
-],
-[
-"margin-right",
-"auto"
-],
-[
-"margin-top",
-"10px"
-],
-[
-"padding",
-"4px 6px 6px 4px"
-],
-[
-"text-align",
-"center"
-],
-[
-"text-decoration",
-"none"
-],
-[
-"width",
-"20%"
-]
-],
-".ast_leftbutton:hover": [
-[
-"background",
-"#b6bcaa"
-],
-[
-"border",
-"solid black 2px"
-]
-],
-".ast_table_header": [
-[
-"background-color",
-"#abbcaa"
-],
-[
-"text-align",
-"left"
-]
-],
-".ast_table_even": [
-[
-"background-color",
-"#c4cbbd"
-]
-],
-".ast_table_odd": [
-[
-"background-color",
-"#b6c2b2"
-]
-],
-".ast_left_label": [
-[
-"display",
-"inline-block"
-],
-[
-"font-weight",
-"bold"
-],
-[
-"margin-right",
-"1%"
-],
-[
-"padding-bottom",
-"3px"
-],
-[
-"padding-top",
-"3px"
-],
-[
-"text-align",
-"right"
-],
-[
-"vertical-align",
-"top"
-],
-[
-"width",
-"59%"
-]
-],
-".ast_output": [
-[
-"-webkit-border-radius",
-"8"
-],
-[
-"background",
-"#b6c2b2"
-],
-[
-"border",
-"solid black 2px"
-],
-[
-"border-radius",
-"8px"
-],
-[
-"margin-bottom",
-"10px"
-],
-[
-"margin-left",
-"5%"
-],
-[
-"margin-right",
-"5%"
-],
-[
-"margin-top",
-"10px"
-],
-[
-"padding",
-"4px 6px 6px 4px"
-]
-],
-".ast_errorcol": [
-[
-"color",
-"red"
-]
-],
-".ast_spacer": [
-[
-"margin-top",
-"10px"
-],
-[
-"margin-bottom",
-"5px"
-]
-]
+"ski.css": {
+"ident": 1006,
+"brief": "CSS file page, ski.css",
+"FilePage": {
+"filepath": "rempi/static/ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
 }
+},
+"w3-theme-ski.css": {
+"ident": 1004,
+"brief": "CSS file page, w3-theme-ski.css",
+"FilePage": {
+"filepath": "rempi/static/w3-theme-ski.css",
+"enable_cache": true,
+"mimetype": "text/css"
+}
+},
+"w3.css": {
+"ident": 1002,
+"brief": "CSS file page, w3.css",
+"FilePage": {
+"filepath": "rempi/static/w3.css",
+"enable_cache": true,
+"mimetype": "text/css"
 }
 }
 }
@@ -583,29 +224,39 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to simple_css",
+"brief": "css link to w3.css",
 "show": true,
 "attribs": {
-"href": "{simple_css}",
+"href": "{w3_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
 }
 ],
 [
-"Comment",
+"ClosedPart",
 {
-"text": "HTML5shiv - included as a TextBlock"
+"tag_name": "link",
+"brief": "css link to w3-theme-ski.css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
-"TextBlock",
+"ClosedPart",
 {
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
+"tag_name": "link",
+"brief": "css link to ski.css",
 "show": true,
-"escape": false,
-"linebreaks": false
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -644,6 +295,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -653,7 +307,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -664,12 +318,26 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Page heading",
+"show": true,
+"hide_if_empty": false,
 "parts": [
 [
 "Text",
 "Robotics Telescope REMPI Raspberry Pi"
+]
+]
+}
+]
+]
+}
 ],
 [
 "Widget",
@@ -683,8 +351,63 @@
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left navigation",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1",
+"style": "width:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Home",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{home}"
+},
+"parts": [
+[
+"Text",
+"Home"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Sensors",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{sensors}"
+},
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
 }
 ]
 ]
@@ -698,7 +421,8 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel",
+"style": "margin-left:20%"
 },
 "parts": [
 [
@@ -727,22 +451,6 @@
 [
 "Text",
 "This page activates control outputs:"
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
 ]
 ]
 }
@@ -755,7 +463,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_output"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -782,22 +490,24 @@
 "fields": {
 "action": "set_output01",
 "action_json": "set_output01_json",
-"button_class": "",
+"button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
 "clear_error": false,
 "div_class": "",
-"error_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "ast_left_label",
+"left_class": "ski_left_label",
 "left_label": "Set output 01",
 "right_class": "",
 "right_label": "",
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 },
 "container_0": [
 "Widget",
@@ -808,8 +518,8 @@
 "fields": {
 "div_class1": "",
 "div_class2": "",
-"left_class1": "ast_left_label",
-"left_class2": "ast_left_label",
+"left_class1": "ski_left_label",
+"left_class2": "ski_left_label",
 "left_label1": "On",
 "left_label2": "Off",
 "radio_checked": true,
@@ -818,7 +528,8 @@
 "right_label1": "",
 "right_label2": "",
 "show": true,
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ]
@@ -832,45 +543,14 @@
 "brief": "Shows result of output 01",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-red",
 "para_class": "",
 "para_text": "The result of output 01 is :",
+"pre_line": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for home button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "home",
-"brief": "Button link to home page",
-"fields": {
-"button_text": "REMPI Home",
-"clear_error": false,
-"error_class": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "home",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "ast_leftbutton"
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ]
@@ -958,29 +638,39 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to simple_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{simple_css}",
+"href": "{w3_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
 }
 ],
 [
-"Comment",
+"ClosedPart",
 {
-"text": "HTML5shiv - included as a TextBlock"
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
-"TextBlock",
+"ClosedPart",
 {
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
+"tag_name": "link",
+"brief": "css link to ski_css",
 "show": true,
-"escape": false,
-"linebreaks": false
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -1019,6 +709,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -1028,7 +721,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -1039,12 +732,26 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "heading",
+"show": true,
+"hide_if_empty": false,
 "parts": [
 [
 "Text",
 "Robotics Telescope REMPI Raspberry Pi"
+]
+]
+}
+]
+]
+}
 ],
 [
 "Widget",
@@ -1054,14 +761,16 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
-}
-}
-]
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
 ]
 }
 ],
@@ -1073,7 +782,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel"
 },
 "parts": [
 [
@@ -1087,14 +796,6 @@
 [
 "Text",
 "You are connected to the REMPI Raspberry Pi.  This device is sited with the robot telescope, and accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
 ]
 ]
 }
@@ -1103,128 +804,114 @@
 "Part",
 {
 "tag_name": "div",
-"brief": "div for the sensors button",
+"brief": "div for buttons",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
 "parts": [
 [
 "Widget",
 {
-"class": "links.ButtonLink1",
+"class": "links.ButtonLink2",
 "name": "sensors",
 "brief": "Button link to sensors page",
 "fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
 "button_text": "Sensors",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
 "clear_error": false,
-"error_class": "",
-"force_ident": false,
+"error_class": "w3-panel w3-red",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
+"json_ident": "",
 "link_ident": "sensors",
-"new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_midbutton"
+"widget_class": "",
+"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the control button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
 "Widget",
 {
-"class": "links.ButtonLink1",
-"name": "contol",
+"class": "links.ButtonLink2",
+"name": "control",
 "brief": "Button link to control page",
 "fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
 "button_text": "Control",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
 "clear_error": false,
-"error_class": "",
-"force_ident": false,
+"error_class": "w3-panel w3-red",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
+"json_ident": "",
 "link_ident": "control",
-"new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_midbutton"
+"widget_class": "",
+"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the information button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
 "Widget",
 {
-"class": "links.ButtonLink1",
+"class": "links.ButtonLink2",
 "name": "information",
 "brief": "Button link to information page",
 "fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
 "button_text": "Information",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
 "clear_error": false,
-"error_class": "",
-"force_ident": false,
+"error_class": "w3-panel w3-red",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
+"json_ident": "",
 "link_ident": "information",
-"new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_midbutton"
+"widget_class": "",
+"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the setup page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
 "Widget",
 {
-"class": "links.ButtonLink1",
+"class": "links.ButtonLink2",
 "name": "setup",
 "brief": "Button link to setup page",
 "fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
 "button_text": "Setup",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
 "clear_error": false,
-"error_class": "",
-"force_ident": false,
+"error_class": "w3-panel w3-red",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
+"json_ident": "",
 "link_ident": "setup",
-"new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_midbutton"
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -1304,6 +991,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -1311,22 +1037,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -1365,6 +1075,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -1374,7 +1087,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -1385,12 +1098,26 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Heading",
+"show": true,
+"hide_if_empty": false,
 "parts": [
 [
 "Text",
 "Robotics Telescope REMPI Raspberry Pi"
+]
+]
+}
+]
+]
+}
 ],
 [
 "Widget",
@@ -1400,12 +1127,86 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left navigation",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1",
+"style": "width:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Home",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{home}"
+},
+"parts": [
+[
+"Text",
+"Home"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Sensors",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{sensors}"
+},
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{control}"
+},
+"parts": [
+[
+"Text",
+"Control"
+]
+]
 }
 ]
 ]
@@ -1419,7 +1220,8 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel",
+"style": "margin-left:20%"
 },
 "parts": [
 [
@@ -1451,7 +1253,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_spacer"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -1468,7 +1270,8 @@
 "link_ident": 6,
 "new_window": true,
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -1483,7 +1286,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_spacer"
+"class": "w3-section"
 },
 "parts": [
 [
@@ -1500,7 +1303,8 @@
 "link_ident": 7,
 "new_window": true,
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -1514,9 +1318,6 @@
 "brief": "Remote control",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "ast_spacer"
-},
 "parts": [
 [
 "Text",
@@ -1580,128 +1381,6 @@
 "show": true,
 "escape": false,
 "linebreaks": true
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Choose a page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
-],
-[
-"Text",
-"Choose a page:"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the home button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "home",
-"brief": "Button link to home page",
-"fields": {
-"button_text": "REMPI Home",
-"clear_error": false,
-"error_class": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "home",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "ast_leftbutton"
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the sensors button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "sensors",
-"brief": "Button link to sensors page",
-"fields": {
-"button_text": "Sensors",
-"clear_error": false,
-"error_class": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "sensors",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "ast_leftbutton"
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for the control button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "contol",
-"brief": "Button link to control page",
-"fields": {
-"button_text": "Control",
-"clear_error": false,
-"error_class": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "control",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "ast_leftbutton"
-}
 }
 ]
 ]
@@ -1795,6 +1474,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -1802,22 +1520,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -1856,6 +1558,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Widget",
@@ -1869,7 +1574,8 @@
 "text_replaceblock": "If this page does not redirect automatically, follow this link:",
 "textblock_ref": "",
 "url": "http://www.bbc.co.uk",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -1955,29 +1661,39 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to simple_css",
+"brief": "css link to w3_css",
 "show": true,
 "attribs": {
-"href": "{simple_css}",
+"href": "{w3_css}",
 "rel": "stylesheet",
 "type": "text/css"
 }
 }
 ],
 [
-"Comment",
+"ClosedPart",
 {
-"text": "HTML5shiv - included as a TextBlock"
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
-"TextBlock",
+"ClosedPart",
 {
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
+"tag_name": "link",
+"brief": "css link to ski_css",
 "show": true,
-"escape": false,
-"linebreaks": false
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
 }
 ],
 [
@@ -2016,6 +1732,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -2025,7 +1744,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -2036,12 +1755,26 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Heading",
+"show": true,
+"hide_if_empty": false,
 "parts": [
 [
 "Text",
 "Robotics Telescope REMPI Raspberry Pi"
+]
+]
+}
+]
+]
+}
 ],
 [
 "Widget",
@@ -2051,12 +1784,67 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Left navigation",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1",
+"style": "width:20%"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Home",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{home}"
+},
+"parts": [
+[
+"Text",
+"Home"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{control}"
+},
+"parts": [
+[
+"Text",
+"Control"
+]
+]
 }
 ]
 ]
@@ -2070,7 +1858,8 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel",
+"style": "margin-left:20%"
 },
 "parts": [
 [
@@ -2099,37 +1888,24 @@
 [
 "Text",
 "This page displays sensor inputs. Choose 'Refresh' to update:"
-],
-[
-"ClosedPart",
-{
-"tag_name": "br",
-"brief": "Line break",
-"show": true
-}
 ]
 ]
 }
 ],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for refresh button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
 [
 "Widget",
 {
-"class": "links.JSONButtonLink",
+"class": "links.ButtonLink2",
 "name": "refresh",
-"brief": "Refreshes sensor values",
+"brief": "Button link to refresh table",
 "fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
 "button_text": "Refresh",
 "button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "get_field1": "",
 "get_field2": "",
 "hide": false,
@@ -2137,11 +1913,9 @@
 "link_ident": "sensors",
 "show": true,
 "show_error": "",
-"widget_class": "ast_leftbutton"
+"widget_class": "w3-section",
+"widget_style": ""
 }
-}
-]
-]
 }
 ],
 [
@@ -2153,47 +1927,15 @@
 "fields": {
 "col1": [],
 "col2": [],
-"even_class": "ast_table_even",
-"header_class": "ast_table_header",
-"odd_class": "ast_table_odd",
+"even_class": "",
+"header_class": "w3-theme-d2",
+"odd_class": "w3-theme-d1",
 "show": true,
-"title1": "Sensor name",
+"title1": "Sensor",
 "title2": "value",
-"widget_class": ""
+"widget_class": "w3-table w3-bordered w3-centered",
+"widget_style": ""
 }
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div for home button",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "links.ButtonLink1",
-"name": "home",
-"brief": "Button link to home page",
-"fields": {
-"button_text": "REMPI Home",
-"clear_error": false,
-"error_class": "",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"link_ident": "home",
-"new_window": false,
-"show": true,
-"show_error": "",
-"widget_class": "ast_leftbutton"
-}
-}
-]
-]
 }
 ]
 ]
@@ -2269,6 +2011,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2276,22 +2057,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -2330,6 +2095,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -2354,12 +2122,17 @@
 "brief": "Shows the error message",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "No error message available",
-"widget_class": ""
-}
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
 ],
 [
@@ -2384,7 +2157,8 @@
 "link_ident": "home",
 "new_window": false,
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -2404,7 +2178,8 @@
 "show": true,
 "show_error": "",
 "toptext": "Environmental variables for this call:",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -2475,6 +2250,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2482,22 +2296,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -2536,6 +2334,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -2545,7 +2346,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -2556,7 +2357,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
 "parts": [
 [
@@ -2574,7 +2375,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel"
 },
 "parts": [
 [
@@ -2632,7 +2433,8 @@
 "text_refnotfound": "",
 "text_replaceblock": "",
 "textblock_ref": "",
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 },
 "set_names": {
 "text_replaceblock": "message_text"
@@ -2674,7 +2476,7 @@
 "fields": {
 "button_text": "Pi 01 Home",
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-button w3-block w3-theme-action",
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
@@ -2683,7 +2485,8 @@
 "new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_leftbutton"
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
 }
 }
 ]
@@ -2763,6 +2566,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2770,22 +2612,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -2824,6 +2650,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -2848,12 +2677,17 @@
 "brief": "Shows the error message",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "No error message available",
-"widget_class": ""
-}
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
 ],
 [
@@ -2878,7 +2712,8 @@
 "link_ident": "home",
 "new_window": false,
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -2983,6 +2818,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2990,22 +2864,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -3044,6 +2902,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Part",
@@ -3053,7 +2914,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_container"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -3064,7 +2925,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_top"
+"class": "w3-panel w3-theme-d1"
 },
 "parts": [
 [
@@ -3079,12 +2940,17 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
-}
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
 ]
 ]
@@ -3098,7 +2964,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "ast_centre"
+"class": "w3-panel"
 },
 "parts": [
 [
@@ -3182,22 +3048,24 @@
 "fields": {
 "action": 4002,
 "action_json": "",
-"button_class": "",
+"button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
 "clear_error": false,
 "div_class": "",
-"error_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "ast_left_label",
+"left_class": "ski_left_label",
 "left_label": "Submit new access password:",
 "right_class": "",
 "right_label": "",
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 },
 "container_0": [
 "Part",
@@ -3216,13 +3084,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "",
+"inputdiv_class": "",
 "label": "Type the current password:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "30",
+"pattern": "",
 "redstar": false,
 "required": true,
 "set_input_accepted": false,
@@ -3230,7 +3102,10 @@
 "show": true,
 "show_error": "",
 "size": "20",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3243,13 +3118,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "",
+"inputdiv_class": "",
 "label": "Type the new password:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "30",
+"pattern": "",
 "redstar": false,
 "required": true,
 "set_input_accepted": false,
@@ -3257,7 +3136,10 @@
 "show": true,
 "show_error": "",
 "size": "20",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3270,13 +3152,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "",
+"inputdiv_class": "",
 "label": "Type the new password again:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "30",
+"pattern": "",
 "redstar": false,
 "required": true,
 "set_input_accepted": false,
@@ -3284,7 +3170,10 @@
 "show": true,
 "show_error": "",
 "size": "20",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ]
@@ -3304,13 +3193,15 @@
 "brief": "shows the result of setting the paragraph",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "para_class": "ast_output",
 "para_text": "The new password has been set.",
+"pre_line": true,
 "show": true,
 "show_error": "",
 "show_para": false,
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3338,7 +3229,8 @@
 "fields": {
 "para_text": "",
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ],
@@ -3366,7 +3258,8 @@
 "fields": {
 "para_text": "",
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ],
@@ -3443,22 +3336,24 @@
 "fields": {
 "action": 4003,
 "action_json": 4004,
-"button_class": "",
+"button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
 "clear_error": false,
 "div_class": "",
-"error_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "ast_left_label",
+"left_class": "ski_left_label",
 "left_label": "Submit to set power-up option:",
 "right_class": "",
 "right_label": "",
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 },
 "container_0": [
 "Part",
@@ -3476,17 +3371,19 @@
 "brief": "Set to enable power up value",
 "fields": {
 "checkbox": "True",
+"checkbox_class": "w3-check",
 "checked": false,
 "clear_error": false,
 "div_class": "",
-"error_class": "",
-"left_class": "ast_left_label",
+"error_class": "w3-panel w3-red",
+"left_class": "ski_left_label",
 "left_label": "Check to set this value on power-up:",
 "right_class": "",
 "right_label": "",
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3499,8 +3396,8 @@
 "fields": {
 "div_class1": "",
 "div_class2": "",
-"left_class1": "ast_left_label",
-"left_class2": "ast_left_label",
+"left_class1": "ski_left_label",
+"left_class2": "ski_left_label",
 "left_label1": "On",
 "left_label2": "Off",
 "radio_checked": true,
@@ -3509,7 +3406,8 @@
 "right_label1": "",
 "right_label2": "",
 "show": true,
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ]
@@ -3527,7 +3425,8 @@
 "fields": {
 "para_text": "",
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]
@@ -3607,22 +3506,24 @@
 "fields": {
 "action": "redis_setup",
 "action_json": "redis_setup_json",
-"button_class": "",
+"button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
 "clear_error": false,
 "div_class": "",
-"error_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
 "hidden_field1": "",
 "hidden_field2": "",
 "hidden_field3": "",
 "hidden_field4": "",
-"left_class": "ast_left_label",
+"left_class": "ski_left_label",
 "left_label": "Submit server settings:",
 "right_class": "",
 "right_label": "",
 "show": true,
 "show_error": "",
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 },
 "container_0": [
 "Part",
@@ -3641,13 +3542,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "",
+"inputdiv_class": "",
 "label": "IP address:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "15",
+"pattern": "",
 "redstar": false,
 "required": false,
 "set_input_accepted": false,
@@ -3655,7 +3560,10 @@
 "show": true,
 "show_error": "",
 "size": "15",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3668,13 +3576,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "6379",
+"inputdiv_class": "",
 "label": "Port:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "6",
+"pattern": "",
 "redstar": false,
 "required": true,
 "set_input_accepted": false,
@@ -3682,7 +3594,10 @@
 "show": true,
 "show_error": "",
 "size": "6",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3695,13 +3610,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "",
+"inputdiv_class": "",
 "label": "Password:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "20",
+"pattern": "",
 "redstar": false,
 "required": false,
 "set_input_accepted": false,
@@ -3709,7 +3628,10 @@
 "show": true,
 "show_error": "",
 "size": "20",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3722,13 +3644,17 @@
 "fields": {
 "clear_error": false,
 "disabled": false,
-"error_class": "",
-"input_accepted_class": "",
-"input_errored_class": "",
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
 "input_text": "0",
+"inputdiv_class": "",
 "label": "Database Number:",
-"label_class": "ast_left_label",
+"label_class": "ski_left_label",
 "maxlength": "2",
+"pattern": "",
 "redstar": false,
 "required": true,
 "set_input_accepted": false,
@@ -3736,7 +3662,10 @@
 "show": true,
 "show_error": "",
 "size": "2",
-"widget_class": ""
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ]
@@ -3756,13 +3685,15 @@
 "brief": "Shows result of setting the redis server settings",
 "fields": {
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-panel w3-red",
 "para_class": "ast_output",
 "para_text": "Settings changed.",
+"pre_line": true,
 "show": true,
 "show_error": "",
 "show_para": false,
-"widget_class": ""
+"widget_class": "w3-section",
+"widget_style": ""
 }
 }
 ],
@@ -3783,7 +3714,7 @@
 "fields": {
 "button_text": "REMPI Home",
 "clear_error": false,
-"error_class": "",
+"error_class": "w3-button w3-block w3-theme-action",
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
@@ -3792,7 +3723,8 @@
 "new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "ast_leftbutton"
+"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_style": ""
 }
 }
 ]
@@ -4089,6 +4021,45 @@
 "ClosedPart",
 {
 "tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -4096,22 +4067,6 @@
 "rel": "stylesheet",
 "type": "text/css"
 }
-}
-],
-[
-"Comment",
-{
-"text": "HTML5shiv - included as a TextBlock"
-}
-],
-[
-"TextBlock",
-{
-"textref": "html5shiv",
-"failmessage": "failed to read textblocks database with ref html5shiv",
-"show": true,
-"escape": false,
-"linebreaks": false
 }
 ],
 [
@@ -4150,6 +4105,9 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
 "parts": [
 [
 "Widget",
@@ -4159,12 +4117,17 @@
 "brief": "ErrorDiv",
 "fields": {
 "clear_error": false,
-"error_class": "ski_errorcol",
+"error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
 "show_error": "",
-"widget_class": ""
-}
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+"Text",
+""
+]
 }
 ],
 [
@@ -4210,7 +4173,8 @@
 "link_ident": "home",
 "new_window": false,
 "show": true,
-"widget_class": ""
+"widget_class": "",
+"widget_style": ""
 }
 }
 ]

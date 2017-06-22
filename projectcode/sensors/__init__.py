@@ -1,7 +1,7 @@
 
 import random, collections
 
-from ....skilift import FailPage, GoTo, ValidateError, ServerError
+from ... import FailPage, GoTo, ValidateError, ServerError
 
 _SENSORS = ["Temperature"]
 

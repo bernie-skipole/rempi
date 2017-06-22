@@ -4,7 +4,7 @@ This package will be called by the Skipole framework to access your data.
 
 import os
 
-from ...skilift import FailPage, GoTo, ValidateError, ServerError
+from .. import FailPage, GoTo, ValidateError, ServerError
 
 from . import sensors, control, information, login, setup, database_ops
 

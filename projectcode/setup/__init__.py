@@ -2,7 +2,9 @@
 
 import os
 
-from ....skilift import FailPage, GoTo, ValidateError, ServerError, get_projectfiles_dir
+from ... import FailPage, GoTo, ValidateError, ServerError
+
+from ....skilift import get_projectfiles_dir
 
 from .. import login, database_ops
 
@@ -86,19 +88,19 @@ def set_password(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     newpassword1 = call_data['newpassword1', 'input_text']
     newpassword2 = call_data['newpassword2', 'input_text']
     if (not oldpassword) or (not newpassword1) or (not newpassword2):
-        raise FailPage(message="Missing data, all fields are required. Please try again.", displaywidgetname='accesspassword')
+        raise FailPage(message="Missing data, all fields are required. Please try again.", widget='accesspassword')
     if newpassword1 != newpassword2:
-        raise FailPage(message="The new password fields are not equal. Please try again.", displaywidgetname='accesspassword')
+        raise FailPage(message="The new password fields are not equal. Please try again.", widget='accesspassword')
     if oldpassword == newpassword1:
-        raise FailPage(message="The new and current passwords must be different. Please try again.", displaywidgetname='accesspassword')
+        raise FailPage(message="The new and current passwords must be different. Please try again.", widget='accesspassword')
     if len(newpassword1) < 4:
-        raise FailPage(message="Four characters or more please. Please try again.", displaywidgetname='accesspassword')
+        raise FailPage(message="Four characters or more please. Please try again.", widget='accesspassword')
     if not login.check_password(oldpassword):
-        raise FailPage(message="Invalid current password. Please try again.", displaywidgetname='accesspassword')
+        raise FailPage(message="Invalid current password. Please try again.", widget='accesspassword')
     # password ok, now set it
     user = database_ops.get_access_user()
     if not database_ops.set_password(user, newpassword1):
-        raise FailPage(message="Sorry, database access failure.", displaywidgetname='accesspassword')
+        raise FailPage(message="Sorry, database access failure.", widget='accesspassword')
     page_data['passwordset', 'show_para'] = True
 
 
@@ -122,7 +124,7 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         try:
             port = int(port)
         except:
-            raise FailPage(message="Invalid port.", displaywidgetname='redissetup')
+            raise FailPage(message="Invalid port.", widget='redissetup')
     # the redis database number, default 0
     if not db:
         db = 0
@@ -130,12 +132,12 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         try:
             db = int(db)
         except:
-            raise FailPage(message="Invalid database number.", displaywidgetname='redissetup')
+            raise FailPage(message="Invalid database number.", widget='redissetup')
     if (db < 0) or (db > 16):
-        raise FailPage(message="Invalid database number.", displaywidgetname='redissetup') 
+        raise FailPage(message="Invalid database number.", widget='redissetup') 
     # set values
     if not database_ops.set_redis(ip, port, auth, db):
-        raise FailPage(message="Sorry, database access failure.", displaywidgetname='redissetup')
+        raise FailPage(message="Sorry, database access failure.", widget='redissetup')
     if not ip:
         page_data['redisset', 'para_text'] = "No IP address, redis disabled"
     else:

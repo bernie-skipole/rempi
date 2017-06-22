@@ -1,6 +1,6 @@
 import collections
 
-from ....skilift import FailPage, GoTo, ValidateError, ServerError
+from ... import FailPage, GoTo, ValidateError, ServerError
 
 from .. import database_ops, factory_defaults
 

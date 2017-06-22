@@ -1,4 +1,4 @@
-from ....skilift import FailPage, GoTo, ValidateError, ServerError
+from ... import FailPage, GoTo, ValidateError, ServerError
 
 
 def information_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
