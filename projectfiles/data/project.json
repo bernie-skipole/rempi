@@ -5,7 +5,7 @@
 "version": "0.0.1",
 "skipole": "0.0.22",
 "subprojects": {
-"lib": "/lib/"
+"lib": {"path": "/lib/"}
 },
 "specialpages": {
 "control": 3,
