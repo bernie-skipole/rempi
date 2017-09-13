@@ -1,11 +1,13 @@
 {
 "url": "/",
 "default_language": "en",
-"brief": "Robotics Telescope REMPI Raspberry Pi",
-"version": "0.0.1",
-"skipole": "0.0.22",
+"brief": "Raspberry Pi 01",
+"version": "0.0.3",
+"skipole": "0.0.35",
 "subprojects": {
-"lib": {"path": "/lib/"}
+"lib": {
+"path": "/lib/"
+}
 },
 "specialpages": {
 "control": 3,
@@ -16,9 +18,6 @@
 "jquery_core": "lib,jquery_core",
 "no_javascript": 540,
 "redirector": 530,
-"redis_setup": 4400,
-"redis_setup_json": 4401,
-"sensor_table01_json": 12,
 "sensors": 2,
 "server_error": 520,
 "set_output01": 3001,
@@ -53,7 +52,196 @@
 "w3_css": 1002,
 "w3_theme_ski_css": 1004
 },
-"sections": {},
+"sections": {
+"leftnav": [
+"Section",
+{
+"tag_name": "div",
+"brief": "Left navigation",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-sidebar w3-bar-block w3-theme-l1",
+"style": "width:20%;top:0;"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h3",
+"brief": "Raspberry pi01 title",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item"
+},
+"parts": [
+[
+"Text",
+"Raspberry pi01"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Home",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{home}"
+},
+"parts": [
+[
+"Text",
+"Home"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Sensors",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{sensors}"
+},
+"parts": [
+[
+"Text",
+"Sensors"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{control}"
+},
+"parts": [
+[
+"Text",
+"Control"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Information",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{information}"
+},
+"parts": [
+[
+"Text",
+"Information"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "Link to Setup",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-bar-item w3-button",
+"href": "{setup}"
+},
+"parts": [
+[
+"Text",
+"Setup"
+]
+]
+}
+]
+]
+}
+],
+"topnav": [
+"Section",
+{
+"tag_name": "div",
+"brief": "New section topnav",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-top w3-container w3-theme-d1",
+"style": "left:20%"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "status",
+"brief": "Shows status message",
+"fields": {
+"para_text": "Status: Nothing to report",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+"topspace": [
+"Section",
+{
+"tag_name": "div",
+"brief": "New section topspace",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "New Tag",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"HTMLSymbol",
+{
+"text": "&nbsp;"
+}
+]
+]
+}
+]
+]
+}
+]
+},
 "RootFolder": {
 "brief": "Site root",
 "default_page_name": "index",
@@ -70,7 +258,7 @@
 "ident": 1006,
 "brief": "CSS file page, ski.css",
 "FilePage": {
-"filepath": "rempi/static/ski.css",
+"filepath": "pi01/static/css/ski.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -79,7 +267,7 @@
 "ident": 1004,
 "brief": "CSS file page, w3-theme-ski.css",
 "FilePage": {
-"filepath": "rempi/static/w3-theme-ski.css",
+"filepath": "pi01/static/css/w3-theme-ski.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -88,7 +276,7 @@
 "ident": 1002,
 "brief": "CSS file page, w3.css",
 "FilePage": {
-"filepath": "rempi/static/w3.css",
+"filepath": "pi01/static/css/w3.css",
 "enable_cache": true,
 "mimetype": "text/css"
 }
@@ -300,6 +488,30 @@
 },
 "parts": [
 [
+"SectionPlaceHolder",
+{
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top navigation",
+"section_name": "topnav",
+"placename": "topnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top space",
+"section_name": "topspace",
+"placename": "topspace"
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -310,35 +522,6 @@
 "class": "w3-container"
 },
 "parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "top",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel w3-theme-d1"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Page heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Robotics Telescope REMPI Raspberry Pi"
-]
-]
-}
-]
-]
-}
-],
 [
 "Widget",
 {
@@ -357,59 +540,6 @@
 "container_0": [
 "Text",
 ""
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Left navigation",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-sidebar w3-bar-block w3-theme-l1",
-"style": "width:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Home",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{home}"
-},
-"parts": [
-[
-"Text",
-"Home"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Sensors",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{sensors}"
-},
-"parts": [
-[
-"Text",
-"Sensors"
-]
-]
-}
-]
 ]
 }
 ],
@@ -638,7 +768,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
+"brief": "css link to w3.css",
 "show": true,
 "attribs": {
 "href": "{w3_css}",
@@ -651,7 +781,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
+"brief": "css link to w3_theme_ski",
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
@@ -664,7 +794,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to ski_css",
+"brief": "css link to ski.css",
 "show": true,
 "attribs": {
 "href": "{ski_css}",
@@ -739,13 +869,13 @@
 "Part",
 {
 "tag_name": "h2",
-"brief": "heading",
+"brief": "Page heading",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"Robotics Telescope REMPI Raspberry Pi"
+"Raspberry Pi 01"
 ]
 ]
 }
@@ -795,7 +925,7 @@
 "parts": [
 [
 "Text",
-"You are connected to the REMPI Raspberry Pi.  This device is sited with the robot telescope, and accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
+"You are connected to Raspberry Pi 01.  This device accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
 ]
 ]
 }
@@ -991,7 +1121,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
+"brief": "css link to w3.css",
 "show": true,
 "attribs": {
 "href": "{w3_css}",
@@ -1004,7 +1134,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
+"brief": "css link to w3-theme-ski.css",
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
@@ -1017,7 +1147,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to ski_css",
+"brief": "css link to ski.css",
 "show": true,
 "attribs": {
 "href": "{ski_css}",
@@ -1067,6 +1197,30 @@
 },
 "parts": [
 [
+"SectionPlaceHolder",
+{
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top navigation",
+"section_name": "topnav",
+"placename": "topnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top space",
+"section_name": "topspace",
+"placename": "topspace"
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -1077,35 +1231,6 @@
 "class": "w3-container"
 },
 "parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "top",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel w3-theme-d1"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Robotics Telescope REMPI Raspberry Pi"
-]
-]
-}
-]
-]
-}
-],
 [
 "Widget",
 {
@@ -1124,78 +1249,6 @@
 "container_0": [
 "Text",
 ""
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Left navigation",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-sidebar w3-bar-block w3-theme-l1",
-"style": "width:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Home",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{home}"
-},
-"parts": [
-[
-"Text",
-"Home"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Sensors",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{sensors}"
-},
-"parts": [
-[
-"Text",
-"Sensors"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Control",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{control}"
-},
-"parts": [
-[
-"Text",
-"Control"
-]
-]
-}
-]
 ]
 }
 ],
@@ -1240,7 +1293,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-section"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -1273,7 +1326,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-section"
+"class": "w3-container"
 },
 "parts": [
 [
@@ -1341,9 +1394,6 @@
 "brief": "Software",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "ast_spacer"
-},
 "parts": [
 [
 "Text",
@@ -1387,13 +1437,14 @@
 "ident": 2010,
 "brief": "Basic Authentication",
 "RespondPage": {
-"class": "SubmitPlainText",
+"class": "SubmitData",
 "original_args": {
-"fail_ident": "home",
+"fail_ident": 1,
 "submit_list": [
 "login",
 "request_login"
-]
+],
+"target_ident": 1
 },
 "original_fields": {}
 }
@@ -1461,45 +1512,6 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -1545,9 +1557,6 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
 "parts": [
 [
 "Widget",
@@ -1648,7 +1657,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
+"brief": "css link to w3.css",
 "show": true,
 "attribs": {
 "href": "{w3_css}",
@@ -1661,7 +1670,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
+"brief": "css link to w3-theme-ski.css",
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
@@ -1674,7 +1683,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to ski_css",
+"brief": "css link to ski.css",
 "show": true,
 "attribs": {
 "href": "{ski_css}",
@@ -1724,6 +1733,30 @@
 },
 "parts": [
 [
+"SectionPlaceHolder",
+{
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top navigation",
+"section_name": "topnav",
+"placename": "topnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top space",
+"section_name": "topspace",
+"placename": "topspace"
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -1734,35 +1767,6 @@
 "class": "w3-container"
 },
 "parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "top",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel w3-theme-d1"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Robotics Telescope REMPI Raspberry Pi"
-]
-]
-}
-]
-]
-}
-],
 [
 "Widget",
 {
@@ -1781,59 +1785,6 @@
 "container_0": [
 "Text",
 ""
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Left navigation",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-sidebar w3-bar-block w3-theme-l1",
-"style": "width:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Home",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{home}"
-},
-"parts": [
-[
-"Text",
-"Home"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Control",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{control}"
-},
-"parts": [
-[
-"Text",
-"Control"
-]
-]
-}
-]
 ]
 }
 ],
@@ -1998,45 +1949,6 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2082,9 +1994,6 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
 "parts": [
 [
 "Part",
@@ -2109,7 +2018,7 @@
 "brief": "Shows the error message",
 "fields": {
 "clear_error": false,
-"error_class": "w3-panel w3-red",
+"error_class": "",
 "hide": true,
 "show": true,
 "show_error": "No error message available",
@@ -2237,45 +2146,6 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2321,9 +2191,6 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
 "parts": [
 [
 "Part",
@@ -2333,7 +2200,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-container"
+"class": "ast_container"
 },
 "parts": [
 [
@@ -2344,7 +2211,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-panel w3-theme-d1"
+"class": "ast_top"
 },
 "parts": [
 [
@@ -2362,7 +2229,7 @@
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"class": "w3-panel"
+"class": "ast_centre"
 },
 "parts": [
 [
@@ -2463,7 +2330,7 @@
 "fields": {
 "button_text": "Pi 01 Home",
 "clear_error": false,
-"error_class": "w3-button w3-block w3-theme-action",
+"error_class": "",
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
@@ -2472,7 +2339,7 @@
 "new_window": false,
 "show": true,
 "show_error": "",
-"widget_class": "w3-button w3-block w3-theme-d4",
+"widget_class": "ast_leftbutton",
 "widget_style": ""
 }
 }
@@ -2553,45 +2420,6 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -2637,9 +2465,6 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
 "parts": [
 [
 "Part",
@@ -2664,7 +2489,7 @@
 "brief": "Shows the error message",
 "fields": {
 "clear_error": false,
-"error_class": "w3-panel w3-red",
+"error_class": "",
 "hide": true,
 "show": true,
 "show_error": "No error message available",
@@ -2805,7 +2630,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
+"brief": "css link to w3.css",
 "show": true,
 "attribs": {
 "href": "{w3_css}",
@@ -2818,7 +2643,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
+"brief": "css link to w3-theme-ski.css",
 "show": true,
 "attribs": {
 "href": "{w3_theme_ski_css}",
@@ -2831,7 +2656,7 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to ski_css",
+"brief": "css link to ski.css",
 "show": true,
 "attribs": {
 "href": "{ski_css}",
@@ -2881,6 +2706,30 @@
 },
 "parts": [
 [
+"SectionPlaceHolder",
+{
+"brief": "Left navigation",
+"section_name": "leftnav",
+"placename": "leftnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top navigation",
+"section_name": "topnav",
+"placename": "topnav"
+}
+],
+[
+"SectionPlaceHolder",
+{
+"brief": "top space",
+"section_name": "topspace",
+"placename": "topspace"
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -2891,35 +2740,6 @@
 "class": "w3-container"
 },
 "parts": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "top",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel w3-theme-d1"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Robotics Telescope REMPI Raspberry Pi"
-]
-]
-}
-]
-]
-}
-],
 [
 "Widget",
 {
@@ -2938,78 +2758,6 @@
 "container_0": [
 "Text",
 ""
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Left navigation",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-sidebar w3-bar-block w3-theme-l1",
-"style": "width:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Home",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{home}"
-},
-"parts": [
-[
-"Text",
-"Home"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Sensors",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{sensors}"
-},
-"parts": [
-[
-"Text",
-"Sensors"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Control",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{control}"
-},
-"parts": [
-[
-"Text",
-"Control"
-]
-]
-}
-]
 ]
 }
 ],
@@ -3236,7 +2984,7 @@
 "fields": {
 "clear_error": false,
 "error_class": "w3-panel w3-red",
-"para_class": "ast_output",
+"para_class": "",
 "para_text": "The new password has been set.",
 "pre_line": true,
 "show": true,
@@ -3466,262 +3214,6 @@
 ]
 ]
 }
-],
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Sensor logs heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Sensor Logs"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About redis",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"This unit logs sensor data to a Redis server. The IP address, port, password and database number of the server should be set here. Set the IP address to empty if no server is available."
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "For redis server",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "redis heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Redis Server"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.SubmitForm1",
-"name": "redissetup",
-"brief": "Form holding redis settings",
-"fields": {
-"action": "redis_setup",
-"action_json": "redis_setup_json",
-"button_class": "w3-button w3-theme-d4",
-"button_text": "Submit",
-"clear_error": false,
-"div_class": "",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"left_class": "ski_left_label",
-"left_label": "Submit server settings:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-"Part",
-{
-"tag_name": "div",
-"brief": "container for redis server settings",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "redis_ip",
-"brief": "Redis IP address",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "IP address:",
-"label_class": "ski_left_label",
-"maxlength": "15",
-"pattern": "",
-"redstar": false,
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "15",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "redis_port",
-"brief": "Port of the redis server",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "6379",
-"inputdiv_class": "",
-"label": "Port:",
-"label_class": "ski_left_label",
-"maxlength": "6",
-"pattern": "",
-"redstar": false,
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "6",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "redis_auth",
-"brief": "Redis auth password",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "Password:",
-"label_class": "ski_left_label",
-"maxlength": "20",
-"pattern": "",
-"redstar": false,
-"required": false,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "20",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "redis_db",
-"brief": "Database number",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "0",
-"inputdiv_class": "",
-"label": "Database Number:",
-"label_class": "ski_left_label",
-"maxlength": "2",
-"pattern": "",
-"redstar": false,
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "2",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ShowPara1",
-"name": "redisset",
-"brief": "Shows result of setting the redis server settings",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"para_class": "ast_output",
-"para_text": "Settings changed.",
-"pre_line": true,
-"show": true,
-"show_error": "",
-"show_para": false,
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
 ]
 ]
 }
@@ -3813,62 +3305,6 @@
 "original_fields": {
 "output01_check:checkbox": "",
 "output01_default:radio_checked": ""
-}
-}
-},
-"redis_setup": {
-"ident": 4400,
-"brief": "Set redis settings",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4501
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_redis"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"redis_auth:input_text": "",
-"redis_db:input_text": "",
-"redis_ip:input_text": "",
-"redis_port:input_text": ""
-}
-}
-},
-"redis_setup_json": {
-"ident": 4401,
-"brief": "Responder sets redis options, returns JSON",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4501
-],
-"alternate_ident": "home",
-"fail_ident": "general_json",
-"submit_list": [
-"setup",
-"set_redis"
-],
-"submit_option": true,
-"target_ident": "general_json",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"redis_auth:input_text": "",
-"redis_db:input_text": "",
-"redis_ip:input_text": "",
-"redis_port:input_text": ""
 }
 }
 }
@@ -4013,45 +3449,6 @@
 "ClosedPart",
 {
 "tag_name": "link",
-"brief": "css link to w3_css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3_theme_ski_css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski_css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
 "brief": "css link to simple_css",
 "show": true,
 "attribs": {
@@ -4097,9 +3494,6 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
 "parts": [
 [
 "Widget",
@@ -4109,7 +3503,7 @@
 "brief": "ErrorDiv",
 "fields": {
 "clear_error": false,
-"error_class": "w3-panel w3-red",
+"error_class": "ski_errorcol",
 "hide": true,
 "show": true,
 "show_error": "",
@@ -4176,22 +3570,6 @@
 ]
 }
 ]
-},
-"sensor_table01.json": {
-"ident": 12,
-"brief": "Returns JSON file to fill in sensors table01 values",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": "general_json",
-"submit_list": [
-"sensors",
-"sensor_table01_values"
-],
-"target_ident": "general_json"
-},
-"original_fields": {}
-}
 },
 "sensors": {
 "ident": 2,

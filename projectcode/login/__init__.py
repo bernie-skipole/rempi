@@ -52,12 +52,9 @@ def check_password(password):
 
 def request_login(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Set up the basic authentication"""
-    failtext = 'Please Authenticate\n'
     realm = 'Basic realm="' + call_data['project'] + '"'
     page_data['headers'] = [
-            ('content-type', 'text/plain'),
-            ('content-length', str(len(failtext))),
+            ('content-type', 'text/html'),
             ('WWW-Authenticate', realm)]
     page_data['status'] = '401 Unauthorized'
-    return failtext
 

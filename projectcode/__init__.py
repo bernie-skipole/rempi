@@ -2,21 +2,23 @@
 This package will be called by the Skipole framework to access your data.
 """
 
-import os
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
-from . import sensors, control, information, login, setup, database_ops
+from . import sensors, control, information, login, setup, database_ops, hardware
 
-_PROTECTED_PAGES = [         5,      # create setup page
-                             8,      # external api call to set an output in named get field
-                          3001,      # set output 01 returns web page, for none-jscript browsers
-                          3002,      # set output 01 returns json page, for jscript browsers
-                          4003,      # set output 01 power-up option, returns web page, for none-jscript browsers
-                          4004,      # set output 01 power-up option, returns json page, for jscript browsers
-                          4400,      # set redis options
-                          4401       # set redis option via json
-                   ]
+
+# any page not listed here requires basic authentication
+_PUBLIC_PAGES = [1,  # index
+                 2,  # sensors
+                 4,  # information
+                 6,  # controls.json
+                 7,  # sensors.json
+               540,  # no_javascript
+              1002,  # css
+              1004,  # css
+              1006   # css
+               ]
 
 
 def start_project(project, projectfiles, path, option):
@@ -28,7 +30,10 @@ def start_project(project, projectfiles, path, option):
     proj_data = {}
 
     # checks database exists, if not create it
-    database_ops.start_database(project, projectfiles)
+    database_ops.start_database(projectfiles)
+
+    # setup hardware
+    hardware.initial_setup_outputs()
 
     # get dictionary of initial start-up output values from database
     output_dict = database_ops.power_up_values()
@@ -39,20 +44,6 @@ def start_project(project, projectfiles, path, option):
     # set the initial start-up values
     control.set_multi_outputs(output_dict)
 
-    # See
-    # www.modmypi.com/blog/ds18b20-one-wire-digital-temperature-sensor-and-the-raspberry-pi
-
-    # Using a DS18B20, and with one-wire enabled.
-    # my unit has address 28-000007e4291f -alter this in the temp_sensor line below to match your
-    # own sensor address
-
-    # If this system is running on a development PC, leave the following lines commented out
-    # and only un-comment them on the target raspberry pi
-
-    # os.system('modprobe w1-gpio')
-    # os.system('modprobe w1-therm')
-    # proj_data['temp_sensor'] = "/sys/bus/w1/devices/28-000007e4291f/w1_slave"
-
     return proj_data
 
 
@@ -62,11 +53,6 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     page_data = {}
     if not called_ident:
         return None, call_data, page_data, lang
-
-    # set temp_sensor into call_data
-    if 'temp_sensor' in proj_data:
-        call_data['temp_sensor'] = proj_data['temp_sensor']
-
     if environ.get('HTTP_HOST'):
         # This is used in the information page to insert the host into a displayed url
         call_data['HTTP_HOST'] = environ['HTTP_HOST']
@@ -75,7 +61,7 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
     # ensure project is in call_data
     call_data['project'] = project
     # password protected pages
-    if called_ident[1] in _PROTECTED_PAGES:
+    if called_ident[1] not in _PUBLIC_PAGES:
         # check login
         if not login.check_login(environ):
             # login failed, ask for a login
@@ -133,4 +119,10 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     """This function is called at the end of a call prior to filling the returned page with page_data,
        it can also return an optional ident_data string to embed into forms."""
+    # in this example, status is the value on input02
+    status = hardware.get_text_input('input02')
+    if status:
+        page_data['topnav','status', 'para_text'] = status
+    else:
+        page_data['topnav','status', 'para_text'] = "Status: input02 unavailable"
     return

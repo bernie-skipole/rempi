@@ -3,7 +3,6 @@
 import os
 
 from ... import FailPage, GoTo, ValidateError, ServerError
-
 from ....skilift import get_projectfiles_dir
 
 from .. import login, database_ops
@@ -20,15 +19,6 @@ def setup_page(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     page_data['setup', 'para_text'] = setup_directory
     # the power up values for each output - further functions to be added for each output
     get_pwr_output01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-    # redis server settings
-    redis_values = database_ops.get_redis()
-    if not redis_values:
-        raise FailPage(message = "Error: Failed to access database.")
-    page_data['redis_ip', 'input_text'] = redis_values[0]
-    page_data['redis_port', 'input_text'] = str(redis_values[1])
-    page_data['redis_auth', 'input_text'] = redis_values[2]
-    page_data['redis_db', 'input_text'] = str(redis_values[3])
-    
 
 
 # Further get_pwr_outputnn functions to be provided for each output
@@ -107,7 +97,11 @@ def set_password(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 ##########################################################
 #
-# Set Redis parameters, IP address, port, password and db
+# If a redis server is used, the following sets the server
+# parameters IP address, port, password and db into the database.
+#
+# The calling page needs a form with four input
+# widgets; redis_ip, redis_port, redis_auth, redis_db
 #
 ##########################################################
 
@@ -124,7 +118,7 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         try:
             port = int(port)
         except:
-            raise FailPage(message="Invalid port.", widget='redissetup')
+            raise FailPage(message="Invalid port.")
     # the redis database number, default 0
     if not db:
         db = 0
@@ -132,17 +126,44 @@ def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, pag
         try:
             db = int(db)
         except:
-            raise FailPage(message="Invalid database number.", widget='redissetup')
+            raise FailPage(message="Invalid database number.")
     if (db < 0) or (db > 16):
-        raise FailPage(message="Invalid database number.", widget='redissetup') 
+        raise FailPage(message="Invalid database number.") 
     # set values
     if not database_ops.set_redis(ip, port, auth, db):
-        raise FailPage(message="Sorry, database access failure.", widget='redissetup')
-    if not ip:
-        page_data['redisset', 'para_text'] = "No IP address, redis disabled"
+        raise FailPage(message="Sorry, database access failure.")
+
+
+
+##########################################################
+#
+# If an mqtt server is used, the following sets the server
+# parameters IP address, port, username and password into the database.
+#
+# The calling page needs a form with four input
+# widgets; mqtt_ip, mqtt_port, mqtt_username, mqtt_password
+#
+##########################################################
+
+def set_mqtt(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    """Check values given, and set them into the database"""
+    ip = call_data['mqtt_ip', 'input_text']
+    port = call_data['mqtt_port', 'input_text']
+    username = call_data['mqtt_username', 'input_text']
+    password = call_data['mqtt_password', 'input_text']
+    # the mqtt port, default 1883
+    if not port:
+        port = 1883
     else:
-        page_data['redisset', 'para_text'] = "Redis server at: %s:%s db:%s" % (ip,port,db)
-    page_data['redisset', 'show_para'] = True
-    # clear any previous error (needed by JSON call, web call refreshes entire page anyway)
-    page_data['redissetup', 'clear_error'] = True
+        try:
+            port = int(port)
+        except:
+            raise FailPage(message="Invalid port.")
+    # set values
+    if not database_ops.set_mqtt(ip, port, username, password):
+        raise FailPage(message="Sorry, database access failure.")
+
+
+
+
 

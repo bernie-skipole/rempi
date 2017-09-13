@@ -1,47 +1,40 @@
 
-import random, collections
+import collections
 
 from ... import FailPage, GoTo, ValidateError, ServerError
-
-_SENSORS = ["Temperature"]
+from .. import hardware
 
 
 def sensor_table01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """sets two lists for sensor table 01 into page data"""
-    page_data['table01', 'col1'] = _SENSORS
-    # and set values
-    sensor_table01_values(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
-
-
-def sensor_table01_values(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    """sets values list for sensor table 01 into page data"""
-    page_data['table01', 'col2'] = _get_sensor_values(call_data)
+    sensors = hardware.get_input_names()
+    page_data['table01', 'col1'] = sensors
+    page_data['table01', 'col2'] = _get_sensor_values(sensors)
 
 
 def sensors_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Returns sensors dictionary"
-    sensors = _SENSORS
-    values = _get_sensor_values(call_data)
+    sensors = hardware.get_input_names()
+    values = _get_sensor_values(sensors)
     return collections.OrderedDict(zip(sensors,values))
 
 
-def _get_sensor_values(call_data):
-    "Returns list of sensor values, in this case the list only has one element, the temperature"
-    if 'temp_sensor' not in call_data:
-        return ['x']
-    temp_sensor = call_data['temp_sensor']
-    try:
-        with open(temp_sensor, 'r') as f:
-            lines = f.readlines()
-        if lines[0].strip()[-3:] != 'YES':
-            return ['x']
-        temp_output = lines[1].find('t=')
-        if temp_output == -1:
-            return ['x']
-        temp_string = lines[1].strip()[temp_output+2:]
-        temperature = float(temp_string) / 1000.0
-    except:
-        # return an 'x' to indicate invalid value
-        return ['x']
-    return [ str(temperature)  ]
-
+def _get_sensor_values(sensors):
+    "Returns list of sensor values"
+    values = []
+    for name in sensors:
+        input_type = hardware.get_input_type(name)
+        if input_type == 'boolean':
+            invalue = hardware.get_boolean_input(name)
+            if invalue is None:
+                value = 'UNKNOWN'
+            elif invalue:
+                value = 'ON'
+            else:
+                value = 'OFF'
+        elif input_type == 'text':
+            value = hardware.get_text_input(name)
+        else:
+            value = ''
+        values.append(value)
+    return values

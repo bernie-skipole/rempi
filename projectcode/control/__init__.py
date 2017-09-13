@@ -2,13 +2,13 @@ import collections
 
 from ... import FailPage, GoTo, ValidateError, ServerError
 
-from .. import database_ops, factory_defaults
+from .. import database_ops, hardware
 
 
 def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Populate the control page, by setting widget values, and then the results values"""
     # widget output01 is boolean radio and expects a binary True, False value
-    page_data['output01', 'radio_checked'] = _get_output01()
+    page_data['output01', 'radio_checked'] = _get_output('output01')
     # further widgets for further outputs to be set here
     # finally fill in all results fields
     refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -16,7 +16,7 @@ def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 def refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Fill in the control page results fields"""
-    if _get_output01():
+    if _get_output('output01'):
         page_data['output01_result', 'para_text'] = "The current value of output 01 is : On"
     else:
         page_data['output01_result', 'para_text'] = "The current value of output 01 is : Off"
@@ -24,7 +24,7 @@ def refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 def controls_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Returns json dictionary of output names : output values, used by external api"
-    controls = factory_defaults.get_output_names()
+    controls = hardware.get_output_names()
     values = [ _get_output(name) for name in controls ]
     return collections.OrderedDict(zip(controls,values))
 
@@ -45,7 +45,7 @@ def set_output(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     if ('name' in received) and ('value' in received):
         name = received['name']
         value = received['value']
-        controls = factory_defaults.get_output_names()
+        controls = hardware.get_output_names()
         if name not in controls:
             return
         _set_output(name, value)
@@ -72,7 +72,7 @@ def set_multi_outputs(output_dict):
 
 def _set_output(name, value):
     """Sets an output, given the output name and value"""
-    output_type = factory_defaults.get_output_type(name)
+    output_type = hardware.get_output_type(name)
     if output_type is None:
         return
     if output_type == 'boolean':
@@ -80,6 +80,7 @@ def _set_output(name, value):
             value = True
         else:
             value = False
+        hardware.set_boolean_output(name, value)
     if output_type == 'int':
         if not isinstance(value, int):
             try:
@@ -95,40 +96,17 @@ def _set_output(name, value):
                 # Invalid value
                 return
         
-    if name == 'output01':
-        _set_output01(value)
-    # to be followed by elif for other outputs
+    # Set output value in database
+    database_ops.set_output(name, value)
 
 
 def _get_output(name):
     """Gets an output value, given the output name, return None on failure"""
-    if name == 'output01':
-        return _get_output01()
-    # to be followed by elif for other outputs
-
-
-
-#######################################
-#
-# Functions:
-#
-#  _set_outputnn(value)
-#  _get_outputnn()
-#
-# are to be provided for every output
-#
-#######################################
-
-
-def _set_output01(value):
-    "Sets output01"
-    # instructions to set an output on hardware would be placed here
-    # Also sets it in database
-    database_ops.set_output('output01', value)
-
-
-def _get_output01():
-    "Gets output01"
-    # instructions to get an output from hardware could be placed here
-    # currently only reads the stored output from the database
-    return database_ops.get_output('output01')
+    # instructions to get an output from hardware are placed here
+    hardtype = hardware.get_output_type(name)
+    if hardtype == 'boolean':
+        hardvalue = hardware.get_boolean_output(name)
+        if hardvalue is not None:
+            return hardvalue
+    # if hardvalue not available, reads the stored output from the database
+    return database_ops.get_output(name)
