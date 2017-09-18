@@ -1,7 +1,7 @@
 {
 "url": "/",
 "default_language": "en",
-"brief": "Raspberry Pi 01",
+"brief": "Raspberry pi for remscope",
 "version": "0.0.3",
 "skipole": "0.0.35",
 "subprojects": {
@@ -355,6 +355,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -711,6 +713,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1064,6 +1068,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1455,6 +1461,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1600,6 +1608,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1892,6 +1902,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -2089,6 +2101,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -2363,6 +2377,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": false,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -2573,6 +2589,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -3054,6 +3072,510 @@
 }
 ],
 [
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "Horizontal rule",
+"show": true
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Redis setup div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About redis",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Data can be logged to a Redis server. The IP address, port, password and database number of the Redis server should be set here. Set the IP address to 'localhost' if the Redis service is running on this local machine. Leave password empty if Redis authentication is not used.."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For redis server",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "redissetup",
+"brief": "Form holding redis settings",
+"fields": {
+"action": 4300,
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Submit server settings:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "container for redis server settings",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_ip",
+"brief": "Redis IP address",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "localhost",
+"inputdiv_class": "",
+"label": "IP address:",
+"label_class": "ski_left_label",
+"maxlength": "15",
+"pattern": "",
+"redstar": true,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "15",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_port",
+"brief": "Port of the redis server",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "6379",
+"inputdiv_class": "",
+"label": "Port:",
+"label_class": "ski_left_label",
+"maxlength": "6",
+"pattern": "",
+"redstar": true,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "6",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_auth",
+"brief": "Redis auth password",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Password:",
+"label_class": "ski_left_label",
+"maxlength": "20",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "redis_db",
+"brief": "Database number",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "0",
+"inputdiv_class": "",
+"label": "Database Number:",
+"label_class": "ski_left_label",
+"maxlength": "2",
+"pattern": "",
+"redstar": true,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "2",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ShowPara1",
+"name": "redisset",
+"brief": "Shows result of setting the redis server settings",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"para_class": "ast_output",
+"para_text": "Settings changed.",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"show_para": false,
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "New Tag",
+"show": true
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "mqtt setup div",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About mqtt",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This unit passes data via an MQTT server. The IP address, port, password and username of the MQTT server should be set here. Set the IP address to 'localhost' if the MQTT server is running on this local machine. Leave username and password empty if MQTT authentication is not used."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For mqtt server",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "mqttsetup",
+"brief": "Form holding mqtt settings",
+"fields": {
+"action": 4400,
+"action_json": "",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"clear_error": false,
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Submit server settings:",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+"Part",
+{
+"tag_name": "div",
+"brief": "container for mqtt server settings",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "mqtt_ip",
+"brief": "MQTT IP address",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "localhost",
+"inputdiv_class": "",
+"label": "IP address:",
+"label_class": "ski_left_label",
+"maxlength": "15",
+"pattern": "",
+"redstar": true,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "15",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "mqtt_port",
+"brief": "MQTT port",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "1883",
+"inputdiv_class": "",
+"label": "Port:",
+"label_class": "ski_left_label",
+"maxlength": "6",
+"pattern": "",
+"redstar": true,
+"required": true,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "6",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "mqtt_username",
+"brief": "MQTT username",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Username:",
+"label_class": "ski_left_label",
+"maxlength": "20",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "inputtext.TextInput2",
+"name": "mqtt_password",
+"brief": "MQTT password",
+"fields": {
+"clear_error": false,
+"disabled": false,
+"error_class": "w3-panel w3-red",
+"input_accepted_class": "ski_input_accepted",
+"input_class": "ski_input",
+"input_disabled_class": "",
+"input_errored_class": "ski_input_errored",
+"input_text": "",
+"inputdiv_class": "",
+"label": "Password:",
+"label_class": "ski_left_label",
+"maxlength": "20",
+"pattern": "",
+"redstar": false,
+"required": false,
+"set_input_accepted": false,
+"set_input_errored": false,
+"show": true,
+"show_error": "",
+"size": "20",
+"title": "",
+"type": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ShowPara1",
+"name": "mqttset",
+"brief": "Shows result of setting the mqtt server settings",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"para_class": "ast_output",
+"para_text": "Settings changed.",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"show_para": false,
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "hr",
+"brief": "New Tag",
+"show": true
+}
+]
+]
+}
+],
+[
 "Part",
 {
 "tag_name": "h2",
@@ -3307,6 +3829,62 @@
 "output01_default:radio_checked": ""
 }
 }
+},
+"set_mqtt_server": {
+"ident": 4400,
+"brief": "Sets up the mqtt server ip and port",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": 5,
+"submit_list": [
+"setup",
+"set_mqtt"
+],
+"submit_option": true,
+"target_ident": 5,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"mqtt_ip:input_text": "",
+"mqtt_password:input_text": "",
+"mqtt_port:input_text": "",
+"mqtt_username:input_text": ""
+}
+}
+},
+"set_redis_server": {
+"ident": 4300,
+"brief": "Sets up the redis server ip and port",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+4501
+],
+"alternate_ident": "home",
+"fail_ident": 5,
+"submit_list": [
+"setup",
+"set_redis"
+],
+"submit_option": true,
+"target_ident": 5,
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"redis_auth:input_text": "",
+"redis_db:input_text": "",
+"redis_ip:input_text": "",
+"redis_port:input_text": ""
+}
+}
 }
 }
 }
@@ -3392,6 +3970,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
+"interval": 0,
+"interval_target": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
