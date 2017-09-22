@@ -5,7 +5,7 @@ This package will be called by the Skipole framework to access your data.
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
-from . import sensors, control, information, login, setup, database_ops, hardware
+from . import sensors, control, information, login, setup, database_ops, hardware, engine
 
 
 # any page not listed here requires basic authentication
@@ -19,6 +19,12 @@ _PUBLIC_PAGES = [1,  # index
               1004,  # css
               1006   # css
                ]
+
+
+
+
+
+
 
 
 def start_project(project, projectfiles, path, option):
@@ -44,7 +50,16 @@ def start_project(project, projectfiles, path, option):
     # set the initial start-up values
     control.set_multi_outputs(output_dict)
 
-    return proj_data
+    # Get the mqtt client and redis connection
+    mqtt_client, rconn = engine.create_mqtt_redis()
+
+
+    # create an input listener, which calls engine.inputcallback
+    # on a pin change
+    listen = hardware.Listen(engine.inputcallback, (mqtt_client, rconn))
+    listen.start_loop()
+
+    return {'mqtt_client':mqtt_client, 'rconn':rconn, 'listen':listen}
 
 
 def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):

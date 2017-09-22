@@ -1,7 +1,7 @@
 
 # _OUTPUTS
 
-# This dictionary has keys output names, and values being a tuple of (type, value, onpower, BCM number)
+# This dictionary has keys output names, and values being a tuple of (type, value, onpower, BCM number, description)
 # where type is one of 'text', 'boolean', 'integer'
 # value is the default value to put in the database when first created
 # onpower is True if the 'default value' is to be set on power up, or False if last recorded value is to be used
@@ -9,12 +9,12 @@
 
 # Currently only one output 'output01' on BCM 24 is defined
 
-_OUTPUTS = {"output01" : ('boolean', False, True, 24)}
+_OUTPUTS = {"output01" : ('boolean', False, True, 24, "Door control")}
 
 
 # _INPUTS
 
-# This dictionary has keys inpuput names, and values being a tuple of (type, pud, BCM number)
+# This dictionary has keys inpuput names, and values being a tuple of (type, pud, BCM number, description)
 # where type is one of 'text', 'boolean', 'integer', 'float'
 # pud, pull up down is True for pull up, False for pull down, None if not relevant
 # BCM number is the appropriate BCM pin number, or None if not relevant
@@ -23,8 +23,8 @@ _OUTPUTS = {"output01" : ('boolean', False, True, 24)}
 # 'input01' is the server time
 # 'input02' is the input on BCM 23
 
-_INPUTS = {"input01" : ('boolean', True, 23),
-           "input02" : ('text', None, None)           
+_INPUTS = {"input01" : ('boolean', True, 23, "Unassigned input"),
+           "input02" : ('text', None, None, "Unassigned input")           
           }
 
 
@@ -76,6 +76,12 @@ def get_outputs():
     return _OUTPUTS.copy()
 
 
+def get_output_description(name):
+    "Given an output name, returns the output description, or None if the name is not found"
+    if name in _OUTPUTS:
+        return _OUTPUTS[name][4]
+
+
 def get_output_type(name):
     "Given an output name, returns the output type, or None if the name is not found"
     if name in _OUTPUTS:
@@ -125,8 +131,15 @@ def get_input_names():
         sensors_list.extend(text_list)
     return sensors_list
 
+
 def get_inputs():
     return _INPUTS.copy()
+
+
+def get_input_description(name):
+    "Given an input name, returns the input description, or None if the name is not found"
+    if name in _INPUTS:
+        return _INPUTS[name][3]
 
 
 def get_input_type(name):
@@ -156,3 +169,59 @@ def get_text_input(name):
         # This input returns a time string
         return time.strftime("%c", time.gmtime())
     return ''
+
+
+def get_input_name(bcm):
+    "Given a bcm number, returns the name"
+    if bcm is None:
+        return
+    for name, values in _INPUTS.items():
+        if values[2] == bcm:
+            return name
+
+
+class Listen(object):
+    """Listens for input pin changes. You should define a callback function
+       mycallback(name, userdata)
+
+       where name will be the input name triggered,
+       and userdata will be the variable you pass to this Listen object. 
+
+       useage
+       listen = Listen(mycallback, userdata)
+       listen.start_loop()
+
+       This will then use the threaded interrupt facilities of RPi.GPIO
+       to call the callback when one of the inputs falls (if pud True)
+       or rises (if pud False), each with a 300ms bounce time
+      
+    """ 
+
+    def __init__(self, callbackfunction, userdata):
+        self.set_callback = callbackfunction
+        self.userdata = userdata
+
+    def input_state(name):
+        return get_boolean_input(name):
+
+    def input_description(name):
+        return get_input_description(name)
+
+    def _pincallback(self, channel):
+        """This is the callback added to each pin, in turn it calls
+           callbackfunction(name, userdata)"""
+        name = get_input_name(channel)
+        self.set_callback(name, self.userdata)
+
+    def start_loop():
+        "Sets up listenning threads"
+        if not _gpio_control:
+            return
+        for name, values in _INPUTS.items():
+            if (values[0] == 'boolean') and isinstance(values[2], int):
+                if values[1]:
+                    # True for pull up pin, therefore detect falling edge
+                    GPIO.add_event_detect(values[2], GPIO.FALLING, callback=self._pincallback, bouncetime=300)
+                else:
+                    GPIO.add_event_detect(values[2], GPIO.RISING, callback=self._pincallback, bouncetime=300)
+
