@@ -201,10 +201,10 @@ class Listen(object):
         self.set_callback = callbackfunction
         self.userdata = userdata
 
-    def input_state(name):
-        return get_boolean_input(name):
+    def input_state(self, name):
+        return get_boolean_input(name)
 
-    def input_description(name):
+    def input_description(self, name):
         return get_input_description(name)
 
     def _pincallback(self, channel):
@@ -213,7 +213,7 @@ class Listen(object):
         name = get_input_name(channel)
         self.set_callback(name, self.userdata)
 
-    def start_loop():
+    def start_loop(self):
         "Sets up listenning threads"
         if not _gpio_control:
             return
