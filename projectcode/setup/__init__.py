@@ -17,25 +17,6 @@ def setup_page(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
     setup_directory = os.path.join(get_projectfiles_dir(project), "setup")
     page_data['defaults', 'para_text'] = defaults
     page_data['setup', 'para_text'] = setup_directory
-
-    ##### redis server settings
-    redis_values = database_ops.get_redis()
-    if not redis_values:
-        raise FailPage(message = "Database access failure.")
-    page_data['redis_ip', 'input_text'] = redis_values[0]
-    page_data['redis_port', 'input_text'] = str(redis_values[1])
-    page_data['redis_auth', 'input_text'] = redis_values[2]
-    page_data['redis_db', 'input_text'] = str(redis_values[3])
-
-    ##### mqtt server settings
-    mqtt_values = database_ops.get_mqtt()
-    if not mqtt_values:
-        raise FailPage(message = "Database access failure.")
-    page_data['mqtt_ip', 'input_text'] = mqtt_values[0]
-    page_data['mqtt_port', 'input_text'] = str(mqtt_values[1])
-    page_data['mqtt_username', 'input_text'] = mqtt_values[2]
-    page_data['mqtt_password', 'input_text'] = mqtt_values[3]
-
     # the power up values for each output - further functions to be added for each output
     get_pwr_output01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
 
@@ -111,88 +92,6 @@ def set_password(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     if not database_ops.set_password(user, newpassword1):
         raise FailPage(message="Sorry, database access failure.", widget='accesspassword')
     page_data['passwordset', 'show_para'] = True
-
-
-
-##########################################################
-#
-# If a redis server is used, the following sets the server
-# parameters IP address, port, password and db into the database.
-#
-# The calling page needs a form with four input
-# widgets; redis_ip, redis_port, redis_auth, redis_db
-#
-##########################################################
-
-def set_redis(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    """Check values given, and set them into the database"""
-    ip = call_data['redis_ip', 'input_text']
-    port = call_data['redis_port', 'input_text']
-    auth = call_data['redis_auth', 'input_text']
-    db = call_data['redis_db', 'input_text']
-    # the redis port, default 6379
-    if not port:
-        port = 6379
-    else:
-        try:
-            port = int(port)
-        except:
-            raise FailPage(message="Invalid port.")
-    # the redis database number, default 0
-    if not db:
-        db = 0
-    else:
-        try:
-            db = int(db)
-        except:
-            raise FailPage(message="Invalid database number.")
-    if (db < 0) or (db > 16):
-        raise FailPage(message="Invalid database number.") 
-    # set values
-    if not database_ops.set_redis(ip, port, auth, db):
-        raise FailPage(message="Sorry, database access failure.", widget='redissetup')
-    if not ip:
-        page_data['redisset', 'para_text'] = "No IP address, redis disabled"
-    else:
-        page_data['redisset', 'para_text'] = "Redis server at: %s:%s db:%s" % (ip,port,db)
-    page_data['redisset', 'show_para'] = True
-
-
-
-##########################################################
-#
-# If an mqtt server is used, the following sets the server
-# parameters IP address, port, username and password into the database.
-#
-# The calling page needs a form with four input
-# widgets; mqtt_ip, mqtt_port, mqtt_username, mqtt_password
-#
-##########################################################
-
-def set_mqtt(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
-    """Check values given, and set them into the database"""
-    ip = call_data['mqtt_ip', 'input_text']
-    port = call_data['mqtt_port', 'input_text']
-    username = call_data['mqtt_username', 'input_text']
-    password = call_data['mqtt_password', 'input_text']
-    # the mqtt port, default 1883
-    if not port:
-        port = 1883
-    else:
-        try:
-            port = int(port)
-        except:
-            raise FailPage(message="Invalid port.")
-    # set values
-    if not database_ops.set_mqtt(ip, port, username, password):
-        raise FailPage(message="Sorry, database access failure.", widget='mqttsetup')
-    if not ip:
-        page_data['mqttset', 'para_text'] = "No IP address, mqtt disabled"
-    else:
-        page_data['mqttset', 'para_text'] = "MQTT server at: %s:%s" % (ip,port)
-    page_data['mqttset', 'show_para'] = True
-
-
 
 
 

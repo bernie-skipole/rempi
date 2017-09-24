@@ -33,7 +33,7 @@ def set_output_from_browser(caller_ident, ident_list, submit_list, submit_dict, 
     """sets given output, called from browser via web page"""
     if ('output01', 'radio_checked') in call_data:
         # set output01
-        _set_output('output01', call_data['output01', 'radio_checked'])
+        _set_output('output01', call_data['output01', 'radio_checked'], submit_dict['proj_data'])
     # further elif statements could set further outputs if they are present in call_data
 
 
@@ -48,7 +48,7 @@ def set_output(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
         controls = hardware.get_output_names()
         if name not in controls:
             return
-        _set_output(name, value)
+        _set_output(name, value, submit_dict['proj_data'])
         call_data['OUTPUT'] = name
            
 
@@ -70,17 +70,27 @@ def set_multi_outputs(output_dict):
         _set_output(name, value)
     
 
-def _set_output(name, value):
+def _set_output(name, value, proj_data={}):
     """Sets an output, given the output name and value"""
     output_type = hardware.get_output_type(name)
     if output_type is None:
         return
+    if ('mqtt_client' in proj_data):
+        mqtt_client = proj_data['mqtt_client']
+    else:
+        mqtt_client = None
     if output_type == 'boolean':
         if (value == 'True') or (value == 'true') or (value is True):
             value = True
         else:
             value = False
         hardware.set_boolean_output(name, value)
+        if mqtt_client is not None:
+            # change the following to depend on output name
+            if value:
+                mqtt_client.publish(topic="From_Pi01/Door/Status", payload='open requested')
+            else:
+                mqtt_client.publish(topic="From_Pi01/Door/Status", payload='close requested')
     if output_type == 'int':
         if not isinstance(value, int):
             try:

@@ -15,7 +15,7 @@ from waitress import serve
 
 import skipoles
 
-project = "pi01"
+project = "rempi"
 
 # Set up command line parser
 
