@@ -25,13 +25,13 @@ def open_redis():
 
 
 
-def store_door_status(status, rconn):
-    "Stores the door status in the database, True on success, False on failure"
+def store_output01(status, rconn):
+    "Stores the output01 in the database, True on success, False on failure"
     if rconn is None:
         return False
     result = False
     try:
-        result = rconn.set('door_status', status)
+        result = rconn.set('output01', status)
     except:
         return False
     return result

@@ -80,17 +80,16 @@ def _set_output(name, value, proj_data={}):
     else:
         mqtt_client = None
     if output_type == 'boolean':
-        if (value == 'True') or (value == 'true') or (value is True):
+        if (value == 'True') or (value == 'true') or (value == 'ON') or (value is True):
             value = True
         else:
             value = False
         hardware.set_boolean_output(name, value)
         if mqtt_client is not None:
-            # change the following to depend on output name
             if value:
-                mqtt_client.publish(topic="From_Pi01/Door/Status", payload='open requested')
+                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='On')
             else:
-                mqtt_client.publish(topic="From_Pi01/Door/Status", payload='close requested')
+                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='OFF')
     if output_type == 'int':
         if not isinstance(value, int):
             try:

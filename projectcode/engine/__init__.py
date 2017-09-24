@@ -22,7 +22,7 @@ import paho.mqtt.client as mqtt
 from ..hardware import get_mqtt, get_redis
 
 
-from .communications import door, redis_ops
+from .communications import outputs, redis_ops
 
 
 
@@ -33,26 +33,24 @@ def _on_message(client, userdata, message):
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
-    if message.topic.startswith('From_WebServer/Door'):
-        door.action(client, userdata, message)
-    elif message.topic.startswith('From_ServerEngine/Door'):
-        door.action(client, userdata, message)
+    if message.topic.startswith('From_WebServer/Outputs'):
+        outputs.action(client, userdata, message)
+    elif message.topic.startswith('From_ServerEngine/Outputs'):
+        outputs.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            door.handle_status_request(client, userdata, message)
+            outputs.status_request(client, userdata, message)
 
 
 
 def inputcallback(name, userdata):
     "Callback when an input pin changes, name is the pin name"
     mqtt_client, rconn = userdata
-    # In future, may call other functions dependent on which
-    # pin is called, for example the 'door' pin
     if mqtt_client is None:
         return
-    mqtt_client.publish("From_Pi01/Pin_Change", payload=name)
+    mqtt_client.publish("From_Pi01/Inputs", payload=name)
 
 
 def create_mqtt_redis():
