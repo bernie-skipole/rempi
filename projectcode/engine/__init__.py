@@ -37,6 +37,8 @@ def _on_message(client, userdata, message):
         outputs.action(client, userdata, message)
     elif message.topic.startswith('From_ServerEngine/Outputs'):
         outputs.action(client, userdata, message)
+    elif message.topic.startswith('From_ServerEngine/Inputs'):
+        outputs.read(client, userdata, message)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")

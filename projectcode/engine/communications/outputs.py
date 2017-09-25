@@ -12,19 +12,29 @@ def action(client, userdata, message):
         else:
             output01_status(client, userdata, message)
 
+def read(client, userdata, message):
+    "Deals with readin Inputs"
+    payload = message.payload.decode("utf-8")
+    if (message.topic == 'From_WebServer/Inputs/input01') or (message.topic == 'From_ServerEngine/Inputs/input01'):
+        if payload == "status_request":
+            input01_status(client, userdata, message)
+
 
 
 
 def status_request(client, userdata, message):
     "Request received for general status request"
-    # call each output status in turn
+    # call each pin status in turn
     output01_status(client, userdata, message)
+    input01_status(client, userdata, message)
 
 
 
 def output01_status(client, userdata, message):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
+    if client is None:
+        return
     status_request = message.payload.decode("utf-8")
     # userdata is the redis connection
     # status_request is the actual message
@@ -32,12 +42,33 @@ def output01_status(client, userdata, message):
         hardvalue = hardware.get_boolean_output("output01")
         if hardvalue is None:
             hardvalue = database_ops.get_output("output01")
-        if client is None:
-            return
         if hardvalue:
             client.publish(topic="From_Pi01/Outputs/output01", payload='ON')
         else:
             client.publish(topic="From_Pi01/Outputs/output01", payload='OFF')
+
+
+
+def input01_status(client, userdata, message):
+    """If a request for input01 status has been received,
+       check gpio pins and respond to it"""
+    if client is None:
+        return
+    status_request = message.payload.decode("utf-8")
+    # userdata is the redis connection
+    # status_request is the actual message
+    if status_request == "status_request":
+        hardvalue = hardware.get_boolean_input("input01")
+        if hardvalue is None:
+            client.publish(topic="From_Pi01/Inputs/input01", payload='UNKNOWN')
+            return
+        if hardvalue:
+            client.publish(topic="From_Pi01/Inputs/input01", payload='ON')
+        else:
+            client.publish(topic="From_Pi01/Inputs/input01", payload='OFF')
+
+
+
 
 
 def output01_ON(client, userdata, message):
