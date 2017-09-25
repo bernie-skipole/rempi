@@ -3,13 +3,22 @@
 #
 # package engine, __init__.py
 #
-# This module contains the function create_mqtt_redis
+# This module contains the functions:
+#
+# create_mqtt_redis
 #
 # which returns a tuple (mqtt client, redis connection),
 # with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
 # and running a threaded loop
 # and with an on_message callback that calls further functions
 # within this package
+#
+# listen_to_inputs(mqtt_client, rconn)
+#
+# Which returns a Listen object that listens for input pin changes
+# and publishes to topic "From_Pi01/Inputs" with payload the name
+# of the pin which has changed
+#
 #
 #############################################################################
 
@@ -19,7 +28,7 @@
 import paho.mqtt.client as mqtt
 
 
-from ..hardware import get_mqtt, get_redis
+from ..hardware import get_mqtt, get_redis, Listen
 
 
 from .communications import outputs, redis_ops
@@ -44,15 +53,6 @@ def _on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
             outputs.status_request(client, userdata, message)
-
-
-
-def inputcallback(name, userdata):
-    "Callback when an input pin changes, name is the pin name"
-    mqtt_client, rconn = userdata
-    if mqtt_client is None:
-        return
-    mqtt_client.publish("From_Pi01/Inputs", payload=name)
 
 
 def create_mqtt_redis():
@@ -95,6 +95,23 @@ def create_mqtt_redis():
     except:
         client = None
 
-
     return (client, rconn)
+
+
+def _inputcallback(name, userdata):
+    "Callback when an input pin changes, name is the pin name"
+    mqtt_client, rconn = userdata
+    if mqtt_client is None:
+        return
+    mqtt_client.publish("From_Pi01/Inputs", payload=name)
+
+
+def listen_to_inputs(mqtt_client, rconn):
+    """create an input Listen object (defined in hardware.py),
+       which calls inputcallback on a pin change"""
+    listen = Listen(_inputcallback, (mqtt_client, rconn))
+    listen.start_loop()
+    return listen
+
+
 

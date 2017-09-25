@@ -52,11 +52,8 @@ def start_project(project, projectfiles, path, option):
     # Get the mqtt client and redis connection
     mqtt_client, rconn = engine.create_mqtt_redis()
 
-
-    # create an input listener, which calls engine.inputcallback
-    # on a pin change
-    listen = hardware.Listen(engine.inputcallback, (mqtt_client, rconn))
-    listen.start_loop()
+    # create an input listener, which publishes messages on an input pin change
+    listen = engine.listen_to_inputs(mqtt_client, rconn)
 
     return {'mqtt_client':mqtt_client, 'rconn':rconn, 'listen':listen}
 
