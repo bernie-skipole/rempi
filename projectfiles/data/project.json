@@ -616,6 +616,25 @@
 [
 "Widget",
 {
+"class": "paras.DivPara",
+"name": "output01_description",
+"brief": "Description of output01",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
 "class": "inputforms.SubmitForm1",
 "name": "outputform01",
 "brief": "Form for setting boolian option output 01",
@@ -1869,18 +1888,20 @@
 [
 "Widget",
 {
-"class": "tables.TwoColTable1",
-"name": "table01",
+"class": "tables.ThreeColTable1",
+"name": "sensors",
 "brief": "Table of sensor values",
 "fields": {
 "col1": [],
 "col2": [],
+"col3": [],
 "even_class": "",
 "header_class": "w3-theme-d2",
 "odd_class": "w3-theme-d1",
 "show": true,
 "title1": "Sensor",
-"title2": "value",
+"title2": "Value",
+"title3": "Description",
 "widget_class": "w3-table w3-bordered w3-centered",
 "widget_style": ""
 }

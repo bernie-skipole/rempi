@@ -26,7 +26,7 @@ _CONFIG = { 'mqtt_ip' : 'localhost',
 
 # Currently only one output 'output01' on BCM 24 is defined
 
-_OUTPUTS = {"output01" : ('boolean', False, True, 24, "Door control")}
+_OUTPUTS = {"output01" : ('boolean', False, True, 24, "BCM 24 - When ON intitiates door opening action")}
 
 
 # _INPUTS
@@ -40,8 +40,8 @@ _OUTPUTS = {"output01" : ('boolean', False, True, 24, "Door control")}
 # 'input01' is the server time
 # 'input02' is the input on BCM 23
 
-_INPUTS = {"input01" : ('boolean', True, 23, "Unassigned input"),
-           "input02" : ('text', None, None, "Unassigned input")           
+_INPUTS = {"input01" : ('boolean', True, 23, "BCM 23 - Limit switch, when ON the door is open"),
+           "input02" : ('text', None, None, "Server time")           
           }
 
 

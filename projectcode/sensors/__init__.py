@@ -8,8 +8,9 @@ from .. import hardware
 def sensor_table01(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """sets two lists for sensor table 01 into page data"""
     sensors = hardware.get_input_names()
-    page_data['table01', 'col1'] = sensors
-    page_data['table01', 'col2'] = _get_sensor_values(sensors)
+    page_data['sensors', 'col1'] = sensors
+    page_data['sensors', 'col2'] = _get_sensor_values(sensors)
+    page_data['sensors', 'col3'] = [hardware.get_input_description(name) for name in sensors]
 
 
 def sensors_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):

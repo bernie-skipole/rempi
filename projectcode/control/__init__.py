@@ -7,6 +7,8 @@ from .. import database_ops, hardware
 
 def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Populate the control page, by setting widget values, and then the results values"""
+    # display output description
+    page_data['output01_description', 'para_text'] = hardware.get_output_description('output01')
     # widget output01 is boolean radio and expects a binary True, False value
     page_data['output01', 'radio_checked'] = _get_output('output01')
     # further widgets for further outputs to be set here
