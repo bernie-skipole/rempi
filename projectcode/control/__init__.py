@@ -89,7 +89,7 @@ def _set_output(name, value, proj_data={}):
         hardware.set_boolean_output(name, value)
         if mqtt_client is not None:
             if value:
-                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='On')
+                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='ON')
             else:
                 mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='OFF')
     if output_type == 'int':

@@ -41,7 +41,7 @@ _OUTPUTS = {"output01" : ('boolean', False, True, 24, "BCM 24 - When ON intitiat
 # 'input02' is the input on BCM 23
 
 _INPUTS = {"input01" : ('boolean', True, 23, "BCM 23 - Limit switch, when ON the door is open"),
-           "input02" : ('text', None, None, "Server time")           
+           "input02" : ('text', None, None, "Server UTC time")           
           }
 
 

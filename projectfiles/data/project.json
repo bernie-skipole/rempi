@@ -1627,8 +1627,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 0,
-"interval_target": null,
+"interval": 5,
+"interval_target": 9,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1854,35 +1854,9 @@
 "parts": [
 [
 "Text",
-"This page displays sensor inputs. Choose 'Refresh' to update:"
+"This page displays sensor inputs."
 ]
 ]
-}
-],
-[
-"Widget",
-{
-"class": "links.ButtonLink2",
-"name": "refresh",
-"brief": "Button link to refresh table",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_text": "Refresh",
-"button_wait_text": "Please wait...",
-"buttondiv_class": "ski_mid_button",
-"buttondiv_style": "",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"json_ident": "sensor_table01_json",
-"link_ident": "sensors",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
 }
 ],
 [
@@ -3629,7 +3603,7 @@
 "fail_ident": "home",
 "submit_list": [
 "sensors",
-"sensor_table01"
+"sensor_table"
 ],
 "target_ident": 2002
 },
@@ -3647,6 +3621,22 @@
 "sensors",
 "sensors_json_api"
 ]
+},
+"original_fields": {}
+}
+},
+"sensors_refresh": {
+"ident": 9,
+"brief": "Refreshes page",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"sensors",
+"sensor_table"
+],
+"target_ident": "general_json"
 },
 "original_fields": {}
 }
