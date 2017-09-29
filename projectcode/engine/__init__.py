@@ -63,42 +63,49 @@ def create_mqtt_redis():
        and with an on_message callback that calls further functions
        within this package"""
 
+    rconn = None
+    mqtt_client = None
+
     # Get the mqtt server parameters from hardware.py
     mqtt_ip, mqtt_port, mqtt_username, mqtt_password = get_mqtt()
 
     try:
         # create a redis connction
         rconn = redis_ops.open_redis()
-    except Exception as e:
-        print(e, file=sys.stderr)
+    except:
         rconn = None
+
+    if rconn is None
+        print("Open Redis connection failed", file=sys.stderr)
 
     try:
         # create an mqtt client instance
-        client = mqtt.Client(client_id="Pi01", userdata=rconn)
+        mqtt_client = mqtt.Client(client_id="Pi01", userdata=rconn)
 
         # attach callback function to client
-        client.on_message = _on_message
+        mqtt_client.on_message = _on_message
 
         # If a username/password is set on the mqtt server
         if mqtt_username and mqtt_password:
-            client.username_pw_set(username = mqtt_username, password = mqtt_password)
+            mqtt_client.username_pw_set(username = mqtt_username, password = mqtt_password)
         elif mqtt_username:
-            client.username_pw_set(username = mqtt_username)
+            mqtt_client.username_pw_set(username = mqtt_username)
 
         # connect to the server
-        client.connect(host=mqtt_ip, port=mqtt_port)
+        mqtt_client.connect(host=mqtt_ip, port=mqtt_port)
 
         # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
-        client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+        mqtt_client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
 
         # start a threaded loop
-        client.loop_start()
-    except Exception as e:
-        print(e, file=sys.stderr)
-        client = None
+        mqtt_client.loop_start()
+    except:
+        mqtt_client = None
 
-    return (client, rconn)
+    if mqtt_client is None
+        print("Failed to create mqtt_client", file=sys.stderr)
+
+    return (mqtt_client, rconn)
 
 
 def _inputcallback(name, userdata):
