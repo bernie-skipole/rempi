@@ -253,3 +253,34 @@ class Listen(object):
                 else:
                     GPIO.add_event_detect(values[2], GPIO.RISING, callback=self._pincallback, bouncetime=300)
 
+
+####### temperature controller #######
+
+def get_temperature():
+    "Returns temperature from probe as floating point number, None on failure"
+
+    # for testing purposes, return a fake value
+    # a random number with mean 6, std dev 0.2
+    # return random.normalvariate(6,0.2)
+
+    # or - if the above line is commented out -
+
+    # This line should be edited for the correct temperature sensor chip DS18B20
+    # result file at:
+    temp_sensor = "/sys/bus/w1/devices/28-000007e4291f/w1_slave"
+
+    try:
+        with open(temp_sensor, 'r') as f:
+            lines = f.readlines()
+        if lines[0].strip()[-3:] != 'YES':
+            return
+        temp_output = lines[1].find('t=')
+        if temp_output == -1:
+            return
+        temp_string = lines[1].strip()[temp_output+2:]
+        temperature = float(temp_string) / 1000.0
+    except:
+        return
+    return temperature
+
+
