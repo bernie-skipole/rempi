@@ -2,7 +2,7 @@ from ... import hardware, database_ops
 
 
 
-def status_request(client, userdata, message):
+def status_request(client, userdata, message=''):
     "Request received for general status request"
     # call each pin status in turn
     output01_status(client, userdata, message)
@@ -20,7 +20,7 @@ def read(client, userdata, message):
             input01_status(client, userdata, message)
 
 
-def input01_status(client, userdata, message):
+def input01_status(client, userdata, message=''):
     """If a request for input01 status has been received,
        check gpio pins and respond to it"""
     if client is None:
@@ -52,7 +52,7 @@ def action(client, userdata, message):
             output01_status(client, userdata, message)
 
 
-def output01_status(client, userdata, message):
+def output01_status(client, userdata, message=''):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
     if client is None:

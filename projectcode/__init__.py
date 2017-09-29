@@ -2,7 +2,7 @@
 This package will be called by the Skipole framework to access your data.
 """
 
-import sys
+import sys, threading
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
@@ -52,7 +52,15 @@ def start_project(project, projectfiles, path, option):
     # create an input listener, which publishes messages on an input pin change
     listen = engine.listen_to_inputs(mqtt_client, rconn)
 
-    return {'mqtt_client':mqtt_client, 'rconn':rconn, 'listen':listen}
+    # create an event schedular to do periodic actions
+    scheduled_events = engine.ScheduledEvents(mqtt_client, rconn)
+    # this is a callable which runs scheduled events, it
+    # needs to be called in its own thread
+    run_scheduled_events = threading.Thread(target=scheduled_events)
+    # and start the thread
+    run_scheduled_events.start()
+
+    return {'mqtt_client':mqtt_client, 'rconn':rconn, 'listen':listen, 'scheduled_events':scheduled_events}
 
 
 def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
