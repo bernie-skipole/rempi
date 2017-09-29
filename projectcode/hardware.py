@@ -5,11 +5,11 @@
 
 # Edit this dictionary to store service parameters
 
-_CONFIG = { 'mqtt_ip' : 'localhost',
+_CONFIG = { 'mqtt_ip' : '192.168.1.73',
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
-            'redis_ip' : 'localhost',
+            'redis_ip' : '192.168.1.73',
             'redis_port' : 6379,
             'redis_auth' : 'creampie',
             'redis_db': 0

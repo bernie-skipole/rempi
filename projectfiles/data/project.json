@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.0.3",
-"skipole": "0.0.35",
+"skipole": "0.0.36",
 "subprojects": {
 "lib": {
 "path": "/lib/"

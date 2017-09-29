@@ -23,6 +23,7 @@
 #############################################################################
 
 
+import sys
 
 
 import paho.mqtt.client as mqtt
@@ -68,7 +69,8 @@ def create_mqtt_redis():
     try:
         # create a redis connction
         rconn = redis_ops.open_redis()
-    except:
+    except Exception as e:
+        print(e, file=sys.stderr)
         rconn = None
 
     try:
@@ -92,7 +94,8 @@ def create_mqtt_redis():
 
         # start a threaded loop
         client.loop_start()
-    except:
+    except Exception as e:
+        print(e, file=sys.stderr)
         client = None
 
     return (client, rconn)

@@ -2,7 +2,7 @@
 This package will be called by the Skipole framework to access your data.
 """
 
-import sys, time
+import sys
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
@@ -33,10 +33,6 @@ def start_project(project, projectfiles, path, option):
 
     # checks database exists, if not create it
     database_ops.start_database(projectfiles)
-
-    # wait ten seconds, this is used to ensure network services are up and working
-    # before making mqtt and redis connections
-    time.sleep(10)
 
     # setup hardware
     hardware.initial_setup_outputs()
