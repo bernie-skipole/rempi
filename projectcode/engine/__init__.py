@@ -186,12 +186,12 @@ class ScheduledEvents(object):
 
         # event1 at two minutes past the hour
         self.event1_time = self._minutespast(tt, 2)
-        # event2 at 15 minutes past the hour
-        self.event2_time = self._minutespast(tt, 15)
-        # event3 at 30 minutes
-        self.event3_time = self._minutespast(tt, 30)
-        # event4 at 45 minutes
-        self.event4_time = self._minutespast(tt, 45)
+        # event2 at 9 minutes past the hour
+        self.event2_time = self._minutespast(tt, 9)
+        # event3 at 24 minutes
+        self.event3_time = self._minutespast(tt, 24)
+        # event4 at 39 minutes
+        self.event4_time = self._minutespast(tt, 39)
         # event5 at 54 minutes
         self.event5_time = self._minutespast(tt, 54)
 
@@ -217,18 +217,21 @@ class ScheduledEvents(object):
 
 # the event callbacks should be set with whatever action is required, and
 # further event callbacks can be set as class methods, however the last one
-# in the hour should include the call to self.create_events()
+# in the hour should include the call to self.create_events() to set events
+# for the next hour
 
-# avoid minutes zero time, since a new user will take over on the hour
-# so last event should be several minutes before (minutes 54)
-# and first event several minutes after (minutes 2)
+# avoid minutes zero and 30 time, since a new user will take over on the hour,
+# and perhaps in future on the half hour.
+# so last event should be several minutes before and first event several minutes after
 
 
 
 ######################### log temperature to redis
 
-def log_temperature(rconn, temperature):
+def log_temperature(rconn, temperature=None):
     "Log the given temperature to the redis connection rconn, return True on success, False on failure"
+    if temperature is None:
+        return False
     try:
         # create a datapoint to set in the redis server
         point = datetime.utcnow().strftime("%Y-%m-%d %H:%M") + " " + str(temperature)
