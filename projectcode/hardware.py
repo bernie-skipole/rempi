@@ -12,7 +12,8 @@ _CONFIG = { 'mqtt_ip' : '192.168.1.73',
             'redis_ip' : '192.168.1.73',
             'redis_port' : 6379,
             'redis_auth' : 'creampie',
-            'redis_db': 0
+            'redis_db': 0,
+            'DS18B20': '28-000007e4291f'     # Edit for the correct temperature sensor chip DS18B20
           }
 
 
@@ -263,11 +264,7 @@ def get_temperature():
     # a random number with mean 6, std dev 0.2
     # return random.normalvariate(6,0.2)
 
-    # or - if the above line is commented out -
-
-    # This line should be edited for the correct temperature sensor chip DS18B20
-    # result file at:
-    temp_sensor = "/sys/bus/w1/devices/28-000007e4291f/w1_slave"
+    temp_sensor = "/sys/bus/w1/devices/" + _CONFIG['DS18B20'] + "/w1_slave"
 
     try:
         with open(temp_sensor, 'r') as f:
