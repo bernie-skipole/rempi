@@ -19,22 +19,20 @@
 # and publishes to topic "From_Pi01/Inputs" with payload the name
 # of the pin which has changed
 #
+# ScheduledEvents
+#
+# A class that sets up periodic events to occur each hour
 #
 #############################################################################
 
 
 import sys, sched, time, datetime
 
-
 import paho.mqtt.client as mqtt
 
-
-from ..hardware import get_mqtt, get_redis, Listen
-
+from .. import hardware
 
 from .communications import outputs, redis_ops
-
-
 
 
 def _on_message(client, userdata, message):
@@ -67,7 +65,7 @@ def create_mqtt_redis():
     mqtt_client = None
 
     # Get the mqtt server parameters from hardware.py
-    mqtt_ip, mqtt_port, mqtt_username, mqtt_password = get_mqtt()
+    mqtt_ip, mqtt_port, mqtt_username, mqtt_password = hardware.get_mqtt()
 
     try:
         # create a redis connction
@@ -122,7 +120,7 @@ def _inputcallback(name, userdata):
 def listen_to_inputs(mqtt_client, rconn):
     """create an input Listen object (defined in hardware.py),
        which calls inputcallback on a pin change"""
-    listen = Listen(_inputcallback, (mqtt_client, rconn))
+    listen = hardware.Listen(_inputcallback, (mqtt_client, rconn))
     listen.start_loop()
     return listen
 
@@ -138,7 +136,13 @@ class ScheduledEvents(object):
         self.schedule = sched.scheduler(time.time, time.sleep)
         # create the events and add them to the schedule
         self._create_events()
-
+        # this creates attributes of
+        # self.thishour
+        # self.nexthour
+        # self.event1_time
+        # self.event2_time
+        # etc
+        # these attributes being seconds, as per the time.time() function
 
     def _minutespast(self, timetuple, minutes):
         "Returns time.time compatable seconds for the minutes interval after the hour in the given timetuple"
@@ -157,20 +161,28 @@ class ScheduledEvents(object):
         outputs.status_request(self.mqtt_client, self.rconn)
 
     def _event2_callback(self):
-        "event2 is to publish status"
+        "event2 is to publish status, and send temperature"
         outputs.status_request(self.mqtt_client, self.rconn)
+        temperature = hardware.get_temperature()
+        redis_ops.log_temperature(self.rconn, temperature)
 
     def _event3_callback(self):
-        "event3 is to publish status"
+        "event3 is to publish status, and send temperature"
         outputs.status_request(self.mqtt_client, self.rconn)
+        temperature = hardware.get_temperature()
+        redis_ops.log_temperature(self.rconn, temperature)
 
     def _event4_callback(self):
-        "event4 is to publish status"
+        "event4 is to publish status, and send temperature"
         outputs.status_request(self.mqtt_client, self.rconn)
+        temperature = hardware.get_temperature()
+        redis_ops.log_temperature(self.rconn, temperature)
 
     def _event5_callback(self):
-        "event5 is to publish status, and start schedule for next hour"
+        "event5 is to publish status, and temperatue and start schedule for next hour"
         outputs.status_request(self.mqtt_client, self.rconn)
+        temperature = hardware.get_temperature()
+        redis_ops.log_temperature(self.rconn, temperature)
         # Once this event is done, then the schedule is finished
         # so set up a new schedule
         self._create_events()
@@ -179,8 +191,14 @@ class ScheduledEvents(object):
     def _create_events(self):
         "Create a new set of events for the following hour"
         # Create a timetuple of now plus one hour
-        nexthour = datetime.datetime.now() + datetime.timedelta(hours=1)
+        thishour = datetime.datetime.now()
+        nexthour = thishour + datetime.timedelta(hours=1)
+        # get the time() for the beginning of this hour
+        self.thishour = self._minutespast(thishour.timetuple(), 0)
+        # get the time() for the beginning of the next hour
         tt = nexthour.timetuple()
+        self.nexthour = self._minutespast(tt, 0)
+
         # create times at which events are to occur
         # at interval minutes after the next hour
 
@@ -203,7 +221,7 @@ class ScheduledEvents(object):
         self.schedule.enterabs(self.event5_time, 1, self._event5_callback)
 
     def __call__(self): 
-        "Run the schedular, this is a blocking call, so run in a thread"
+        "Run the scheduler, this is a blocking call, so run in a thread"
         self.schedule.run()
 
 
@@ -216,31 +234,15 @@ class ScheduledEvents(object):
 # run_scheduled_events.start()
 
 # the event callbacks should be set with whatever action is required, and
-# further event callbacks can be set as class methods, however the last one
+# further event callbacks can be added as further class methods, however the last one
 # in the hour should include the call to self.create_events() to set events
 # for the next hour
 
-# avoid minutes zero and 30 time, since a new user will take over on the hour,
+# avoid minutes zero and 30 times, since a new user will take over on the hour,
 # and perhaps in future on the half hour.
 # so last event should be several minutes before and first event several minutes after
 
 
-
-######################### log temperature to redis
-
-def log_temperature(rconn, temperature=None):
-    "Log the given temperature to the redis connection rconn, return True on success, False on failure"
-    if temperature is None:
-        return False
-    try:
-        # create a datapoint to set in the redis server
-        point = datetime.utcnow().strftime("%Y-%m-%d %H:%M") + " " + str(temperature)
-        rconn.rpush("temperature", point)
-        # and limit number of points to 200
-        rconn.ltrim("temperature", 0,200)
-    except:
-        return False
-    return True
 
 
 

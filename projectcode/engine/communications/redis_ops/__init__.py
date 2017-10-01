@@ -1,5 +1,5 @@
 
-
+import datetime
 import redis
 
 from ....hardware import get_redis
@@ -37,5 +37,23 @@ def store_output01(status, rconn):
     return result
 
 
+
+######################### log temperature to redis,
+
+def log_temperature(rconn, temperature=None):
+    "Log the given temperature to the redis connection rconn, return True on success, False on failure"
+    if temperature is None:
+        return False
+    if rconn is None:
+        return False
+    try:
+        # create a datapoint to set in the redis server
+        point = datetime.utcnow().strftime("%Y-%m-%d %H:%M") + " " + str(temperature)
+        rconn.rpush("temperature", point)
+        # and limit number of points to 200
+        rconn.ltrim("temperature", 0,200)
+    except:
+        return False
+    return True
 
 
