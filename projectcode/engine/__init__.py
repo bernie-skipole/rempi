@@ -28,7 +28,11 @@
 
 import sys, sched, time, datetime
 
-import paho.mqtt.client as mqtt
+_mqtt_mod = True
+try:
+    import paho.mqtt.client as mqtt
+except:
+    _mqtt_mod = False
 
 from .. import hardware
 
@@ -75,6 +79,11 @@ def create_mqtt_redis():
 
     if rconn is None:
         print("Open Redis connection failed", file=sys.stderr)
+
+
+    if not _mqtt_mod:
+        print("Failed to create mqtt_client", file=sys.stderr)
+        return (None, rconn)
 
     try:
         # create an mqtt client instance

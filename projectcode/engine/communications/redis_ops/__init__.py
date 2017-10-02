@@ -1,6 +1,14 @@
 
 import datetime
-import redis
+
+_redis_mod = True
+try:
+    import redis
+except:
+    _redis_mod = False
+
+
+
 
 from ....hardware import get_redis
 
@@ -8,13 +16,16 @@ from ....hardware import get_redis
 def open_redis():
     "Returns a connection to the redis database, on failure returns None"
 
+    if not _redis_mod:
+        return
+
     rconn = None
 
     # redis server settings from hardware.py
     redis_ip, redis_port, redis_auth, redis_db = get_redis()
 
     if not redis_ip:
-        return None
+        return
 
     # create a connection to the server
     try:
