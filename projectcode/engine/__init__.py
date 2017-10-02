@@ -73,7 +73,7 @@ def create_mqtt_redis():
     except:
         rconn = None
 
-    if rconn is None
+    if rconn is None:
         print("Open Redis connection failed", file=sys.stderr)
 
     try:
@@ -100,7 +100,7 @@ def create_mqtt_redis():
     except:
         mqtt_client = None
 
-    if mqtt_client is None
+    if mqtt_client is None:
         print("Failed to create mqtt_client", file=sys.stderr)
 
     return (mqtt_client, rconn)
