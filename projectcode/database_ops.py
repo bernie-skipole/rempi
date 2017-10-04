@@ -17,7 +17,7 @@ from . import hardware
 _OUTPUTS = hardware.get_outputs()
 
 # If it does not already exist, a database will be created in a directory
-# beneath the projectfiles directory
+# beneath the projectfiles/project directory
 _DATABASE_DIR_NAME =  'setup'
 _DATABASE_NAME = 'setup.db'
 
@@ -46,13 +46,13 @@ def hash_password(password, seed=None):
     return hashed_password, seed
 
 
-def start_database(projectfiles):
+def start_database(project, projectfiles):
     """Must be called first, before any other database operation, to check if database
        exists, and if not, to create it, and to set globals _DATABASE_PATH and _DATABASE_EXISTS"""
     global _DATABASE_PATH, _DATABASE_EXISTS
     if _DATABASE_EXISTS:
         return
-    database_dir = os.path.join(projectfiles, _DATABASE_DIR_NAME)
+    database_dir = os.path.join(projectfiles, project, _DATABASE_DIR_NAME)
     # Set global variables
     _DATABASE_PATH = os.path.join(database_dir, _DATABASE_NAME)
     _DATABASE_EXISTS = True
