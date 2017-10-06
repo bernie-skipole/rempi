@@ -26,7 +26,7 @@
 #############################################################################
 
 
-import sys, sched, time, datetime
+import sys, sched, time
 
 _mqtt_mod = True
 try:
@@ -134,107 +134,134 @@ def listen_to_inputs(mqtt_client, rconn):
     return listen
 
 
+###  scheduled actions ###
+
+
+def event1(mqtt_client, rconn):
+    "event1 is to publish status"
+    outputs.status_request(mqtt_client, rconn)
+    print('******1******')
+
+def event2(mqtt_client, rconn):
+    "event2 is to publish status, and send temperature"
+    outputs.status_request(mqtt_client, rconn)
+    temperature = hardware.get_temperature()
+    redis_ops.log_temperature(rconn, temperature)
+    print('******2******')
+
+def event3(mqtt_client, rconn):
+    "event3 is to publish status, and send temperature"
+    outputs.status_request(mqtt_client, rconn)
+    temperature = hardware.get_temperature()
+    redis_ops.log_temperature(rconn, temperature)
+    print('******3******')
+
+def event4(mqtt_client, rconn):
+    "event4 is to publish status, and send temperature"
+    outputs.status_request(mqtt_client, rconn)
+    temperature = hardware.get_temperature()
+    redis_ops.log_temperature(rconn, temperature)
+    print('******4******')
+
+def event5(mqtt_client, rconn):
+    "event5 is to publish status, and temperatue and start schedule for next hour"
+    outputs.status_request(mqtt_client, rconn)
+    temperature = hardware.get_temperature()
+    redis_ops.log_temperature(rconn, temperature)
+    print('******5******')
+
+
+
 ### scheduled actions to occur at set times each hour ###
 
 class ScheduledEvents(object):
 
     def __init__(self, mqtt_client, rconn):
         "Stores the mqtt_clent and rconn and creates the schedule of hourly events"
+        # create a list of event callbacks and minutes past the hour for each event in turn
+        self.event_list = [(event1, 2), (event2, 9), (event3, 24), (event4, 39), (event5, 54)]
         self.mqtt_client = mqtt_client
         self.rconn = rconn
         self.schedule = sched.scheduler(time.time, time.sleep)
-        # create the events and add them to the schedule
-        self._create_events()
-        # this creates attributes of
-        # self.thishour
-        # self.nexthour
-        # self.event1_time
-        # self.event2_time
-        # etc
-        # these attributes being seconds, as per the time.time() function
-
-    def _minutespast(self, timetuple, minutes):
-        "Returns time.time compatable seconds for the minutes interval after the hour in the given timetuple"
-        return time.mktime(time.struct_time((timetuple.tm_year,
-                                             timetuple.tm_mon,
-                                             timetuple.tm_mday,
-                                             timetuple.tm_hour,
-                                             minutes,
-                                             0,
-                                             timetuple.tm_wday,
-                                             timetuple.tm_yday,
-                                             timetuple.tm_isdst)))
-
-    def _event1_callback(self):
-        "event1 is to publish status"
-        outputs.status_request(self.mqtt_client, self.rconn)
-
-    def _event2_callback(self):
-        "event2 is to publish status, and send temperature"
-        outputs.status_request(self.mqtt_client, self.rconn)
-        temperature = hardware.get_temperature()
-        redis_ops.log_temperature(self.rconn, temperature)
-
-    def _event3_callback(self):
-        "event3 is to publish status, and send temperature"
-        outputs.status_request(self.mqtt_client, self.rconn)
-        temperature = hardware.get_temperature()
-        redis_ops.log_temperature(self.rconn, temperature)
-
-    def _event4_callback(self):
-        "event4 is to publish status, and send temperature"
-        outputs.status_request(self.mqtt_client, self.rconn)
-        temperature = hardware.get_temperature()
-        redis_ops.log_temperature(self.rconn, temperature)
-
-    def _event5_callback(self):
-        "event5 is to publish status, and temperatue and start schedule for next hour"
-        outputs.status_request(self.mqtt_client, self.rconn)
-        temperature = hardware.get_temperature()
-        redis_ops.log_temperature(self.rconn, temperature)
-        # Once this event is done, then the schedule is finished
-        # so set up a new schedule
-        self._create_events()
 
 
-    def _create_events(self):
+    def _create_next_hour_events(self):
         "Create a new set of events for the following hour"
-        # Create a timetuple of now plus one hour
-        thishour = datetime.datetime.now()
-        nexthour = thishour + datetime.timedelta(hours=1)
-        # get the time() for the beginning of this hour
-        self.thishour = self._minutespast(thishour.timetuple(), 0)
-        # get the time() for the beginning of the next hour
-        tt = nexthour.timetuple()
-        self.nexthour = self._minutespast(tt, 0)
 
-        # create times at which events are to occur
-        # at interval minutes after the next hour
+        # On moving into the next hour, thishour timestamp is moved
+        # forward by an hour 
+        self.thishour = self.thishour + 3600
 
-        # event1 at two minutes past the hour
-        self.event1_time = self._minutespast(tt, 2)
-        # event2 at 9 minutes past the hour
-        self.event2_time = self._minutespast(tt, 9)
-        # event3 at 24 minutes
-        self.event3_time = self._minutespast(tt, 24)
-        # event4 at 39 minutes
-        self.event4_time = self._minutespast(tt, 39)
-        # event5 at 54 minutes
-        self.event5_time = self._minutespast(tt, 54)
+        # create scheduled events which are to occur
+        # at interval minutes during thishour
 
-        # enter these events into the schedule
-        self.schedule.enterabs(self.event1_time, 1, self._event1_callback)
-        self.schedule.enterabs(self.event2_time, 1, self._event2_callback)
-        self.schedule.enterabs(self.event3_time, 1, self._event3_callback)
-        self.schedule.enterabs(self.event4_time, 1, self._event4_callback)
-        self.schedule.enterabs(self.event5_time, 1, self._event5_callback)
+        for evt_callback, mins in self.event_list:
+            self.schedule.enterabs(time = self.thishour + mins*60,
+                                   priority = 1,
+                                   action = evt_callback,
+                                   argument = (self.mqtt_client, self.rconn)
+                                   )
+
+        # schedule a final event to occur 30 seconds after last event
+        last_event = self.event_list[-1]
+ 
+        final_event_time = self.thishour + last_event[1]*60 + 30
+        self.schedule.enterabs(time = final_event_time,
+                               priority = 1,
+                               action = self._create_next_hour_events
+                               )
+
 
     def __call__(self): 
-        "Run the scheduler, this is a blocking call, so run in a thread"
+        "Schedule Events, and run the scheduler, this is a blocking call, so run in a thread"
+        # set the scheduled events for the current hour
+
+        # get a time tuple for now
+        ttnow = time.localtime()
+        # get the timestamp of now
+        rightnow = time.mktime(ttnow)
+
+        # get the timestamp for the beginning of the current hour
+        self.thishour = time.mktime((ttnow.tm_year,
+                                     ttnow.tm_mon,
+                                     ttnow.tm_mday,
+                                     ttnow.tm_hour,
+                                     0,                  # zero minutes
+                                     0,                  # zero seconds
+                                     ttnow.tm_wday,
+                                     ttnow.tm_yday,
+                                     ttnow.tm_isdst))
+
+        # create times at which events are to occur
+        # during the remaining part of this hour
+        for evt_callback, mins in self.event_list:
+            event_time = self.thishour + mins*60
+            if event_time > rightnow:
+                self.schedule.enterabs(time = event_time,
+                                       priority = 1,
+                                       action = evt_callback,
+                                       argument = (self.mqtt_client, self.rconn)
+                                       )
+
+        # schedule a final event to occur 30 seconds after last event
+        last_event = self.event_list[-1]
+        
+        final_event_time = self.thishour + last_event[1]*60 + 30
+        self.schedule.enterabs(time = final_event_time,
+                               priority = 1,
+                               action = self._create_next_hour_events
+                               )
+
+
+        # and run the schedule
         self.schedule.run()
 
 
 # How to use
+
+# create event callback functions
+# add them in time order to the self.event_list attribute, as tuples of (event function, minutes after the hour)
+
 # create a ScheduledEvents instance
 # scheduled_events = ScheduledEvents(mqtt_client, rconn)
 # this is a callable, use it as a thread target
@@ -242,17 +269,7 @@ class ScheduledEvents(object):
 # and start the thread
 # run_scheduled_events.start()
 
-# the event callbacks should be set with whatever action is required, and
-# further event callbacks can be added as further class methods, however the last one
-# in the hour should include the call to self.create_events() to set events
-# for the next hour
-
-# avoid minutes zero and 30 times, since a new user will take over on the hour,
-# and perhaps in future on the half hour.
-# so last event should be several minutes before and first event several minutes after
-
-
-
+# the event callbacks should be set with whatever action is required
 
 
 
