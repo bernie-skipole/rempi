@@ -6,11 +6,11 @@
 # Edit this dictionary to store service parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : '192.168.1.73',
+            'mqtt_ip' : 'localhost',
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
-            'redis_ip' : '192.168.1.73',
+            'redis_ip' : 'localhost',
             'redis_port' : 6379,
             'redis_auth' : 'creampie',
             'redis_db': 0,

@@ -69,7 +69,7 @@
 "Part",
 {
 "tag_name": "h3",
-"brief": "Raspberry pi01 title",
+"brief": "Raspberry RemPi01 title",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -78,7 +78,7 @@
 "parts": [
 [
 "Text",
-"Raspberry pi01"
+"RemPi01"
 ]
 ]
 }
@@ -2225,7 +2225,7 @@
 "parts": [
 [
 "Text",
-"Robot Raspberry Pi 01"
+"Robot RemPi 01"
 ]
 ]
 }
