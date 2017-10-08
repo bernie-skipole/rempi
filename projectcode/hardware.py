@@ -5,7 +5,8 @@
 
 # Edit this dictionary to store service parameters
 
-_CONFIG = { 'mqtt_ip' : '192.168.1.73',
+_CONFIG = { 'name' : 'RemPi01',                # This device identifying name
+            'mqtt_ip' : '192.168.1.73',
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
@@ -42,7 +43,8 @@ _OUTPUTS = {"output01" : ('boolean', False, True, 24, "BCM 24 - When ON intitiat
 # 'input02' is the input on BCM 23
 
 _INPUTS = {"input01" : ('boolean', True, 23, "BCM 23 - Limit switch, when ON the door is open"),
-           "input02" : ('text', None, None, "Server UTC time")           
+           "input02" : ('text', None, None, "Server UTC time"),
+           "input03" : ('float', None, None, "Temperature")         
           }
 
 
@@ -54,6 +56,11 @@ try:
     import RPi.GPIO as GPIO            # import RPi.GPIO module  
 except:
     _gpio_control = False
+
+
+def get_name():
+    "Return identifying name"
+    return _CONFIG['name']
 
 
 def get_mqtt():
@@ -165,6 +172,19 @@ def get_inputs():
     return _INPUTS.copy()
 
 
+def get_input(name):
+    "Given an input name, returns the value, or None if the name is not found"
+    if name not in _INPUTS:
+        return
+    input_type = _INPUTS[name][0]
+    if input_type == 'boolean':
+        return get_boolean_input(name)
+    if input_type == 'text':
+        return get_text_input(name)
+    if input_type == 'float':
+        return get_float_input(name)
+
+
 def get_input_description(name):
     "Given an input name, returns the input description, or None if the name is not found"
     if name in _INPUTS:
@@ -198,6 +218,18 @@ def get_text_input(name):
         # This input returns a time string
         return time.strftime("%c", time.gmtime())
     return ''
+
+
+def get_float_input(name):
+    "Returns float input for the appropriate input, or None if no input found"
+    if name not in _INPUTS:
+        return
+    if _INPUTS[name][0] != 'float':
+        return
+    if name == "input03":
+        # This input returns a temperature value
+        return get_temperature()
+    return
 
 
 def get_input_name(bcm):

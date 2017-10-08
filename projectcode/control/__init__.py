@@ -88,10 +88,11 @@ def _set_output(name, value, proj_data={}):
             value = False
         hardware.set_boolean_output(name, value)
         if mqtt_client is not None:
+            topic = "From_" + hardware.get_name() + "/Outputs/" + name
             if value:
-                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='ON')
+                mqtt_client.publish(topic=topic, payload='ON')
             else:
-                mqtt_client.publish(topic="From_Pi01/Outputs/" + name, payload='OFF')
+                mqtt_client.publish(topic=topic, payload='OFF')
     if output_type == 'int':
         if not isinstance(value, int):
             try:

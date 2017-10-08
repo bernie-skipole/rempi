@@ -39,6 +39,10 @@ from .. import hardware
 from .communications import outputs, redis_ops
 
 
+def from_topic():
+    "Returns a string 'From_name' where name is the hardware name of this device"
+    return 'From_' + hardware.get_name()
+
 def _on_message(client, userdata, message):
     "Callback when a message is received"
 
@@ -87,7 +91,7 @@ def create_mqtt_redis():
 
     try:
         # create an mqtt client instance
-        mqtt_client = mqtt.Client(client_id="Pi01", userdata=rconn)
+        mqtt_client = mqtt.Client(client_id=hardware.get_name(), userdata=rconn)
 
         # attach callback function to client
         mqtt_client.on_message = _on_message
@@ -123,7 +127,7 @@ def _inputcallback(name, userdata):
     mqtt_client, rconn = userdata
     if mqtt_client is None:
         return
-    mqtt_client.publish("From_Pi01/Inputs", payload=name)
+    mqtt_client.publish(from_topic() + "/Inputs", payload=name)
 
 
 def listen_to_inputs(mqtt_client, rconn):
@@ -139,36 +143,17 @@ def listen_to_inputs(mqtt_client, rconn):
 
 def event1(mqtt_client, rconn):
     "event1 is to publish status"
-    outputs.status_request(mqtt_client, rconn)
-    print('******1******')
+    outputs.input_status("input01", mqtt_client, rconn)
+    outputs.output_status("output01", mqtt_client, rconn)
+
 
 def event2(mqtt_client, rconn):
     "event2 is to publish status, and send temperature"
-    outputs.status_request(mqtt_client, rconn)
+    outputs.input_status("input01", mqtt_client, rconn)
+    outputs.output_status("output01", mqtt_client, rconn)
     temperature = hardware.get_temperature()
     redis_ops.log_temperature(rconn, temperature)
-    print('******2******')
 
-def event3(mqtt_client, rconn):
-    "event3 is to publish status, and send temperature"
-    outputs.status_request(mqtt_client, rconn)
-    temperature = hardware.get_temperature()
-    redis_ops.log_temperature(rconn, temperature)
-    print('******3******')
-
-def event4(mqtt_client, rconn):
-    "event4 is to publish status, and send temperature"
-    outputs.status_request(mqtt_client, rconn)
-    temperature = hardware.get_temperature()
-    redis_ops.log_temperature(rconn, temperature)
-    print('******4******')
-
-def event5(mqtt_client, rconn):
-    "event5 is to publish status, and temperatue and start schedule for next hour"
-    outputs.status_request(mqtt_client, rconn)
-    temperature = hardware.get_temperature()
-    redis_ops.log_temperature(rconn, temperature)
-    print('******5******')
 
 
 
@@ -179,10 +164,15 @@ class ScheduledEvents(object):
     def __init__(self, mqtt_client, rconn):
         "Stores the mqtt_clent and rconn and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
-        self.event_list = [(event1, 2), (event2, 9), (event3, 24), (event4, 39), (event5, 54)]
+        self.event_list = [(event1, 2), (event2, 9), (event2, 24), (event2, 39), (event2, 54)]
         self.mqtt_client = mqtt_client
         self.rconn = rconn
         self.schedule = sched.scheduler(time.time, time.sleep)
+
+
+    @property
+    def queue(self):
+        return self.schedule.queue
 
 
     def _create_next_hour_events(self):

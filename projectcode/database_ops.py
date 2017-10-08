@@ -14,6 +14,13 @@ from .. import FailPage, GoTo, ValidateError, ServerError
 
 from . import hardware
 
+
+# _OUTPUTS is a dictionary which has keys output names, and values being a tuple of (type, value, onpower, BCM number, description)
+# where type is one of 'text', 'boolean', 'integer'
+# value is the default value to put in the database when first created
+# onpower is True if the 'default value' is to be set on power up, or False if last recorded value is to be used
+# BCM number is the appropriate BCM pin number, or None if not relevant
+
 _OUTPUTS = hardware.get_outputs()
 
 # If it does not already exist, a database will be created in a directory
