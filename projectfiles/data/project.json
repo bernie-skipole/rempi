@@ -355,8 +355,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 0,
-"interval_target": null,
+"interval": 10,
+"interval_target": 13,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
