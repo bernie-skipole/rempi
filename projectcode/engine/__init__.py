@@ -138,10 +138,8 @@ def event1(mqtt_client):
 def event2(mqtt_client):
     "event2 is to publish status, and send temperature"
     outputs.input_status("input01", mqtt_client)
+    outputs.input_status("input03", mqtt_client)     # temperature
     outputs.output_status("output01", mqtt_client)
-    temperature = hardware.get_temperature()
-    # publish temperature to do
-
 
 
 
