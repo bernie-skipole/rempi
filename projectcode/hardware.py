@@ -45,7 +45,7 @@ _INPUTS = {"input01" : ('boolean', True, 23, "BCM 23 - Limit switch, when ON the
 
 
 
-import time
+import time, random
 
 _gpio_control = True
 try:

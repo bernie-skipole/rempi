@@ -35,6 +35,8 @@ def _get_sensor_values(sensors):
                 value = 'OFF'
         elif input_type == 'text':
             value = hardware.get_text_input(name)
+        elif input_type == 'float':
+            value = str(hardware.get_float_input(name))
         else:
             value = ''
         values.append(value)

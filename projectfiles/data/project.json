@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.0.3",
-"skipole": "0.0.37",
+"skipole": "0.0.39",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -1304,7 +1304,8 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -1406,7 +1407,8 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -1442,7 +1444,8 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]
@@ -2289,7 +2292,6 @@
 "clear_error": false,
 "error_class": "errorcol",
 "linebreaks": true,
-"project_ident": "",
 "replace_strings": [],
 "show": true,
 "show_error": "",
@@ -3554,7 +3556,8 @@
 "failmessage": "Javascript failure - This page requires javascript to be enabled in your browser.",
 "show": true,
 "escape": true,
-"linebreaks": true
+"linebreaks": true,
+"decode": false
 }
 ]
 ]

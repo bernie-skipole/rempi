@@ -120,7 +120,7 @@ def _inputcallback(name, mqtt_client):
 
 def listen_to_inputs(mqtt_client):
     """create an input Listen object (defined in hardware.py),
-       which calls inputcallback on a pin change"""
+       which calls _inputcallback on a pin change"""
     listen = hardware.Listen(_inputcallback, mqtt_client)
     listen.start_loop()
     return listen
