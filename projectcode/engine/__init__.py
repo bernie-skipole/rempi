@@ -36,7 +36,7 @@ except:
 
 from .. import hardware
 
-from .communications import outputs
+from .import communications
 
 
 def from_topic():
@@ -50,16 +50,16 @@ def _on_message(client, userdata, message):
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs'):
-        outputs.action(client, message)
+        communications.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Outputs'):
-        outputs.action(client, message)
+        communications.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Inputs'):
-        outputs.read(client, message)
+        communications.read(client, message)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            outputs.status_request(client, message)
+            communications.status_request(client, message)
 
 
 def create_mqtt():
@@ -131,15 +131,15 @@ def listen_to_inputs(mqtt_client):
 
 def event1(mqtt_client):
     "event1 is to publish status"
-    outputs.input_status("input01", mqtt_client)
-    outputs.output_status("output01", mqtt_client)
+    communications.input_status("input01", mqtt_client)
+    communications.output_status("output01", mqtt_client)
 
 
 def event2(mqtt_client):
     "event2 is to publish status, and send temperature"
-    outputs.input_status("input01", mqtt_client)
-    outputs.input_status("input03", mqtt_client)     # temperature
-    outputs.output_status("output01", mqtt_client)
+    communications.input_status("input01", mqtt_client)
+    communications.input_status("input03", mqtt_client)     # temperature
+    communications.output_status("output01", mqtt_client)
 
 
 

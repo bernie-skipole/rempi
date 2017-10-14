@@ -1,10 +1,10 @@
-# If comunications recieved by mqtt for hardware input or output status
-# then reply by publishing the status
+# If comunications recieved by mqtt for hardware input or output
 
-# Can also set output status if a request is received by mqtt
+# can set outputs and
+# reply by publishing the status
 
 
-from ... import hardware, database_ops
+from .. import hardware, database_ops
 
 
 def from_topic():
@@ -25,11 +25,17 @@ def status_request(mqtt_client, message=''):
 
 
 def read(mqtt_client, message):
-    "Deals with reading Inputs"
+    "Deals with a request to read a specific Input"
     payload = message.payload.decode("utf-8")
     if (message.topic == 'From_WebServer/Inputs/input01') or (message.topic == 'From_ServerEngine/Inputs/input01'):
         if payload == "status_request":
             input_status('input01', mqtt_client, message)
+    if (message.topic == 'From_WebServer/Inputs/input02') or (message.topic == 'From_ServerEngine/Inputs/input02'):
+        if payload == "status_request":
+            input_status('input02', mqtt_client, message)
+    if (message.topic == 'From_WebServer/Inputs/input03') or (message.topic == 'From_ServerEngine/Inputs/input03'):
+        if payload == "status_request":
+            input_status('input03', mqtt_client, message)
 
 
 def input_status(input_name, mqtt_client, message=''):
@@ -100,17 +106,15 @@ def output01_ON(mqtt_client, message):
     hardware.set_boolean_output("output01", True)
     # Set output value in database
     database_ops.set_output("output01", True)
-    if mqtt_client is not None:
-        topic = from_topic() + '/Outputs/output01'
-        mqtt_client.publish(topic=topic, payload='ON')
+    # respond with output01 status
+    output01_status(mqtt_client)
 
 def output01_OFF(mqtt_client, message):
     "set output01 pin low"
     hardware.set_boolean_output("output01", False)
     # Set output value in database
     database_ops.set_output("output01", False)
-    if mqtt_client is not None:
-        topic = from_topic() + '/Outputs/output01'
-        mqtt_client.publish(topic=topic, payload='OFF')
+    # respond with output01 status
+    output01_status(mqtt_client)
 
 
