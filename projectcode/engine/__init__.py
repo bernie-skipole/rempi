@@ -5,15 +5,15 @@
 #
 # This module contains the functions:
 #
-# create_mqtt_redis
+# create_mqtt
 #
-# which returns a tuple (mqtt client, redis connection),
+# which returns an mqtt client
 # with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
 # and running a threaded loop
 # and with an on_message callback that calls further functions
 # within this package
 #
-# listen_to_inputs(mqtt_client, rconn)
+# listen_to_inputs(mqtt_client)
 #
 # Which returns a Listen object that listens for input pin changes
 # and publishes to topic "From_Pi01/Inputs" with payload the name
@@ -36,7 +36,7 @@ except:
 
 from .. import hardware
 
-from .communications import outputs, redis_ops
+from .communications import outputs
 
 
 def from_topic():
@@ -50,48 +50,37 @@ def _on_message(client, userdata, message):
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs'):
-        outputs.action(client, userdata, message)
+        outputs.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Outputs'):
-        outputs.action(client, userdata, message)
+        outputs.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Inputs'):
-        outputs.read(client, userdata, message)
+        outputs.read(client, message)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            outputs.status_request(client, userdata, message)
+            outputs.status_request(client, message)
 
 
-def create_mqtt_redis():
-    """Returns a tuple (mqtt client, redis connection),
+def create_mqtt():
+    """Returns an mqtt client,
        with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""
 
-    rconn = None
     mqtt_client = None
 
     # Get the mqtt server parameters from hardware.py
     mqtt_ip, mqtt_port, mqtt_username, mqtt_password = hardware.get_mqtt()
 
-    try:
-        # create a redis connction
-        rconn = redis_ops.open_redis()
-    except:
-        rconn = None
-
-    if rconn is None:
-        print("Open Redis connection failed", file=sys.stderr)
-
-
     if not _mqtt_mod:
         print("Failed to create mqtt_client", file=sys.stderr)
-        return (None, rconn)
+        return
 
     try:
         # create an mqtt client instance
-        mqtt_client = mqtt.Client(client_id=hardware.get_name(), userdata=rconn)
+        mqtt_client = mqtt.Client(client_id=hardware.get_name())
 
         # attach callback function to client
         mqtt_client.on_message = _on_message
@@ -116,24 +105,23 @@ def create_mqtt_redis():
     if mqtt_client is None:
         print("Failed to create mqtt_client", file=sys.stderr)
 
-    return (mqtt_client, rconn)
+    return mqtt_client
 
 
 ###  input pin changes ###
 
 
-def _inputcallback(name, userdata):
+def _inputcallback(name, mqtt_client):
     "Callback when an input pin changes, name is the pin name"
-    mqtt_client, rconn = userdata
     if mqtt_client is None:
         return
     mqtt_client.publish(from_topic() + "/Inputs", payload=name)
 
 
-def listen_to_inputs(mqtt_client, rconn):
+def listen_to_inputs(mqtt_client):
     """create an input Listen object (defined in hardware.py),
        which calls inputcallback on a pin change"""
-    listen = hardware.Listen(_inputcallback, (mqtt_client, rconn))
+    listen = hardware.Listen(_inputcallback, mqtt_client)
     listen.start_loop()
     return listen
 
@@ -141,18 +129,18 @@ def listen_to_inputs(mqtt_client, rconn):
 ###  scheduled actions ###
 
 
-def event1(mqtt_client, rconn):
+def event1(mqtt_client):
     "event1 is to publish status"
-    outputs.input_status("input01", mqtt_client, rconn)
-    outputs.output_status("output01", mqtt_client, rconn)
+    outputs.input_status("input01", mqtt_client)
+    outputs.output_status("output01", mqtt_client)
 
 
-def event2(mqtt_client, rconn):
+def event2(mqtt_client):
     "event2 is to publish status, and send temperature"
-    outputs.input_status("input01", mqtt_client, rconn)
-    outputs.output_status("output01", mqtt_client, rconn)
+    outputs.input_status("input01", mqtt_client)
+    outputs.output_status("output01", mqtt_client)
     temperature = hardware.get_temperature()
-    redis_ops.log_temperature(rconn, temperature)
+    # publish temperature to do
 
 
 
@@ -161,12 +149,11 @@ def event2(mqtt_client, rconn):
 
 class ScheduledEvents(object):
 
-    def __init__(self, mqtt_client, rconn):
-        "Stores the mqtt_clent and rconn and creates the schedule of hourly events"
+    def __init__(self, mqtt_client):
+        "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
         self.event_list = [(event1, 2), (event2, 9), (event2, 24), (event2, 39), (event2, 54)]
         self.mqtt_client = mqtt_client
-        self.rconn = rconn
         self.schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -189,7 +176,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = self.thishour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.mqtt_client, self.rconn)
+                                   argument = self.mqtt_client
                                    )
 
         # schedule a final event to occur 30 seconds after last event
@@ -230,7 +217,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.mqtt_client, self.rconn)
+                                       argument = self.mqtt_client
                                        )
 
         # schedule a final event to occur 30 seconds after last event
@@ -253,7 +240,7 @@ class ScheduledEvents(object):
 # add them in time order to the self.event_list attribute, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents(mqtt_client, rconn)
+# scheduled_events = ScheduledEvents(mqtt_client)
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread

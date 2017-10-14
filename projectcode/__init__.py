@@ -45,21 +45,21 @@ def start_project(project, projectfiles, path, option):
     # set the initial start-up values
     control.set_multi_outputs(output_dict)
 
-    # Get the mqtt client and redis connection
-    mqtt_client, rconn = engine.create_mqtt_redis()
+    # Get the mqtt client connection
+    mqtt_client = engine.create_mqtt()
 
     # create an input listener, which publishes messages on an input pin change
-    listen = engine.listen_to_inputs(mqtt_client, rconn)
+    listen = engine.listen_to_inputs(mqtt_client)
 
     # create an event schedular to do periodic actions
-    scheduled_events = engine.ScheduledEvents(mqtt_client, rconn)
+    scheduled_events = engine.ScheduledEvents(mqtt_client)
     # this is a callable which runs scheduled events, it
     # needs to be called in its own thread
     run_scheduled_events = threading.Thread(target=scheduled_events)
     # and start the thread
     run_scheduled_events.start()
 
-    return {'mqtt_client':mqtt_client, 'rconn':rconn, 'listen':listen, 'scheduled_events':scheduled_events}
+    return {'mqtt_client':mqtt_client, 'listen':listen, 'scheduled_events':scheduled_events}
 
 
 def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):

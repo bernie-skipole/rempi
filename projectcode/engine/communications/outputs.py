@@ -12,27 +12,27 @@ def from_topic():
     return 'From_' + hardware.get_name()
 
 
-def status_request(mqtt_client, rconn, message=''):
+def status_request(mqtt_client, message=''):
     "Request received for general status request"
     # call each pin status in turn
-    output01_status(mqtt_client, rconn, message)
+    output01_status(mqtt_client, message)
     input_names = hardware.get_input_names()
     for name in input_names:
-        input_status(name, mqtt_client, rconn, message)
+        input_status(name, mqtt_client, message)
 
 
 ###### INPUTS ######
 
 
-def read(mqtt_client, rconn, message):
+def read(mqtt_client, message):
     "Deals with reading Inputs"
     payload = message.payload.decode("utf-8")
     if (message.topic == 'From_WebServer/Inputs/input01') or (message.topic == 'From_ServerEngine/Inputs/input01'):
         if payload == "status_request":
-            input_status('input01', mqtt_client, rconn, message)
+            input_status('input01', mqtt_client, message)
 
 
-def input_status(input_name, mqtt_client, rconn, message=''):
+def input_status(input_name, mqtt_client, message=''):
     """If a request for an input status has been received, respond to it"""
     if mqtt_client is None:
         return
@@ -53,24 +53,24 @@ def input_status(input_name, mqtt_client, rconn, message=''):
 ###### OUTPUTS ######
 
 
-def action(mqtt_client, rconn, message):
+def action(mqtt_client, message):
     "Deals with setting Outputs"
     payload = message.payload.decode("utf-8")
     if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01'):
         if payload == "ON":
-            output01_ON(mqtt_client, rconn, message)
+            output01_ON(mqtt_client, message)
         elif payload == "OFF":
-            output01_OFF(mqtt_client, rconn, message)
+            output01_OFF(mqtt_client, message)
         else:
-            output01_status(mqtt_client, rconn, message)
+            output01_status(mqtt_client, message)
 
 
-def output_status(output_name, mqtt_client, rconn, message=''):
+def output_status(output_name, mqtt_client, message=''):
     """If a request for an output status has been received, respond to it"""
     if mqtt_client is None:
         return
     if output_name == 'output01':
-        output01_status(mqtt_client, rconn, message)
+        output01_status(mqtt_client, message)
     # add elif's as further outputs defined
 
 
@@ -79,7 +79,7 @@ def output_status(output_name, mqtt_client, rconn, message=''):
 
 ###### output01 #####
 
-def output01_status(mqtt_client, rconn, message=''):
+def output01_status(mqtt_client, message=''):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
     if mqtt_client is None:
@@ -95,7 +95,7 @@ def output01_status(mqtt_client, rconn, message=''):
     else:
         mqtt_client.publish(topic=topic, payload='OFF')
 
-def output01_ON(mqtt_client, rconn, message):
+def output01_ON(mqtt_client, message):
     "set output01 pin high"
     hardware.set_boolean_output("output01", True)
     # Set output value in database
@@ -104,7 +104,7 @@ def output01_ON(mqtt_client, rconn, message):
         topic = from_topic() + '/Outputs/output01'
         mqtt_client.publish(topic=topic, payload='ON')
 
-def output01_OFF(mqtt_client, rconn, message):
+def output01_OFF(mqtt_client, message):
     "set output01 pin low"
     hardware.set_boolean_output("output01", False)
     # Set output value in database

@@ -10,10 +10,6 @@ _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
-            'redis_ip' : 'localhost',
-            'redis_port' : 6379,
-            'redis_auth' : 'creampie',
-            'redis_db': 0,
             'DS18B20': '28-000007e4291f'     # Edit for the correct temperature sensor chip DS18B20
           }
 
@@ -66,13 +62,6 @@ def get_name():
 def get_mqtt():
     "Returns tuple of mqtt server ip, port, username, password"
     return (_CONFIG['mqtt_ip'], _CONFIG['mqtt_port'], _CONFIG['mqtt_username'], _CONFIG['mqtt_password'])
-
-
-
-def get_redis():
-    "Returns tuple of redis ip, port, auth, db"
-    return (_CONFIG['redis_ip'], _CONFIG['redis_port'], _CONFIG['redis_auth'], _CONFIG['redis_db'])
-
 
 
 def initial_setup_outputs():
