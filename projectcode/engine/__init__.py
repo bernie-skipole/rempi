@@ -129,14 +129,16 @@ def listen_to_inputs(mqtt_client):
 ###  scheduled actions ###
 
 
-def event1(mqtt_client):
+def event1(*args):
     "event1 is to publish status"
+    mqtt_client = args[0]
     communications.input_status("input01", mqtt_client)
     communications.output_status("output01", mqtt_client)
 
 
-def event2(mqtt_client):
+def event2(*args):
     "event2 is to publish status, and send temperature"
+    mqtt_client = args[0]
     communications.input_status("input01", mqtt_client)
     communications.input_status("input03", mqtt_client)     # temperature
     communications.output_status("output01", mqtt_client)
@@ -174,7 +176,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = self.thishour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = self.mqtt_client
+                                   argument = (self.mqtt_client,)
                                    )
 
         # schedule a final event to occur 30 seconds after last event
@@ -215,7 +217,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = self.mqtt_client
+                                       argument = (self.mqtt_client,)
                                        )
 
         # schedule a final event to occur 30 seconds after last event

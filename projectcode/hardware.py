@@ -283,7 +283,7 @@ def get_temperature():
 
     # for testing purposes, return a fake value
     # a random number with mean 6, std dev 0.2
-    # return random.normalvariate(6,0.2)
+    return random.normalvariate(6,0.2)
 
     temp_sensor = "/sys/bus/w1/devices/" + _CONFIG['DS18B20'] + "/w1_slave"
 
