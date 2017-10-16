@@ -8,6 +8,4 @@ Associated repositories:
 
 skipole - skipole web framework used to develop rempi
 
-pi01 - base general project for running on a pi, rempi starts as a copy of pi01.
-
 astro - which will be the main internet facing web server, and which will communicate to a pi running rempi.
