@@ -34,7 +34,7 @@ try:
 except:
     _mqtt_mod = False
 
-from .. import hardware
+from .. import hardware, database_ops
 
 from .import communications
 
@@ -55,6 +55,11 @@ def _on_message(client, userdata, message):
         communications.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Inputs'):
         communications.read(client, message)
+    elif message.topic == "From_WebServer/AdminMessage":
+        # An admin message has been received, with format 'username:message'
+        splitmessage = message.payload.decode("utf-8").split(":", 1)
+        if len(splitmessage) == 2:
+            database_ops.set_message(*splitmessage)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")
