@@ -6,7 +6,7 @@ import sys, threading
 
 from .. import FailPage, GoTo, ValidateError, ServerError
 
-from . import sensors, control, information, login, setup, database_ops, hardware, engine
+from . import home, sensors, control, information, login, setup, database_ops, hardware, engine
 
 
 # any page not listed here requires basic authentication
@@ -86,6 +86,16 @@ def start_call(environ, path, project, called_ident, caller_ident, received_cook
 
 def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "This function is called when a Responder wishes to submit data for processing in some manner"
+
+
+    # calls to home package
+    if submit_list and (submit_list[0] == 'home'):
+        try:
+            submitfunc = getattr(home, submit_list[1])
+        except:
+            raise FailPage("submit_list contains 'home', but function not recognised")
+        return submitfunc(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
+
 
     # calls to sensors package
     if submit_list and (submit_list[0] == 'sensors'):

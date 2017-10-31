@@ -941,14 +941,14 @@
 [
 "Part",
 {
-"tag_name": "p",
+"tag_name": "h2",
 "brief": "About text",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"You are connected to RemPi 01.  This device accepts inputs which it displays on the 'Sensors' page, and controls outputs which can be accessed via the 'Control' page.\r\n\r\nPlease choose a page:"
+"You are connected to Raspberry Pi - RemPi 01."
 ]
 ]
 }
@@ -1064,6 +1064,49 @@
 "show": true,
 "show_error": "",
 "widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Messages section",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Admin messages",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Status messages from system administrators:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "messages",
+"brief": "Shows admin messages",
+"fields": {
+"para_text": "",
+"show": true,
+"widget_class": "w3-panel",
 "widget_style": ""
 }
 }
@@ -3384,10 +3427,15 @@
 },
 "index": {
 "ident": 1,
-"brief": "Responder to fill in index_template fields",
+"brief": "Fills in the home template",
 "RespondPage": {
-"class": "NoOperation",
+"class": "SubmitData",
 "original_args": {
+"fail_ident": 2001,
+"submit_list": [
+"home",
+"index_page"
+],
 "target_ident": 2001
 },
 "original_fields": {}
