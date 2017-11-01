@@ -247,7 +247,7 @@ class Listen(object):
       
     """ 
 
-    def __init__(self, callbackfunction, userdata):
+    def __init__(self, callbackfunction, userdata=None):
         self.set_callback = callbackfunction
         self.userdata = userdata
 

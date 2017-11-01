@@ -7,13 +7,13 @@
 #
 # create_mqtt
 #
-# which returns an mqtt client
+# which creates an mqtt client
 # with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
 # and running a threaded loop
 # and with an on_message callback that calls further functions
 # within this package
 #
-# listen_to_inputs(mqtt_client)
+# listen_to_inputs()
 #
 # Which returns a Listen object that listens for input pin changes
 # and publishes to topic "From_Pi01/Inputs" with payload the name
@@ -33,6 +33,12 @@ try:
     import paho.mqtt.client as mqtt
 except:
     _mqtt_mod = False
+
+# initially assume no mqtt connection
+_mqtt_connected = False
+
+# The mqtt_client
+MQTT_CLIENT = None
 
 from .. import hardware, database_ops
 
@@ -67,66 +73,100 @@ def _on_message(client, userdata, message):
             communications.status_request(client, message)
 
 
+# The callback for when the client receives a CONNACK response from the server.
+def _on_connect(client, userdata, flags, rc):
+    global _mqtt_connected
+    if rc != 0:
+        # client not connected
+        _mqtt_connected = False
+        database_ops.set_message("System", "MQTT client failed to connect, rc code " + str(rc))
+        return
+    _mqtt_connected = True
+    database_ops.set_message("System", "MQTT client connected")
+    print("MQTT client connected")
+    # Subscribing in on_connect() means that if we lose the connection and
+    # reconnect then subscriptions will be renewed.
+    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
+    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+
+
+def _on_disconnect(client, userdata, rc):
+    global _mqtt_connected
+    database_ops.set_message("System", "MQTT client disconnected, rc code " + str(rc))
+    _mqtt_connected = False
+
+
 def create_mqtt():
-    """Returns an mqtt client,
+    """Creates an mqtt client,
        with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""
 
-    mqtt_client = None
+    global MQTT_CLIENT
 
     # Get the mqtt server parameters from hardware.py
     mqtt_ip, mqtt_port, mqtt_username, mqtt_password = hardware.get_mqtt()
 
     if not _mqtt_mod:
         print("Failed to create mqtt_client", file=sys.stderr)
+        database_ops.set_message("System", "Module paho.mqtt.client not available, failed to create mqtt client")
         return
+
+    print("Waiting for MQTT connection...")
 
     try:
         # create an mqtt client instance
-        mqtt_client = mqtt.Client(client_id=hardware.get_name())
+        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name())
 
         # attach callback function to client
-        mqtt_client.on_message = _on_message
+        MQTT_CLIENT.on_connect = _on_connect
+        MQTT_CLIENT.on_disconnect = _on_disconnect
+        MQTT_CLIENT.on_message = _on_message
 
         # If a username/password is set on the mqtt server
         if mqtt_username and mqtt_password:
-            mqtt_client.username_pw_set(username = mqtt_username, password = mqtt_password)
+            MQTT_CLIENT.username_pw_set(username = mqtt_username, password = mqtt_password)
         elif mqtt_username:
-            mqtt_client.username_pw_set(username = mqtt_username)
+            MQTT_CLIENT.username_pw_set(username = mqtt_username)
 
         # connect to the server
-        mqtt_client.connect(host=mqtt_ip, port=mqtt_port)
-
-        # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
-        mqtt_client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+        MQTT_CLIENT.connect(host=mqtt_ip, port=mqtt_port)
 
         # start a threaded loop
-        mqtt_client.loop_start()
-    except:
-        mqtt_client = None
+        MQTT_CLIENT.loop_start()
+    except Exception as e:
+        database_ops.set_message("System", "Failure creating MQTT connection.")
+        MQTT_CLIENT = None
 
-    if mqtt_client is None:
+    if MQTT_CLIENT is None:
         print("Failed to create mqtt_client", file=sys.stderr)
 
-    return mqtt_client
+
+### output status request ###
+
+def output_status(output_name):
+    """If a request for an output status has been received, respond to it"""
+    global MQTT_CLIENT
+    communications.output_status(output_name, MQTT_CLIENT)
 
 
 ###  input pin changes ###
 
 
-def _inputcallback(name, mqtt_client):
+def _inputcallback(name, userdata):
     "Callback when an input pin changes, name is the pin name"
-    if mqtt_client is None:
+    global MQTT_CLIENT
+    if MQTT_CLIENT is None:
         return
-    mqtt_client.publish(from_topic() + "/Inputs", payload=name)
+    if _mqtt_connected:
+        MQTT_CLIENT.publish(from_topic() + "/Inputs", payload=name)
 
 
-def listen_to_inputs(mqtt_client):
+def listen_to_inputs():
     """create an input Listen object (defined in hardware.py),
        which calls _inputcallback on a pin change"""
-    listen = hardware.Listen(_inputcallback, mqtt_client)
+    listen = hardware.Listen(_inputcallback)
     listen.start_loop()
     return listen
 
@@ -135,18 +175,26 @@ def listen_to_inputs(mqtt_client):
 
 
 def event1(*args):
-    "event1 is to publish status"
-    mqtt_client = args[0]
-    communications.input_status("input01", mqtt_client)
-    communications.output_status("output01", mqtt_client)
+    "event1 is to publish status, and make MQTT connection if not already made"
+    if _mqtt_mod is None:
+        return
+    if MQTT_CLIENT is None:
+        create_mqtt()
+    if _mqtt_connected:
+        communications.input_status("input01", MQTT_CLIENT)
+        communications.output_status("output01", MQTT_CLIENT)
 
 
 def event2(*args):
-    "event2 is to publish status, and send temperature"
-    mqtt_client = args[0]
-    communications.input_status("input01", mqtt_client)
-    communications.input_status("input03", mqtt_client)     # temperature
-    communications.output_status("output01", mqtt_client)
+    "event2 is to publish status, and send temperature, and make MQTT connection if not already made"
+    if _mqtt_mod is None:
+        return
+    if MQTT_CLIENT is None:
+        create_mqtt()
+    if _mqtt_connected:
+        communications.input_status("input01", MQTT_CLIENT)
+        communications.input_status("input03", MQTT_CLIENT)     # temperature
+        communications.output_status("output01", MQTT_CLIENT)
 
 
 
@@ -154,11 +202,11 @@ def event2(*args):
 
 class ScheduledEvents(object):
 
-    def __init__(self, mqtt_client):
+    def __init__(self, userdata=None):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
         self.event_list = [(event1, 2), (event2, 9), (event2, 24), (event2, 39), (event2, 54)]
-        self.mqtt_client = mqtt_client
+        self.userdata = userdata
         self.schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -181,7 +229,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = self.thishour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.mqtt_client,)
+                                   argument = (self.userdata,)
                                    )
 
         # schedule a final event to occur 30 seconds after last event
@@ -222,7 +270,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.mqtt_client,)
+                                       argument = (self.userdata,)
                                        )
 
         # schedule a final event to occur 30 seconds after last event
@@ -245,7 +293,7 @@ class ScheduledEvents(object):
 # add them in time order to the self.event_list attribute, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents(mqtt_client)
+# scheduled_events = ScheduledEvents()
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread

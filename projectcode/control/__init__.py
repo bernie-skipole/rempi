@@ -2,7 +2,8 @@ import collections
 
 from ... import FailPage, GoTo, ValidateError, ServerError
 
-from .. import database_ops, hardware
+from .. import database_ops, hardware, engine
+
 
 
 def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -77,22 +78,12 @@ def _set_output(name, value, proj_data={}):
     output_type = hardware.get_output_type(name)
     if output_type is None:
         return
-    if ('mqtt_client' in proj_data):
-        mqtt_client = proj_data['mqtt_client']
-    else:
-        mqtt_client = None
     if output_type == 'boolean':
         if (value == 'True') or (value == 'true') or (value == 'ON') or (value is True):
             value = True
         else:
             value = False
         hardware.set_boolean_output(name, value)
-        if mqtt_client is not None:
-            topic = "From_" + hardware.get_name() + "/Outputs/" + name
-            if value:
-                mqtt_client.publish(topic=topic, payload='ON')
-            else:
-                mqtt_client.publish(topic=topic, payload='OFF')
     if output_type == 'int':
         if not isinstance(value, int):
             try:
@@ -110,6 +101,8 @@ def _set_output(name, value, proj_data={}):
         
     # Set output value in database
     database_ops.set_output(name, value)
+    # publish output status by mqtt
+    engine.output_status(name)
 
 
 def _get_output(name):

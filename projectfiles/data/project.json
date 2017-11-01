@@ -941,7 +941,7 @@
 [
 "Part",
 {
-"tag_name": "h2",
+"tag_name": "h3",
 "brief": "About text",
 "show": true,
 "hide_if_empty": false,
@@ -1085,14 +1085,14 @@
 [
 "Part",
 {
-"tag_name": "h2",
+"tag_name": "h3",
 "brief": "Admin messages",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"Status messages from system administrators:"
+"Status messages:"
 ]
 ]
 }
