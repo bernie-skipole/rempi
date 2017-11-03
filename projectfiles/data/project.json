@@ -66,21 +66,21 @@
 },
 "parts": [
 [
-"Part",
+"Widget",
 {
-"tag_name": "h3",
-"brief": "Raspberry RemPi01 title",
+"class": "headers.HeaderText3",
+"name": "left_name",
+"brief": "Left section raspberry pi name",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"large_text": "",
 "show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item"
-},
-"parts": [
-[
-"Text",
-"RemPi01"
-]
-]
+"show_error": "",
+"small_text": "",
+"widget_class": "w3-bar-item",
+"widget_style": ""
+}
 }
 ],
 [
@@ -2862,7 +2862,7 @@
 "parts": [
 [
 "Text",
-"This page sets system parameters for this RemPi01 unit."
+"Most system parameters should be set in the file hardware.py which defines mqtt server, device name and input/output hardware. This page sets user controlled parameters."
 ]
 ]
 }

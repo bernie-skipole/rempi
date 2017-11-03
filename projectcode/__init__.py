@@ -147,10 +147,19 @@ def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, p
 def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
     """This function is called at the end of a call prior to filling the returned page with page_data,
        it can also return an optional ident_data string to embed into forms."""
+
     # in this example, status is the value on input02
     status = hardware.get_text_input('input02')
     if status:
         page_data['topnav','status', 'para_text'] = status
     else:
         page_data['topnav','status', 'para_text'] = "Status: input02 unavailable"
-    return
+
+
+    if page_type != "TemplatePage":
+        return
+
+    page_data['leftnav','left_name','large_text'] = hardware.get_name()
+
+
+

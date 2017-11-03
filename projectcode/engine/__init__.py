@@ -205,7 +205,11 @@ class ScheduledEvents(object):
     def __init__(self, userdata=None):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
-        self.event_list = [(event1, 2), (event2, 9), (event2, 24), (event2, 39), (event2, 54)]
+        self.event_list = [(event1, 2),   # event1 at two minutes past the hour
+                           (event2, 9),   # event 2 at 9 minutes past the hour
+                           (event2, 24),  # event 2 again at 24 minutes past the hour
+                           (event2, 39),  # etc.,
+                           (event2, 54)]
         self.userdata = userdata
         self.schedule = sched.scheduler(time.time, time.sleep)
 
