@@ -889,18 +889,21 @@
 },
 "parts": [
 [
-"Part",
+"Widget",
 {
-"tag_name": "h2",
-"brief": "Page heading",
+"class": "headers.HeaderText2",
+"name": "headingtext",
+"brief": "Heading raspberry pi name",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"large_text": "",
 "show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"RemPi 01"
-]
-]
+"show_error": "",
+"small_text": "",
+"widget_class": "",
+"widget_style": ""
+}
 }
 ]
 ]
@@ -939,18 +942,21 @@
 },
 "parts": [
 [
-"Part",
+"Widget",
 {
-"tag_name": "h3",
-"brief": "About text",
+"class": "headers.HeaderText3",
+"name": "intro",
+"brief": "Introduction text",
+"fields": {
+"clear_error": false,
+"error_class": "",
+"large_text": "",
 "show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"You are connected to Raspberry Pi - RemPi 01."
-]
-]
+"show_error": "",
+"small_text": "",
+"widget_class": "",
+"widget_style": ""
+}
 }
 ],
 [
