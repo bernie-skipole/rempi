@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
-"version": "0.0.4",
-"skipole": "0.1.0",
+"version": "0.1.0",
+"skipole": "0.2.0",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -12,7 +12,7 @@
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
-"general_json": "lib,general_json",
+"general_json": 2006,
 "home": 1,
 "information": 4,
 "jquery_core": "lib,jquery_core",
@@ -724,6 +724,14 @@
 ]
 }
 ]
+},
+"general_json": {
+"ident": 2006,
+"brief": "Empty JSON file for general use",
+"JSON": {
+"enable_cache": false,
+"content": {}
+}
 },
 "index_template": {
 "ident": 2001,
