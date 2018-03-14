@@ -19,7 +19,9 @@ _PUBLIC_PAGES = [1,  # index
                540,  # no_javascript
               1002,  # css
               1004,  # css
-              1006   # css
+              1006,  # css
+              5001,  # weather
+              5002   # weather by JSON
                ]
 
 

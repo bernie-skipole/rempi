@@ -2639,6 +2639,257 @@
 }
 }
 }
+},
+"weather": {
+"ident": 5000,
+"brief": "Folder for weather station pages",
+"default_page_name": "index",
+"restricted": false,
+"folders": {
+"restricted": {
+"ident": 5100,
+"brief": "Restricetd folder for weather template",
+"default_page_name": "index",
+"restricted": true,
+"folders": {},
+"pages": {
+"weather_template": {
+"ident": 5101,
+"brief": "Template page for weather station",
+"TemplatePage": {
+"show_backcol": false,
+"last_scroll": true,
+"interval": 10,
+"interval_target": 5002,
+"lang": "en",
+"backcol": "#115e18",
+"default_error_widget": [
+"",
+"top_error"
+]
+},
+"head": [
+"Part",
+{
+"tag_name": "head",
+"brief": "The head section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The charset meta declaration",
+"show": true,
+"attribs": {
+"charset": "utf-8"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "meta",
+"brief": "The viewport meta declaration",
+"show": true,
+"attribs": {
+"content": "width=device-width, initial-scale=1",
+"name": "viewport"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "title",
+"brief": "The page title element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Page 5101"
+]
+]
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_css",
+"show": true,
+"attribs": {
+"href": "{w3_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to w3_theme_ski_css",
+"show": true,
+"attribs": {
+"href": "{w3_theme_ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"ClosedPart",
+{
+"tag_name": "link",
+"brief": "css link to ski_css",
+"show": true,
+"attribs": {
+"href": "{ski_css}",
+"rel": "stylesheet",
+"type": "text/css"
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to jquery_core",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{jquery_core}"
+},
+"parts": []
+}
+],
+[
+"Part",
+{
+"tag_name": "script",
+"brief": "script link to skipole_js",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"src": "{skipole_js}"
+},
+"parts": []
+}
+]
+]
+}
+],
+"body": [
+"Part",
+{
+"tag_name": "body",
+"brief": "The body section of the page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "svg",
+"brief": "Temperature graph",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"height": "700",
+"width": "700"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "svgbasics.SimpleText",
+"name": "temperature_value",
+"brief": "Shows the temperature value",
+"fields": {
+"dx": "0",
+"dy": "0",
+"fill": "black",
+"font_family": "Arial",
+"font_size": "20",
+"show": true,
+"stroke": "",
+"stroke_width": "",
+"text": "Temperature : 0",
+"widget_class": "",
+"widget_style": "",
+"x": "50",
+"y": "30"
+}
+}
+],
+[
+"Widget",
+{
+"class": "svgmeters.Traditional1",
+"name": "temperature",
+"brief": "Temperature meter",
+"fields": {
+"arrow_stroke": "grey",
+"font_family": "arial",
+"largeintervals": "10",
+"maximum": "40",
+"measurement": "0",
+"minimum": "-10",
+"show": true,
+"smallintervals": "2",
+"transform": "translate(10,10)",
+"widget_class": "",
+"widget_style": ""
+}
+}
+]
+]
+}
+]
+]
+}
+]
+}
+}
+}
+},
+"pages": {
+"index": {
+"ident": 5001,
+"brief": "Fills weather page",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "server_error",
+"submit_list": [
+"sensors",
+"temperature"
+],
+"target_ident": 5101
+},
+"original_fields": {}
+}
+},
+"index_json": {
+"ident": 5002,
+"brief": "JSON filled temperature measurement",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"fail_ident": "general_json",
+"submit_list": [
+"sensors",
+"temperature"
+],
+"target_ident": "general_json"
+},
+"original_fields": {}
+}
+}
+}
 }
 },
 "pages": {

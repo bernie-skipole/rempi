@@ -41,3 +41,10 @@ def _get_sensor_values(sensors):
             value = ''
         values.append(value)
     return values
+
+
+def temperature(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+    "Fills weather station temperature meter"
+    temperature = str(hardware.get_temperature())
+    page_data["temperature", "measurement"] = temperature
+    page_data["temperature_value", "text"] = "Temperature : %s" % (temperature,)
