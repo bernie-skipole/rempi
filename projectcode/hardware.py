@@ -279,11 +279,13 @@ class Listen(object):
 ####### temperature controller #######
 
 def get_temperature():
-    "Returns temperature from probe as floating point number, None on failure"
+    "Returns temperature from probe as floating point number, Returns 0.0 on failure"
 
-    # for testing purposes, return a fake value
-    # a random number with mean 6, std dev 0.2
-    return random.normalvariate(6,0.2)
+    if not _gpio_control:
+        # presumably not running on a raspbery pi
+        # for testing purposes, return a fake value
+        # a random number with mean 6, std dev 2.0
+        return random.normalvariate(6,2.0)
 
     temp_sensor = "/sys/bus/w1/devices/" + _CONFIG['DS18B20'] + "/w1_slave"
 
@@ -291,14 +293,14 @@ def get_temperature():
         with open(temp_sensor, 'r') as f:
             lines = f.readlines()
         if lines[0].strip()[-3:] != 'YES':
-            return
+            return 0.0
         temp_output = lines[1].find('t=')
         if temp_output == -1:
-            return
+            return 0.0
         temp_string = lines[1].strip()[temp_output+2:]
         temperature = float(temp_string) / 1000.0
     except:
-        return
+        return 0.0
     return temperature
 
 

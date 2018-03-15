@@ -1796,7 +1796,7 @@
 "parts": [
 [
 "Text",
-"This page displays sensor inputs."
+"Pi inputs:"
 ]
 ]
 }
@@ -1821,6 +1821,61 @@
 "widget_class": "w3-table w3-bordered w3-centered",
 "widget_style": ""
 }
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "buttons to sensor pages",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Introduces buttons",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Links to individual sensor pages:"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "links.ButtonLink2",
+"name": "temperature",
+"brief": "Link to temperature meter",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_text": "Temperature",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "",
+"link_ident": 5001,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
 }
 ]
 ]
@@ -2780,6 +2835,20 @@
 "brief": "The body section of the page",
 "show": true,
 "hide_if_empty": false,
+"attribs": {
+"class": "w3-theme"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "container",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-container"
+},
 "parts": [
 [
 "Part",
@@ -2802,7 +2871,7 @@
 "fields": {
 "dx": "0",
 "dy": "0",
-"fill": "black",
+"fill": "white",
 "font_family": "Arial",
 "font_size": "20",
 "show": true,
@@ -2835,6 +2904,9 @@
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
 }
 ]
 ]
