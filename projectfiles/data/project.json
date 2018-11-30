@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.2.0",
-"skipole": "1.0.0",
+"skipole": "1.4.0",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -22,7 +22,6 @@
 "server_error": "lib,server_error",
 "set_output01": 3001,
 "set_output01_json": 3002,
-"setup": 5,
 "ski_basic": "lib,ski_basic",
 "ski_checkbox": "lib,ski_checkbox",
 "ski_confirm": "lib,ski_confirm",
@@ -157,25 +156,6 @@
 [
 "Text",
 "Information"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "a",
-"brief": "Link to Setup",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-bar-item w3-button",
-"href": "{setup}"
-},
-"parts": [
-[
-"Text",
-"Setup"
 ]
 ]
 }
@@ -644,6 +624,7 @@
 "action_json": "set_output01_json",
 "button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
+"button_wait_text": "",
 "clear_error": false,
 "container_class": "",
 "div_class": "",
@@ -1050,75 +1031,6 @@
 "show": true,
 "show_error": "",
 "widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "links.ButtonLink2",
-"name": "setup",
-"brief": "Button link to setup page",
-"fields": {
-"button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_text": "Setup",
-"button_wait_text": "Please wait...",
-"buttondiv_class": "ski_mid_button",
-"buttondiv_style": "",
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"get_field1": "",
-"get_field2": "",
-"hide": false,
-"json_ident": "",
-"link_ident": "setup",
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "Messages section",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h3",
-"brief": "Admin messages",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Status messages:"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ParaText",
-"name": "messages",
-"brief": "Shows admin messages",
-"fields": {
-"para_text": "",
-"show": true,
-"widget_class": "w3-panel",
 "widget_style": ""
 }
 }
@@ -1530,6 +1442,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 1,
 "submit_list": [
 "login",
@@ -1890,802 +1803,6 @@
 }
 }
 },
-"system_setup": {
-"ident": 4000,
-"brief": "Folder holding setup templates",
-"default_page_name": "index",
-"restricted": false,
-"folders": {
-"restricted": {
-"ident": 4500,
-"brief": "Holds restricted pages",
-"default_page_name": "index",
-"restricted": true,
-"folders": {},
-"pages": {
-"get_pwr_output01": {
-"ident": 4504,
-"brief": "Gets power option for output01 for json",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": "general_json",
-"submit_list": [
-"setup",
-"get_pwr_output01"
-],
-"target_ident": "general_json"
-},
-"original_fields": {}
-}
-},
-"setup_template": {
-"ident": 4501,
-"brief": "Template setup page",
-"TemplatePage": {
-"show_backcol": false,
-"last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"lang": "en",
-"backcol": "#ffffff",
-"default_error_widget": [
-"",
-"top_error"
-]
-},
-"head": [
-"Part",
-{
-"tag_name": "head",
-"brief": "The head section of the page",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The charset meta declaration",
-"show": true,
-"attribs": {
-"charset": "utf-8"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "meta",
-"brief": "The viewport meta declaration",
-"show": true,
-"attribs": {
-"content": "width=device-width, initial-scale=1",
-"name": "viewport"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "title",
-"brief": "The page title element",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Setup"
-]
-]
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3.css",
-"show": true,
-"attribs": {
-"href": "{w3_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to w3-theme-ski.css",
-"show": true,
-"attribs": {
-"href": "{w3_theme_ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "link",
-"brief": "css link to ski.css",
-"show": true,
-"attribs": {
-"href": "{ski_css}",
-"rel": "stylesheet",
-"type": "text/css"
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to jquery_core",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{jquery_core}"
-},
-"parts": []
-}
-],
-[
-"Part",
-{
-"tag_name": "script",
-"brief": "script link to skipole_js",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"src": "{skipole_js}"
-},
-"parts": []
-}
-]
-]
-}
-],
-"body": [
-"Part",
-{
-"tag_name": "body",
-"brief": "The body section of the page",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-theme"
-},
-"parts": [
-[
-"SectionPlaceHolder",
-{
-"brief": "Left navigation",
-"section_name": "leftnav",
-"placename": "leftnav",
-"multiplier": 1,
-"mtag": "div"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "top navigation",
-"section_name": "topnav",
-"placename": "topnav",
-"multiplier": 1,
-"mtag": "div"
-}
-],
-[
-"SectionPlaceHolder",
-{
-"brief": "top space",
-"section_name": "topspace",
-"placename": "topspace",
-"multiplier": 1,
-"mtag": "div"
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "container",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "error_messages.ErrorDiv",
-"name": "top_error",
-"brief": "Error Div providing a widget for the default error field",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "centre",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel",
-"style": "margin-left:20%"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Setup heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"System setup"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About text",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Most system parameters should be set in the file hardware.py which defines mqtt server, device name and input/output hardware. This page sets user controlled parameters."
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "For access password",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "access password",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Set access password"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.SubmitForm1",
-"name": "accesspassword",
-"brief": "Sets new access password",
-"fields": {
-"action": 4002,
-"action_json": "",
-"button_class": "w3-button w3-theme-d4",
-"button_text": "Submit",
-"clear_error": false,
-"container_class": "",
-"div_class": "",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"left_class": "ski_left_label",
-"left_label": "Submit new access password:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "div holding input fields",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "oldpassword",
-"brief": "Type the current password",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "Type the current password:",
-"label_class": "ski_left_label",
-"maxlength": "30",
-"pattern": "",
-"redstar": false,
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "20",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "newpassword1",
-"brief": "Type the new password",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "Type the new password:",
-"label_class": "ski_left_label",
-"maxlength": "30",
-"pattern": "",
-"redstar": false,
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "20",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "inputtext.TextInput2",
-"name": "newpassword2",
-"brief": "Type the new password again",
-"fields": {
-"clear_error": false,
-"disabled": false,
-"error_class": "w3-panel w3-red",
-"input_accepted_class": "ski_input_accepted",
-"input_class": "ski_input",
-"input_disabled_class": "",
-"input_errored_class": "ski_input_errored",
-"input_text": "",
-"inputdiv_class": "",
-"label": "Type the new password again:",
-"label_class": "ski_left_label",
-"maxlength": "30",
-"pattern": "",
-"redstar": false,
-"required": true,
-"set_input_accepted": false,
-"set_input_errored": false,
-"show": true,
-"show_error": "",
-"size": "20",
-"title": "",
-"type": "text",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ShowPara1",
-"name": "passwordset",
-"brief": "shows the result of setting the paragraph",
-"fields": {
-"clear_error": false,
-"error_class": "w3-panel w3-red",
-"para_class": "",
-"para_text": "The new password has been set.",
-"pre_line": true,
-"show": true,
-"show_error": "",
-"show_para": false,
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "about reverting to default.",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Note: If the password is lost, then the 'setup' directory and contents should be deleted, and the pi powered off and on."
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ParaText",
-"name": "defaults",
-"brief": "Shows default username and password.",
-"fields": {
-"para_text": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "Setup location",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"The setup directory can be found at:"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ParaText",
-"name": "setup",
-"brief": "location of setup directory",
-"fields": {
-"para_text": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-],
-[
-"ClosedPart",
-{
-"tag_name": "hr",
-"brief": "Horizontal rule",
-"show": true
-}
-],
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Outputs heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Outputs - power up values"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About power up values",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"When the Raspberry pi is powered up, outputs can either take the values last set, or can take default 'on power-up' values set here."
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "for output 01",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-section"
-},
-"parts": [
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "output01 heading",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"output01"
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "inputforms.SubmitForm1",
-"name": "set_output01",
-"brief": "Sets power up options for output01",
-"fields": {
-"action": 4003,
-"action_json": 4004,
-"button_class": "w3-button w3-theme-d4",
-"button_text": "Submit",
-"clear_error": false,
-"container_class": "",
-"div_class": "",
-"enctype": "",
-"error_class": "w3-panel w3-red",
-"hidden_field1": "",
-"hidden_field2": "",
-"hidden_field3": "",
-"hidden_field4": "",
-"left_class": "ski_left_label",
-"left_label": "Submit to set power-up option:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-},
-"container_0": [
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "submit container",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Widget",
-{
-"class": "checkbox.CheckBox1",
-"name": "output01_check",
-"brief": "Set to enable power up value",
-"fields": {
-"checkbox": "True",
-"checkbox_class": "w3-check",
-"checked": false,
-"clear_error": false,
-"div_class": "",
-"error_class": "w3-panel w3-red",
-"left_class": "ski_left_label",
-"left_label": "Check to set this value on power-up:",
-"right_class": "",
-"right_label": "",
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
-"class": "radio.BooleanRadio",
-"name": "output01_default",
-"brief": "power on value for output 01",
-"fields": {
-"div_class1": "",
-"div_class2": "",
-"left_class1": "ski_left_label",
-"left_class2": "ski_left_label",
-"left_label1": "On",
-"left_label2": "Off",
-"radio_checked": true,
-"right_class1": "",
-"right_class2": "",
-"right_label1": "",
-"right_label2": "",
-"show": true,
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
-}
-],
-[
-"Widget",
-{
-"class": "paras.ParaText",
-"name": "output01_result",
-"brief": "Text of current power setting for output 01",
-"fields": {
-"para_text": "",
-"show": true,
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-]
-}
-]
-}
-}
-}
-},
-"pages": {
-"access_pwd": {
-"ident": 4002,
-"brief": "Sets the access password",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4501
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_password"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"newpassword1:input_text": "",
-"newpassword2:input_text": "",
-"oldpassword:input_text": ""
-}
-}
-},
-"pwr_output01": {
-"ident": 4003,
-"brief": "Sets power option for output01",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4501
-],
-"alternate_ident": "home",
-"fail_ident": "setup",
-"submit_list": [
-"setup",
-"set_pwr_output01"
-],
-"submit_option": true,
-"target_ident": "setup",
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"output01_check:checkbox": "",
-"output01_default:radio_checked": ""
-}
-}
-},
-"pwr_output01_json": {
-"ident": 4004,
-"brief": "Sets power option for output01 for json",
-"RespondPage": {
-"class": "AllowStore",
-"original_args": {
-"allowed_callers": [
-4501
-],
-"alternate_ident": "home",
-"fail_ident": "general_json",
-"submit_list": [
-"setup",
-"set_pwr_output01"
-],
-"submit_option": true,
-"target_ident": 4504,
-"validate_fail_ident": null,
-"validate_option": false
-},
-"original_fields": {
-"output01_check:checkbox": "",
-"output01_default:radio_checked": ""
-}
-}
-}
-}
-},
 "weather": {
 "ident": 5000,
 "brief": "Folder for weather station pages",
@@ -2926,6 +2043,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "server_error",
 "submit_list": [
 "sensors",
@@ -2942,6 +2060,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "sensors",
@@ -2962,6 +2081,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "home",
 "submit_list": [
 "control",
@@ -2978,6 +2098,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "control",
@@ -3009,6 +2130,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": 2001,
 "submit_list": [
 "home",
@@ -3025,6 +2147,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "home",
 "submit_list": [
 "information",
@@ -3041,6 +2164,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "home",
 "submit_list": [
 "sensors",
@@ -3072,6 +2196,7 @@
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
+"allowed_callers": [],
 "fail_ident": "general_json",
 "submit_list": [
 "sensors",
@@ -3094,22 +2219,6 @@
 "set_output"
 ],
 "target_ident": 2005
-},
-"original_fields": {}
-}
-},
-"setup": {
-"ident": 5,
-"brief": "Responder to fill in setup_template fields",
-"RespondPage": {
-"class": "SubmitData",
-"original_args": {
-"fail_ident": "home",
-"submit_list": [
-"setup",
-"setup_page"
-],
-"target_ident": 4501
 },
 "original_fields": {}
 }

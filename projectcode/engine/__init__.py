@@ -40,9 +40,9 @@ _mqtt_connected = False
 # The mqtt_client
 MQTT_CLIENT = None
 
-from .. import hardware, database_ops
+from .. import hardware
 
-from .import communications
+from . import communications
 
 
 def from_topic():
@@ -61,11 +61,6 @@ def _on_message(client, userdata, message):
         communications.action(client, message)
     elif message.topic.startswith('From_ServerEngine/Inputs'):
         communications.read(client, message)
-    elif message.topic == "From_WebServer/AdminMessage":
-        # An admin message has been received, with format 'username:message'
-        splitmessage = message.payload.decode("utf-8").split(":", 1)
-        if len(splitmessage) == 2:
-            database_ops.set_message(*splitmessage)
     elif message.topic == 'From_ServerEngine':
         # no subtopic, generally an initial full status request
         payload = message.payload.decode("utf-8")
@@ -79,10 +74,8 @@ def _on_connect(client, userdata, flags, rc):
     if rc != 0:
         # client not connected
         _mqtt_connected = False
-        database_ops.set_message("System", "MQTT client failed to connect, rc code " + str(rc))
         return
     _mqtt_connected = True
-    database_ops.set_message("System", "MQTT client connected")
     print("MQTT client connected")
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
@@ -92,7 +85,6 @@ def _on_connect(client, userdata, flags, rc):
 
 def _on_disconnect(client, userdata, rc):
     global _mqtt_connected
-    database_ops.set_message("System", "MQTT client disconnected, rc code " + str(rc))
     _mqtt_connected = False
 
 
@@ -110,7 +102,6 @@ def create_mqtt():
 
     if not _mqtt_mod:
         print("Failed to create mqtt_client", file=sys.stderr)
-        database_ops.set_message("System", "Module paho.mqtt.client not available, failed to create mqtt client")
         return
 
     print("Waiting for MQTT connection...")
@@ -136,7 +127,6 @@ def create_mqtt():
         # start a threaded loop
         MQTT_CLIENT.loop_start()
     except Exception as e:
-        database_ops.set_message("System", "Failure creating MQTT connection.")
         MQTT_CLIENT = None
 
     if MQTT_CLIENT is None:

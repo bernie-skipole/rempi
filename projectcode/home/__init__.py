@@ -4,7 +4,7 @@
 from ... import FailPage, GoTo, ValidateError, ServerError
 
 
-from .. import database_ops, hardware
+from .. import hardware
 
 
 
@@ -15,7 +15,4 @@ def index_page(caller_ident, ident_list, submit_list, submit_dict, call_data, pa
 
     page_data['intro', 'large_text'] = "You are connected to Raspberry Pi - " + hardware.get_name()
 
-    message_string = database_ops.get_all_messages()
-    if message_string:
-        page_data['messages', 'para_text'] = message_string
 

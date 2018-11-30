@@ -6,7 +6,7 @@ import sys, threading
 
 from .. import FailPage, GoTo, ValidateError, ServerError, use_submit_list
 
-from . import control, login, database_ops, hardware, engine
+from . import control, login, hardware, engine
 
 
 # any page not listed here requires basic authentication
@@ -32,23 +32,9 @@ def start_project(project, projectfiles, path, option):
        Can be used to set any initial parameters, and the dictionary returned will be passed as
        'proj_data' to subsequent start_call functions."""
 
-    # checks database exists, if not create it
-    database_ops.start_database(project, projectfiles)
-
-    # Start up message
-    database_ops.set_message("System", "Service startup")
 
     # setup hardware
     hardware.initial_setup_outputs()
-
-    # get dictionary of initial start-up output values from database
-    output_dict = database_ops.power_up_values()
-    if not output_dict:
-        print("Invalid read of database, delete setup directory to revert to defaults")
-        sys.exit(1)
-
-    # set the initial start-up values
-    control.set_multi_outputs(output_dict)
 
     # Create the mqtt client connection
     engine.create_mqtt()

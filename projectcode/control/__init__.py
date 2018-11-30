@@ -2,7 +2,7 @@ import collections
 
 from ... import FailPage, GoTo, ValidateError, ServerError
 
-from .. import database_ops, hardware, engine
+from .. import hardware, engine, redis_ops
 
 
 
@@ -99,8 +99,8 @@ def _set_output(name, value, proj_data={}):
                 # Invalid value
                 return
         
-    # Set output value in database
-    database_ops.set_output(name, value)
+    # Set output value in redis store
+    redis_ops.set_output(name, value)
     # publish output status by mqtt
     engine.output_status(name)
 
@@ -113,5 +113,5 @@ def _get_output(name):
         hardvalue = hardware.get_boolean_output(name)
         if hardvalue is not None:
             return hardvalue
-    # if hardvalue not available, reads the stored output from the database
-    return database_ops.get_output(name)
+    # if hardvalue not available, reads the stored output from the redis store
+    return redis_ops.get_output(name)
