@@ -34,7 +34,7 @@ def open_redis():
     return rconn
 
 
-def set_output(name, value, rconn=None):
+def store_output(name, value, rconn=None):
     "Store an output, given the output name return True on success, False on failure"
     if rconn is None:
         try:
@@ -44,7 +44,7 @@ def set_output(name, value, rconn=None):
     if rconn is None:
         return False
     if name == "output01":
-        return store_output01(value, rconn)
+        return _store_output01(value, rconn)
     return False
 
 
@@ -58,14 +58,14 @@ def get_output(name, rconn=None):
     if rconn is None:
         return
     if name == "output01":
-        result = get_output01(rconn)
+        result = _get_output01(rconn)
         if result == "UNKNOWN":
             return
         return result 
     return        
 
 
-def get_output01(rconn):
+def _get_output01(rconn):
     "Return rempi01_output01 string from redis database, if unable to access redis, return 'UNKNOWN'"
     if rconn is None:
         return 'UNKNOWN'
@@ -81,7 +81,7 @@ def get_output01(rconn):
     return output01
 
 
-def store_output01(value, rconn):
+def _store_output01(value, rconn):
     "Stores the rempi01_output01 value in the database, True on success, False on failure"
     if rconn is None:
         return False
@@ -93,7 +93,38 @@ def store_output01(value, rconn):
     return result
 
 
-def get_input01(rconn):
+def store_input(name, value, rconn=None):
+    "Store an input, given the input name return True on success, False on failure"
+    if rconn is None:
+        try:
+            rconn = open_redis()
+        except:
+            return False
+    if rconn is None:
+        return False
+    if name == "input01":
+        return _store_input01(value, rconn)
+    return False
+
+
+def get_input(name, rconn=None):
+    "Get an input value, given the input name return None on failure"
+    if rconn is None:
+        try:
+            rconn = open_redis()
+        except:
+            return
+    if rconn is None:
+        return
+    if name == "input01":
+        result = _get_input01(rconn)
+        if result == "UNKNOWN":
+            return
+        return result 
+    return
+
+
+def _get_input01(rconn):
     "Return rempi01_input01 string from redis database, if unable to access redis, return 'UNKNOWN'"
     if rconn is None:
         return 'UNKNOWN'
@@ -109,13 +140,13 @@ def get_input01(rconn):
     return input01
 
 
-def store_input01(status, rconn):
-    "Stores the rempi01_input01 status in the database, True on success, False on failure"
+def _store_input01(value, rconn):
+    "Stores the rempi01_input01 value in the database, True on success, False on failure"
     if rconn is None:
         return False
     result = False
     try:
-        result = rconn.set('rempi01_input01', status)
+        result = rconn.set('rempi01_input01', value)
     except:
         return False
     return result

@@ -94,7 +94,11 @@ def output01_status(mqtt_client, message=''):
     # if unable to get pin output, respond with redis store value
     # primarily for test usage on a none-raspberry pi pc
     if hardvalue is None:
-        hardvalue = redis_ops.get_output("output01")
+        storedvalue = redis_ops.get_output("output01")
+        if storedvalue == 'ON':
+            hardvalue = True
+        else:
+            hardvalue = False
     topic = from_topic() + '/Outputs/output01'
     if hardvalue:
         mqtt_client.publish(topic=topic, payload='ON')
@@ -105,7 +109,7 @@ def output01_ON(mqtt_client, message):
     "set output01 pin high"
     hardware.set_boolean_output("output01", True)
     # Set output value in database
-    redis_ops.set_output("output01", True)
+    redis_ops.set_output("output01", "ON")
     # respond with output01 status
     output01_status(mqtt_client)
 
@@ -113,7 +117,7 @@ def output01_OFF(mqtt_client, message):
     "set output01 pin low"
     hardware.set_boolean_output("output01", False)
     # Set output value in database
-    redis_ops.set_output("output01", False)
+    redis_ops.set_output("output01", "OFF")
     # respond with output01 status
     output01_status(mqtt_client)
 

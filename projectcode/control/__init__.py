@@ -11,7 +11,10 @@ def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, 
     # display output description
     page_data['output01_description', 'para_text'] = hardware.get_output_description('output01')
     # widget output01 is boolean radio and expects a binary True, False value
-    page_data['output01', 'radio_checked'] = _get_output('output01')
+    if _get_output('output01')  == 'ON':
+        page_data['output01', 'radio_checked'] = True
+    else:
+        page_data['output01', 'radio_checked'] = False
     # further widgets for further outputs to be set here
     # finally fill in all results fields
     refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang)
@@ -19,7 +22,7 @@ def control_page(caller_ident, ident_list, submit_list, submit_dict, call_data, 
 
 def refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     """Fill in the control page results fields"""
-    if _get_output('output01'):
+    if _get_output('output01')  == 'ON':
         page_data['output01_result', 'para_text'] = "The current value of output 01 is : On"
     else:
         page_data['output01_result', 'para_text'] = "The current value of output 01 is : Off"
@@ -27,9 +30,11 @@ def refresh_results(caller_ident, ident_list, submit_list, submit_dict, call_dat
 
 def controls_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
     "Returns json dictionary of output names : output values, used by external api"
-    controls = hardware.get_output_names()
-    values = [ _get_output(name) for name in controls ]
-    return collections.OrderedDict(zip(controls,values))
+    if _get_output('output01')  == 'ON':
+        return collections.OrderedDict([('output01', True)])
+    else:
+        return collections.OrderedDict([('output01', False)])
+
 
 
 def set_output_from_browser(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
@@ -75,32 +80,11 @@ def set_multi_outputs(output_dict):
 
 def _set_output(name, value, proj_data={}):
     """Sets an output, given the output name and value"""
-    output_type = hardware.get_output_type(name)
-    if output_type is None:
-        return
-    if output_type == 'boolean':
-        if (value == 'True') or (value == 'true') or (value == 'ON') or (value is True):
-            value = True
+    if name == 'output01':
+        if (value is True) or (value == 'True') or (value == 'ON'):
+            redis_ops.store_output(name, 'ON')
         else:
-            value = False
-        hardware.set_boolean_output(name, value)
-    if output_type == 'int':
-        if not isinstance(value, int):
-            try:
-                value = int(value)
-            except:
-                # Invalid value
-                return
-    if output_type == 'text':
-        if not isinstance(value, str):
-            try:
-                value = str(value)
-            except:
-                # Invalid value
-                return
-        
-    # Set output value in redis store
-    redis_ops.set_output(name, value)
+            redis_ops.store_output(name, 'OFF')
     # publish output status by mqtt
     engine.output_status(name)
 
