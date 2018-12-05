@@ -27,13 +27,13 @@ def status_request(mqtt_client, message=''):
 def read(mqtt_client, message):
     "Deals with a request to read a specific Input"
     payload = message.payload.decode("utf-8")
-    if (message.topic == 'From_WebServer/Inputs/input01') or (message.topic == 'From_ServerEngine/Inputs/input01'):
+    if message.topic == 'From_WebServer/Inputs/input01':
         if payload == "status_request":
             input_status('input01', mqtt_client, message)
-    if (message.topic == 'From_WebServer/Inputs/input02') or (message.topic == 'From_ServerEngine/Inputs/input02'):
+    if message.topic == 'From_WebServer/Inputs/input02':
         if payload == "status_request":
             input_status('input02', mqtt_client, message)
-    if (message.topic == 'From_WebServer/Inputs/input03') or (message.topic == 'From_ServerEngine/Inputs/input03'):
+    if message.topic == 'From_WebServer/Inputs/input03':
         if payload == "status_request":
             input_status('input03', mqtt_client, message)
 
@@ -62,7 +62,7 @@ def input_status(input_name, mqtt_client, message=''):
 def action(mqtt_client, message):
     "Deals with setting Outputs"
     payload = message.payload.decode("utf-8")
-    if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01'):
+    if message.topic == 'From_WebServer/Outputs/output01':
         if payload == "ON":
             output01_ON(mqtt_client, message)
         elif payload == "OFF":

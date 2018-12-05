@@ -6,7 +6,7 @@
 # Edit this dictionary to store service parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : 'localhost',
+            'mqtt_ip' : '10.76.78.52',         # test mqtt sedrver - change as required
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
@@ -16,15 +16,14 @@ _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
 
 # _OUTPUTS
 
-# This dictionary has keys output names, and values being a tuple of (type, value, onpower, BCM number, description)
+# This dictionary has keys output names, and values being a tuple of (type, value, BCM number, description)
 # where type is one of 'text', 'boolean', 'integer'
-# value is the default value to put in the database when first created
-# onpower is True if the 'default value' is to be set on power up, or False if last recorded value is to be used
+# value is the power on value
 # BCM number is the appropriate BCM pin number, or None if not relevant
 
 # Currently only one output 'output01' on BCM 24 is defined
 
-_OUTPUTS = {"output01" : ('boolean', False, True, 24, "BCM 24 - When ON intitiates door opening action")}
+_OUTPUTS = {"output01" : ('boolean', False, 24, "BCM 24 - When ON intitiates door opening action")}
 
 
 # _INPUTS
@@ -71,8 +70,8 @@ def initial_setup_outputs():
     GPIO.setmode(GPIO.BCM)             # choose BCM or BOARD
     for bcm in _OUTPUTS.values():
         # set outputs
-        if bcm[3] is not None: 
-            GPIO.setup(bcm[3], GPIO.OUT)
+        if bcm[2] is not None: 
+            GPIO.setup(bcm[2], GPIO.OUT)
     for bcm in _INPUTS.values():
         # set inputs
         if bcm[2] is not None:
@@ -97,14 +96,10 @@ def get_output_names():
     return controls_list
 
 
-def get_outputs():
-    return _OUTPUTS.copy()
-
-
 def get_output_description(name):
     "Given an output name, returns the output description, or None if the name is not found"
     if name in _OUTPUTS:
-        return _OUTPUTS[name][4]
+        return _OUTPUTS[name][3]
 
 
 def get_output_type(name):
@@ -132,10 +127,10 @@ def set_boolean_output(name, value):
         return
     if _OUTPUTS[name][0] != 'boolean':
         return
-    if value:
-        GPIO.output(_OUTPUTS[name][3], 1)
+    if (value is True) or (value == 'True') or (value == 'ON'):
+        GPIO.output(_OUTPUTS[name][2], 1)
     else:
-        GPIO.output(_OUTPUTS[name][3], 0)
+        GPIO.output(_OUTPUTS[name][2], 0)
 
 
 
@@ -155,10 +150,6 @@ def get_input_names():
     if text_list:
         sensors_list.extend(text_list)
     return sensors_list
-
-
-def get_inputs():
-    return _INPUTS.copy()
 
 
 def get_input(name):

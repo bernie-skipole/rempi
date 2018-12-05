@@ -57,12 +57,8 @@ def _on_message(client, userdata, message):
     
     if message.topic.startswith('From_WebServer/Outputs'):
         communications.action(client, message)
-    elif message.topic.startswith('From_ServerEngine/Outputs'):
-        communications.action(client, message)
-    elif message.topic.startswith('From_ServerEngine/Inputs'):
-        communications.read(client, message)
     elif message.topic == 'From_ServerEngine':
-        # no subtopic, generally an initial full status request
+        # an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
             communications.status_request(client, message)
@@ -79,8 +75,8 @@ def _on_connect(client, userdata, flags, rc):
     print("MQTT client connected")
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
-    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+    # subscribe to topics "From_WebServer/#" and "From_ServerEngine"
+    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine", 0)] )
 
 
 def _on_disconnect(client, userdata, rc):
@@ -90,7 +86,7 @@ def _on_disconnect(client, userdata, rc):
 
 def create_mqtt():
     """Creates an mqtt client,
-       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
+       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""
@@ -133,7 +129,7 @@ def create_mqtt():
         print("Failed to create mqtt_client", file=sys.stderr)
 
 
-### output status request ###
+### status request ###
 
 def output_status(output_name):
     """If a request for an output status has been received, respond to it"""
@@ -141,16 +137,22 @@ def output_status(output_name):
     communications.output_status(output_name, MQTT_CLIENT)
 
 
+def input_status(input_name):
+    """If a request for an input status has been received, respond to it"""
+    global MQTT_CLIENT
+    communications.input_status(input_name, MQTT_CLIENT)
+
+
 ###  input pin changes ###
 
 
-def _inputcallback(name, userdata):
+def _inputcallback(input_name, userdata):
     "Callback when an input pin changes, name is the pin name"
     global MQTT_CLIENT
     if MQTT_CLIENT is None:
         return
     if _mqtt_connected:
-        MQTT_CLIENT.publish(from_topic() + "/Inputs", payload=name)
+        input_status(input_name)
 
 
 def listen_to_inputs():
@@ -195,7 +197,7 @@ class ScheduledEvents(object):
     def __init__(self, userdata=None):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
-        self.event_list = [(event1, 2),   # event1 at two minutes past the hour
+        self.event_list = [(event1, 1),   # event1 at one minute past the hour
                            (event2, 9),   # event 2 at 9 minutes past the hour
                            (event2, 24),  # event 2 again at 24 minutes past the hour
                            (event2, 39),  # etc.,
