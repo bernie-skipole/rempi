@@ -80,7 +80,7 @@ def _set_output(name, value, call_data):
         else:
             call_data['door'].output01 = False
     # publish output status by mqtt
-    engine.output_status(name)
+    engine.output_status(name, call_data)
 
 
 def _get_output(name, call_data):

@@ -131,10 +131,10 @@ def create_mqtt(state_values):
 
 ### status request ###
 
-def output_status(output_name):
+def output_status(output_name, state_values):
     """If a request for an output status has been received, respond to it"""
     global MQTT_CLIENT
-    communications.output_status(output_name, MQTT_CLIENT)
+    communications.output_status(output_name, MQTT_CLIENT, state_values)
 
 
 def input_status(input_name):
