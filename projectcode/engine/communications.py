@@ -103,7 +103,7 @@ def output01_status(mqtt_client, state_values, message=''):
 def output01_ON(mqtt_client, state_values, message):
     "set output01 pin high"
     hardware.set_boolean_output("output01", True)
-    # Set output value in database
+    # Set output value in the state 'door'
     state_values['door'].output01 = True
     # respond with output01 status
     output01_status(mqtt_client, state_values)
@@ -111,7 +111,7 @@ def output01_ON(mqtt_client, state_values, message):
 def output01_OFF(mqtt_client, state_values, message):
     "set output01 pin low"
     hardware.set_boolean_output("output01", False)
-    # Set output value in database
+    # Set output value in the state 'door'
     state_values['door'].output01 = False
     # respond with output01 status
     output01_status(mqtt_client, state_values)

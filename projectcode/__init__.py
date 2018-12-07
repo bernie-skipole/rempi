@@ -55,7 +55,7 @@ def start_project(project, projectfiles, path, option):
     listen = engine.listen_to_inputs()
 
     # create an event schedular to do periodic actions
-    scheduled_events = engine.ScheduledEvents()
+    scheduled_events = engine.ScheduledEvents(state_values)
     # this is a callable which runs scheduled events, it
     # needs to be called in its own thread
     run_scheduled_events = threading.Thread(target=scheduled_events)

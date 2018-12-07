@@ -170,19 +170,21 @@ def event1(*args):
     "event1 is to publish status"
     if _mqtt_mod is None:
         return
+    state_values = args[0]
     if _mqtt_connected:
         communications.input_status("input01", MQTT_CLIENT)
-        communications.output_status("output01", MQTT_CLIENT)
+        communications.output_status("output01", MQTT_CLIENT, state_values)
 
 
 def event2(*args):
     "event2 is to publish status, and send temperature"
     if _mqtt_mod is None:
         return
+    state_values = args[0]
     if _mqtt_connected:
         communications.input_status("input01", MQTT_CLIENT)
         communications.input_status("input03", MQTT_CLIENT)     # temperature
-        communications.output_status("output01", MQTT_CLIENT)
+        communications.output_status("output01", MQTT_CLIENT, state_values)
 
 
 
@@ -190,7 +192,7 @@ def event2(*args):
 
 class ScheduledEvents(object):
 
-    def __init__(self, userdata=None):
+    def __init__(self, state_values):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
         self.event_list = [(event1, 1),   # event1 at one minute past the hour
@@ -198,7 +200,7 @@ class ScheduledEvents(object):
                            (event2, 24),  # event 2 again at 24 minutes past the hour
                            (event2, 39),  # etc.,
                            (event2, 54)]
-        self.userdata = userdata
+        self.state_values = state_values
         self.schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -221,7 +223,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = self.thishour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.userdata,)
+                                   argument = (self.state_values,)
                                    )
 
         # schedule a final event to occur 30 seconds after last event
@@ -262,7 +264,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.userdata,)
+                                       argument = (self.state_values,)
                                        )
 
         # schedule a final event to occur 30 seconds after last event
@@ -285,7 +287,7 @@ class ScheduledEvents(object):
 # add them in time order to the self.event_list attribute, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents()
+# scheduled_events = ScheduledEvents(state_values)
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread
