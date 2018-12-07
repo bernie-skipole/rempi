@@ -146,7 +146,7 @@ def input_status(input_name):
 ###  input pin changes ###
 
 
-def _inputcallback(input_name, userdata):
+def _inputcallback(input_name, state_values):
     "Callback when an input pin changes, name is the pin name"
     global MQTT_CLIENT
     if MQTT_CLIENT is None:
@@ -155,10 +155,10 @@ def _inputcallback(input_name, userdata):
         input_status(input_name)
 
 
-def listen_to_inputs():
+def listen_to_inputs(state_values):
     """create an input Listen object (defined in hardware.py),
        which calls _inputcallback on a pin change"""
-    listen = hardware.Listen(_inputcallback)
+    listen = hardware.Listen(_inputcallback, state_values)
     listen.start_loop()
     return listen
 

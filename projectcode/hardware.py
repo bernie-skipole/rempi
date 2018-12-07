@@ -247,9 +247,9 @@ class Listen(object):
       
     """ 
 
-    def __init__(self, callbackfunction, userdata=None):
+    def __init__(self, callbackfunction, state_values):
         self.set_callback = callbackfunction
-        self.userdata = userdata
+        self.state_values = state_values
 
     def input_state(self, name):
         return get_boolean_input(name)
@@ -259,9 +259,9 @@ class Listen(object):
 
     def _pincallback(self, channel):
         """This is the callback added to each pin, in turn it calls
-           callbackfunction(name, userdata)"""
+           callbackfunction(name, state_values)"""
         name = get_input_name(channel)
-        self.set_callback(name, self.userdata)
+        self.set_callback(name, self.state_values)
 
     def start_loop(self):
         "Sets up listenning threads"

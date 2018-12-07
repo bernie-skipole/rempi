@@ -44,7 +44,7 @@ def start_project(project, projectfiles, path, option):
     # set state of door
     # still to be done as it depends on hardware
     # door.set_state(door_open, door_closed, door_opening, door_closing)
-
+    # door.start()
 
     # Create the mqtt client connection, with state values (currently only door)
     state_values = {'door':door}
@@ -52,7 +52,7 @@ def start_project(project, projectfiles, path, option):
     engine.create_mqtt(state_values)
 
     # create an input listener, which publishes messages on an input pin change
-    listen = engine.listen_to_inputs()
+    listen = engine.listen_to_inputs(state_values)
 
     # create an event schedular to do periodic actions
     scheduled_events = engine.ScheduledEvents(state_values)
