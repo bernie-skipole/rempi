@@ -4,7 +4,7 @@
 # reply by publishing the status
 
 
-from .. import hardware, redis_ops
+from .. import hardware
 
 
 def from_topic():
@@ -12,10 +12,10 @@ def from_topic():
     return 'From_' + hardware.get_name()
 
 
-def status_request(mqtt_client, message=''):
+def status_request(mqtt_client, state_values, message=''):
     "Request received for general status request"
     # call each pin status in turn
-    output01_status(mqtt_client, message)
+    output01_status(mqtt_client, state_values, message)
     input_names = hardware.get_input_names()
     for name in input_names:
         input_status(name, mqtt_client, message)
@@ -55,28 +55,27 @@ def input_status(input_name, mqtt_client, message=''):
         mqtt_client.publish(topic=topic, payload=str(value))
 
 
-
 ###### OUTPUTS ######
 
 
-def action(mqtt_client, message):
+def action(mqtt_client, state_values, message):
     "Deals with setting Outputs"
     payload = message.payload.decode("utf-8")
     if message.topic == 'From_WebServer/Outputs/output01':
         if payload == "ON":
-            output01_ON(mqtt_client, message)
+            output01_ON(mqtt_client, state_values, message)
         elif payload == "OFF":
-            output01_OFF(mqtt_client, message)
+            output01_OFF(mqtt_client, state_values, message)
         else:
-            output01_status(mqtt_client, message)
+            output01_status(mqtt_client, state_values, message)
 
 
-def output_status(output_name, mqtt_client, message=''):
+def output_status(output_name, mqtt_client, state_values, message=''):
     """If a request for an output status has been received, respond to it"""
     if mqtt_client is None:
         return
     if output_name == 'output01':
-        output01_status(mqtt_client, message)
+        output01_status(mqtt_client, state_values, message)
     # add elif's as further outputs defined
 
 
@@ -85,40 +84,36 @@ def output_status(output_name, mqtt_client, message=''):
 
 ###### output01 #####
 
-def output01_status(mqtt_client, message=''):
+def output01_status(mqtt_client, state_values, message=''):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
     if mqtt_client is None:
         return
     hardvalue = hardware.get_boolean_output("output01")
-    # if unable to get pin output, respond with redis store value
+    # if unable to get pin output, respond with state store value
     # primarily for test usage on a none-raspberry pi pc
     if hardvalue is None:
-        storedvalue = redis_ops.get_output("output01")
-        if storedvalue == 'ON':
-            hardvalue = True
-        else:
-            hardvalue = False
+        hardvalue = state_values['door'].output01
     topic = from_topic() + '/Outputs/output01'
     if hardvalue:
         mqtt_client.publish(topic=topic, payload='ON')
     else:
         mqtt_client.publish(topic=topic, payload='OFF')
 
-def output01_ON(mqtt_client, message):
+def output01_ON(mqtt_client, state_values, message):
     "set output01 pin high"
     hardware.set_boolean_output("output01", True)
     # Set output value in database
-    redis_ops.set_output("output01", "ON")
+    state_values['door'].output01 = True
     # respond with output01 status
-    output01_status(mqtt_client)
+    output01_status(mqtt_client, state_values)
 
-def output01_OFF(mqtt_client, message):
+def output01_OFF(mqtt_client, state_values, message):
     "set output01 pin low"
     hardware.set_boolean_output("output01", False)
     # Set output value in database
-    redis_ops.set_output("output01", "OFF")
+    state_values['door'].output01 = False
     # respond with output01 status
-    output01_status(mqtt_client)
+    output01_status(mqtt_client, state_values)
 
 

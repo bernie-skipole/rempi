@@ -119,6 +119,15 @@ def get_boolean_output(name):
     return bool(GPIO.input(_OUTPUTS[name][3]))
 
 
+def get_boolean_power_on_value(name):
+    "Given an output name, return True or False for the power on value of the output, or None if name not found, or not boolean"
+    if name not in _OUTPUTS:
+        return
+    if _OUTPUTS[name][0] != 'boolean':
+        return
+    return _OUTPUTS[name][1]
+
+
 def set_boolean_output(name, value):
     "Given an output name, sets the output pin"
     if not _gpio_control:

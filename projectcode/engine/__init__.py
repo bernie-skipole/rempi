@@ -50,18 +50,18 @@ def from_topic():
     return 'From_' + hardware.get_name()
 
 def _on_message(client, userdata, message):
-    "Callback when a message is received"
+    "Callback when a message is received, userdata is state_values"
 
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs'):
-        communications.action(client, message)
+        communications.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine':
         # an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            communications.status_request(client, message)
+            communications.status_request(client, userdata, message)
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -84,7 +84,7 @@ def _on_disconnect(client, userdata, rc):
     _mqtt_connected = False
 
 
-def create_mqtt():
+def create_mqtt(state_values):
     """Creates an mqtt client,
        with the mqtt client subscribed to From_WebServer/# and From_ServerEngine
        and running a threaded loop
@@ -104,7 +104,7 @@ def create_mqtt():
 
     try:
         # create an mqtt client instance
-        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name())
+        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name(), userdata=state_values)
 
         # attach callback function to client
         MQTT_CLIENT.on_connect = _on_connect
@@ -167,22 +167,18 @@ def listen_to_inputs():
 
 
 def event1(*args):
-    "event1 is to publish status, and make MQTT connection if not already made"
+    "event1 is to publish status"
     if _mqtt_mod is None:
         return
-    if MQTT_CLIENT is None:
-        create_mqtt()
     if _mqtt_connected:
         communications.input_status("input01", MQTT_CLIENT)
         communications.output_status("output01", MQTT_CLIENT)
 
 
 def event2(*args):
-    "event2 is to publish status, and send temperature, and make MQTT connection if not already made"
+    "event2 is to publish status, and send temperature"
     if _mqtt_mod is None:
         return
-    if MQTT_CLIENT is None:
-        create_mqtt()
     if _mqtt_connected:
         communications.input_status("input01", MQTT_CLIENT)
         communications.input_status("input03", MQTT_CLIENT)     # temperature

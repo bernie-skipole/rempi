@@ -6,7 +6,9 @@ import sys, threading
 
 from .. import FailPage, GoTo, ValidateError, ServerError, use_submit_list
 
-from . import control, login, hardware, engine
+from . import login, hardware, engine
+
+from .control import state
 
 
 # any page not listed here requires basic authentication
@@ -32,12 +34,22 @@ def start_project(project, projectfiles, path, option):
        Can be used to set any initial parameters, and the dictionary returned will be passed as
        'proj_data' to subsequent start_call functions."""
 
+    # create door state
+    door = state.Door()
+    door.output01 = hardware.get_boolean_power_on_value('output01')
 
     # setup hardware
     hardware.initial_setup_outputs()
 
-    # Create the mqtt client connection
-    engine.create_mqtt()
+    # set state of door
+    # still to be done as it depends on hardware
+    # door.set_state(door_open, door_closed, door_opening, door_closing)
+
+
+    # Create the mqtt client connection, with state values (currently only door)
+    state_values = {'door':door}
+
+    engine.create_mqtt(state_values)
 
     # create an input listener, which publishes messages on an input pin change
     listen = engine.listen_to_inputs()
@@ -50,12 +62,13 @@ def start_project(project, projectfiles, path, option):
     # and start the thread
     run_scheduled_events.start()
 
-    return {'scheduled_events':scheduled_events, 'listen':listen}
+    return {'scheduled_events':scheduled_events, 'listen':listen, 'door':door}
 
 
 def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
     "When a call is initially received this function is called."
-    call_data = {}
+    # set the door state into call_data
+    call_data = {'door':proj_data['door']}
     page_data = {}
     if not called_ident:
         return None, call_data, page_data, lang
