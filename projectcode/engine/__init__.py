@@ -57,7 +57,7 @@ def _on_message(client, userdata, message):
     
     if message.topic.startswith('From_WebServer/Outputs'):
         communications.action(client, userdata, message)
-    elif message.topic == 'From_ServerEngine':
+    elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
@@ -75,8 +75,8 @@ def _on_connect(client, userdata, flags, rc):
     print("MQTT client connected")
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    # subscribe to topics "From_WebServer/#" and "From_ServerEngine"
-    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine", 0)] )
+    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
+    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
 
 
 def _on_disconnect(client, userdata, rc):
@@ -86,7 +86,7 @@ def _on_disconnect(client, userdata, rc):
 
 def create_mqtt(state_values):
     """Creates an mqtt client,
-       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine
+       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""

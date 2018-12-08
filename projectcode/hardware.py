@@ -6,7 +6,8 @@
 # Edit this dictionary to store service parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : '10.76.78.52',         # test mqtt sedrver - change as required
+            'mqtt_ip' : '10.76.78.52',         # test mqtt server - change as required
+           #'mqtt_ip' : '192.168.1.91',
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',
@@ -116,7 +117,7 @@ def get_boolean_output(name):
         return
     if _OUTPUTS[name][0] != 'boolean':
         return
-    return bool(GPIO.input(_OUTPUTS[name][3]))
+    return bool(GPIO.input(_OUTPUTS[name][2]))
 
 
 def get_boolean_power_on_value(name):
