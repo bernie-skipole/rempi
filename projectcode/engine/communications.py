@@ -61,7 +61,7 @@ def input_status(input_name, mqtt_client, message=''):
 def action(mqtt_client, state_values, message):
     "Deals with setting Outputs"
     payload = message.payload.decode("utf-8")
-    if message.topic == 'From_WebServer/Outputs/output01':
+    if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01'):
         if payload == "ON":
             output01_ON(mqtt_client, state_values, message)
         elif payload == "OFF":

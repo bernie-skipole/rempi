@@ -55,7 +55,7 @@ def _on_message(client, userdata, message):
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
-    if message.topic.startswith('From_WebServer/Outputs'):
+    if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
         communications.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
