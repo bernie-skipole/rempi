@@ -32,11 +32,11 @@ def check_login(environ):
     return False
 
 
-def request_login(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def request_login(skicall):
     """Set up the basic authentication"""
-    realm = 'Basic realm="' + call_data['project'] + '"'
-    page_data['headers'] = [
-            ('content-type', 'text/html'),
-            ('WWW-Authenticate', realm)]
-    page_data['status'] = '401 Unauthorized'
+    realm = 'Basic realm="' + skicall.project + '"'
+    skicall.page_data['headers'] = [
+                                    ('content-type', 'text/html'),
+                                    ('WWW-Authenticate', realm)]
+    skicall.page_data['status'] = '401 Unauthorized'
 

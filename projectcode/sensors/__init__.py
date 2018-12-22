@@ -5,15 +5,15 @@ from ... import FailPage, GoTo, ValidateError, ServerError
 from .. import hardware
 
 
-def sensor_table(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def sensor_table(skicall):
     """sets three lists for sensor table into page data"""
     sensors = hardware.get_input_names()
-    page_data['sensors', 'col1'] = sensors
-    page_data['sensors', 'col2'] = _get_sensor_values(sensors)
-    page_data['sensors', 'col3'] = [hardware.get_input_description(name) for name in sensors]
+    skicall.page_data['sensors', 'col1'] = sensors
+    skicall.page_data['sensors', 'col2'] = _get_sensor_values(sensors)
+    skicall.page_data['sensors', 'col3'] = [hardware.get_input_description(name) for name in sensors]
 
 
-def sensors_json_api(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def sensors_json_api(skicall):
     "Returns sensors dictionary"
     sensors = hardware.get_input_names()
     values = _get_sensor_values(sensors)
@@ -43,8 +43,8 @@ def _get_sensor_values(sensors):
     return values
 
 
-def temperature(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def temperature(skicall):
     "Fills weather station temperature meter"
     temperature = str(hardware.get_temperature())
-    page_data["temperature", "measurement"] = temperature
-    page_data["temperature_value", "text"] = "Temperature : %s" % (temperature,)
+    skicall.page_data["temperature", "measurement"] = temperature
+    skicall.page_data["temperature_value", "text"] = "Temperature : %s" % (temperature,)

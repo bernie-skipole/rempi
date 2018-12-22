@@ -65,53 +65,48 @@ def start_project(project, projectfiles, path, option):
     return {'scheduled_events':scheduled_events, 'listen':listen, 'door':door}
 
 
-def start_call(environ, path, project, called_ident, caller_ident, received_cookies, ident_data, lang, option, proj_data):
+def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
     # set the door state into call_data
-    call_data = {'door':proj_data['door']}
-    page_data = {}
+    skicallcall_data = {'door':skicall.proj_data['door']}
     if not called_ident:
-        return None, call_data, page_data, lang
-    if environ.get('HTTP_HOST'):
+        return
+    if skicall.environ.get('HTTP_HOST'):
         # This is used in the information page to insert the host into a displayed url
-        call_data['HTTP_HOST'] = environ['HTTP_HOST']
+        skicall.call_data['HTTP_HOST'] = skicall.environ['HTTP_HOST']
     else:
-        call_data['HTTP_HOST'] = environ['SERVER_NAME']
-    # ensure project is in call_data
-    call_data['project'] = project
+        skicall.call_data['HTTP_HOST'] = skicall.environ['SERVER_NAME']
     # password protected pages
     if called_ident[1] not in _PUBLIC_PAGES:
         # check login
-        if not login.check_login(environ):
+        if not login.check_login(skicall.environ):
             # login failed, ask for a login
-            return (project,2010), call_data, page_data, lang
-    return called_ident, call_data, page_data, lang
+            return skicall.project,2010
+    return called_ident
 
 
 @use_submit_list
-def submit_data(caller_ident, ident_list, submit_list, submit_dict, call_data, page_data, lang):
+def submit_data(skicall):
     """This function is called when a Responder wishes to submit data for processing in some manner
        For two or more submit_list values, the decorator ensures the matching function is called instead"""
-
     raise FailPage("submit_list string not recognised")
 
 
-def end_call(page_ident, page_type, call_data, page_data, proj_data, lang):
+def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with page_data,
        it can also return an optional ident_data string to embed into forms."""
 
     # in this example, status is the value on input02
     status = hardware.get_text_input('input02')
     if status:
-        page_data['topnav','status', 'para_text'] = status
+        skicall.page_data['topnav','status', 'para_text'] = status
     else:
-        page_data['topnav','status', 'para_text'] = "Status: input02 unavailable"
-
+        skicall.page_data['topnav','status', 'para_text'] = "Status: input02 unavailable"
 
     if page_type != "TemplatePage":
         return
 
-    page_data['leftnav','left_name','large_text'] = hardware.get_name()
+    skicall.page_data['leftnav','left_name','large_text'] = hardware.get_name()
 
 
 
