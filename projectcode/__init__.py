@@ -68,7 +68,7 @@ def start_project(project, projectfiles, path, option):
 def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
     # set the door state into call_data
-    skicallcall_data = {'door':skicall.proj_data['door']}
+    skicall.call_data = {'door':skicall.proj_data['door']}
     if not called_ident:
         return
     if skicall.environ.get('HTTP_HOST'):
