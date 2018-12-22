@@ -6,8 +6,7 @@
 # Edit this dictionary to store service parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : '10.76.78.52',         # test mqtt server - change as required
-           #'mqtt_ip' : 'localhost',
+            'mqtt_ip' : 'localhost',           # mqtt server, change as required
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : '',

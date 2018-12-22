@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
-"version": "0.4.0",
-"skipole": "1.4.0",
+"version": "0.5.0",
+"skipole": "2.0.0",
 "subprojects": {
 "lib": {
 "path": "/lib/"
