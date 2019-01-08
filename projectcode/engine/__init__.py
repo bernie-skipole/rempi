@@ -40,6 +40,16 @@ _mqtt_connected = False
 # The mqtt_client
 MQTT_CLIENT = None
 
+# _HEARTBEAT starts with a value of 4 and decremented every 10 minutes
+# set to 4 every 6 minutes when a heartbeat command is received
+# via mqtt from the server
+
+# if heartbeat reaches zero the program exts with a failure code
+# and relies on systemd to restart it. Hopefully this will cause a 
+# restart if the communications with the server become screwed
+
+_HEARTBEAT = 4
+
 from .. import hardware
 
 from . import communications
@@ -52,6 +62,8 @@ def from_topic():
 def _on_message(client, userdata, message):
     "Callback when a message is received, userdata is state_values"
 
+    global _HEARTBEAT
+
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
@@ -62,6 +74,8 @@ def _on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
             communications.status_request(client, userdata, message)
+    elif message.topic == 'From_ServerEngine/HEARTBEAT':
+        _HEARTBEAT = 4
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -168,24 +182,47 @@ def listen_to_inputs(state_values):
 
 def event1(*args):
     "event1 is to publish status"
-    if _mqtt_mod is None:
+    try:
+        if _mqtt_mod is None:
+            return
+        state_values = args[0]
+        if _mqtt_connected:
+            communications.input_status("input01", MQTT_CLIENT)
+            communications.output_status("output01", MQTT_CLIENT, state_values)
+    except:
+        # return without action if any failure occurs
         return
-    state_values = args[0]
-    if _mqtt_connected:
-        communications.input_status("input01", MQTT_CLIENT)
-        communications.output_status("output01", MQTT_CLIENT, state_values)
 
 
 def event2(*args):
     "event2 is to publish status, and send temperature"
-    if _mqtt_mod is None:
+    try:
+        if _mqtt_mod is None:
+            return
+        state_values = args[0]
+        if _mqtt_connected:
+            communications.input_status("input01", MQTT_CLIENT)
+            communications.input_status("input03", MQTT_CLIENT)     # temperature
+            communications.output_status("output01", MQTT_CLIENT, state_values)
+    except:
+        # return without action if any failure occurs
         return
-    state_values = args[0]
-    if _mqtt_connected:
-        communications.input_status("input01", MQTT_CLIENT)
-        communications.input_status("input03", MQTT_CLIENT)     # temperature
-        communications.output_status("output01", MQTT_CLIENT, state_values)
 
+
+def event3(*args):
+    """event3 is called every ten minutes
+       checks _HEARTBEAT, if zero or less, then exits the process
+       with a failure code of 1
+       This should cause a systemd restart of this service"""
+    global _HEARTBEAT
+    try:
+        if _HEARTBEAT < 1:
+            sys.exit(1)
+        # _HEARTBEAT is still positive, decrement it
+        _HEARTBEAT -= 1
+    except:
+        # return without action if any failure occurs
+        return
 
 
 ### scheduled actions to occur at set times each hour ###
@@ -199,7 +236,13 @@ class ScheduledEvents(object):
                            (event2, 9),   # event 2 at 9 minutes past the hour
                            (event2, 24),  # event 2 again at 24 minutes past the hour
                            (event2, 39),  # etc.,
-                           (event2, 54)]
+                           (event2, 54),
+                           (event3, 2),   # heartbeat check every ten minutes
+                           (event3, 12),
+                           (event3, 22),
+                           (event3, 32),
+                           (event3, 42),
+                           (event3, 52)]
         self.state_values = state_values
         self.schedule = sched.scheduler(time.time, time.sleep)
 
@@ -212,15 +255,24 @@ class ScheduledEvents(object):
     def _create_next_hour_events(self):
         "Create a new set of events for the following hour"
 
-        # On moving into the next hour, thishour timestamp is moved
-        # forward by an hour 
-        self.thishour = self.thishour + 3600
+        # get a time tuple for now
+        ttnow = time.localtime()
+        # get the timestamp for the beginning of the next hour
+        nexthour = 3600 + time.mktime( (ttnow.tm_year,
+                                        ttnow.tm_mon,
+                                        ttnow.tm_mday,
+                                        ttnow.tm_hour,
+                                        0,                  # zero minutes
+                                        0,                  # zero seconds
+                                        ttnow.tm_wday,
+                                        ttnow.tm_yday,
+                                        ttnow.tm_isdst)  )
 
         # create scheduled events which are to occur
-        # at interval minutes during thishour
+        # at interval minutes during nexthour
 
         for evt_callback, mins in self.event_list:
-            self.schedule.enterabs(time = self.thishour + mins*60,
+            self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
                                    argument = (self.state_values,)
@@ -229,7 +281,7 @@ class ScheduledEvents(object):
         # schedule a final event to occur 30 seconds after last event
         last_event = self.event_list[-1]
  
-        final_event_time = self.thishour + last_event[1]*60 + 30
+        final_event_time = nexthour + last_event[1]*60 + 30
         self.schedule.enterabs(time = final_event_time,
                                priority = 1,
                                action = self._create_next_hour_events
@@ -246,20 +298,20 @@ class ScheduledEvents(object):
         rightnow = time.mktime(ttnow)
 
         # get the timestamp for the beginning of the current hour
-        self.thishour = time.mktime((ttnow.tm_year,
-                                     ttnow.tm_mon,
-                                     ttnow.tm_mday,
-                                     ttnow.tm_hour,
-                                     0,                  # zero minutes
-                                     0,                  # zero seconds
-                                     ttnow.tm_wday,
-                                     ttnow.tm_yday,
-                                     ttnow.tm_isdst))
+        thishour = time.mktime( (ttnow.tm_year,
+                                 ttnow.tm_mon,
+                                 ttnow.tm_mday,
+                                 ttnow.tm_hour,
+                                 0,                  # zero minutes
+                                 0,                  # zero seconds
+                                 ttnow.tm_wday,
+                                 ttnow.tm_yday,
+                                 ttnow.tm_isdst)  )
 
         # create times at which events are to occur
         # during the remaining part of this hour
         for evt_callback, mins in self.event_list:
-            event_time = self.thishour + mins*60
+            event_time = thishour + mins*60
             if event_time > rightnow:
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
@@ -270,7 +322,7 @@ class ScheduledEvents(object):
         # schedule a final event to occur 30 seconds after last event
         last_event = self.event_list[-1]
         
-        final_event_time = self.thishour + last_event[1]*60 + 30
+        final_event_time = thishour + last_event[1]*60 + 30
         self.schedule.enterabs(time = final_event_time,
                                priority = 1,
                                action = self._create_next_hour_events
