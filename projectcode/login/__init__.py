@@ -25,7 +25,7 @@ def check_login(environ):
             if password == _PASSWORD:
                 # login ok
                 return True
-    except:
+    except Exception:
         pass
         # Any exception causes False to be returned
     # login fail

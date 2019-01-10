@@ -2,7 +2,9 @@
 This package will be called by the Skipole framework to access your data.
 """
 
-import sys, threading
+import os, sys, threading, logging
+
+from logging.handlers import RotatingFileHandler
 
 from .. import FailPage, GoTo, ValidateError, ServerError, use_submit_list
 
@@ -18,6 +20,12 @@ _PUBLIC_PAGES = [1,  # index
                  6,  # controls.json
                  7,  # sensors.json
                  9,  # sensors_refresh
+                21,  # rempi.log.1
+                22,  # rempi.log.2
+                23,  # rempi.log.3
+                24,  # rempi.log.4
+                25,  # rempi.log.5
+                29,  # rempi.log
                540,  # no_javascript
               1002,  # css
               1004,  # css
@@ -34,6 +42,13 @@ def start_project(project, projectfiles, path, option):
        Can be used to set any initial parameters, and the dictionary returned will be passed as
        'proj_data' to subsequent start_call functions."""
 
+    logfile = os.path.join(projectfiles, project, 'rempi.log')
+    handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
+
+
+    logging.info('start_project called')
+
     # create door state
     door = state.Door()
     door.output01 = hardware.get_boolean_power_on_value('output01')
@@ -46,8 +61,8 @@ def start_project(project, projectfiles, path, option):
     # door.set_state(door_open, door_closed, door_opening, door_closing)
     # door.start()
 
-    # Create the mqtt client connection, with state values (currently only door)
-    state_values = {'door':door}
+    # Create the mqtt client connection, with state values
+    state_values = {'door':door, 'comms':True}
 
     engine.create_mqtt(state_values)
 
@@ -62,13 +77,11 @@ def start_project(project, projectfiles, path, option):
     # and start the thread
     run_scheduled_events.start()
 
-    return {'scheduled_events':scheduled_events, 'listen':listen, 'door':door}
+    return state_values
 
 
 def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
-    # set the door state into call_data
-    skicall.call_data = {'door':skicall.proj_data['door']}
     if not called_ident:
         return
     if skicall.environ.get('HTTP_HOST'):

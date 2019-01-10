@@ -26,12 +26,12 @@
 #############################################################################
 
 
-import sys, sched, time
+import sys, sched, time, logging
 
 _mqtt_mod = True
 try:
     import paho.mqtt.client as mqtt
-except:
+except Exception:
     _mqtt_mod = False
 
 # initially assume no mqtt connection
@@ -40,15 +40,13 @@ _mqtt_connected = False
 # The mqtt_client
 MQTT_CLIENT = None
 
-# _HEARTBEAT starts with a value of 4 and decremented every 10 minutes
-# set to 4 every 6 minutes when a heartbeat command is received
+# _COMMS_COUNTDOWN starts with a value of 4 and decremented every 10 minutes
+# set to 4 every time a command is received
 # via mqtt from the server
 
-# if heartbeat reaches zero the program exts with a failure code
-# and relies on systemd to restart it. Hopefully this will cause a 
-# restart if the communications with the server become screwed
+# if COMMS_COUNTDOWN reaches zero the program assumes the server or communications is down
 
-_HEARTBEAT = 4
+_COMMS_COUNTDOWN = 4
 
 from .. import hardware
 
@@ -60,22 +58,30 @@ def from_topic():
     return 'From_' + hardware.get_name()
 
 def _on_message(client, userdata, message):
-    "Callback when a message is received, userdata is state_values"
+    "Callback when a message is received"
 
-    global _HEARTBEAT
+    state_values = userdata
+
+    global _COMMS_COUNTDOWN
 
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
-        communications.action(client, userdata, message)
+        _COMMS_COUNTDOWN = 4
+        state_values['comms'] = True
+        communications.action(client, state_values, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
+        _COMMS_COUNTDOWN = 4
+        state_values['comms'] = True
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            communications.status_request(client, userdata, message)
+            communications.status_request(client, state_values, message)
     elif message.topic == 'From_ServerEngine/HEARTBEAT':
-        _HEARTBEAT = 4
+        # sent by the server every six minutes to maintain _COMMS_COUNTDOWN
+        state_values['comms'] = True
+        _COMMS_COUNTDOWN = 4
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -111,10 +117,12 @@ def create_mqtt(state_values):
     mqtt_ip, mqtt_port, mqtt_username, mqtt_password = hardware.get_mqtt()
 
     if not _mqtt_mod:
-        print("Failed to create mqtt_client", file=sys.stderr)
+        print("paho.mqtt.client not loaded", file=sys.stderr)
+        logging.critical('paho.mqtt.client not loaded')
         return
 
-    print("Waiting for MQTT connection...")
+    print("Starting MQTT client...")
+    logging.info("Starting MQTT client")
 
     try:
         # create an mqtt client instance
@@ -141,6 +149,21 @@ def create_mqtt(state_values):
 
     if MQTT_CLIENT is None:
         print("Failed to create mqtt_client", file=sys.stderr)
+        logging.critical('Failed to create mqtt_client')
+    logging.info("MQTT client started")
+
+
+### set outputs ###
+
+def set_output(output_name, value, state_values, mqtt_client=None):
+    """Sets an output, given the output name and value"""
+    if output_name == 'output01':
+        if (value is True) or (value == 'True') or (value == 'ON'):
+            communications.output01_ON(state_values, mqtt_client)
+        else:
+            communications.output01_OFF(state_values, mqtt_client)
+    # other output names to be checked here
+
 
 
 ### status request ###
@@ -189,9 +212,11 @@ def event1(*args):
         if _mqtt_connected:
             communications.input_status("input01", MQTT_CLIENT)
             communications.output_status("output01", MQTT_CLIENT, state_values)
-    except:
+    except Exception:
         # return without action if any failure occurs
+        logging.error('Exception during scheduled Event1')
         return
+    logging.info("Scheduled Event1 status sent.")
 
 
 def event2(*args):
@@ -204,25 +229,26 @@ def event2(*args):
             communications.input_status("input01", MQTT_CLIENT)
             communications.input_status("input03", MQTT_CLIENT)     # temperature
             communications.output_status("output01", MQTT_CLIENT, state_values)
-    except:
+    except Exception:
         # return without action if any failure occurs
+        logging.error('Exception during scheduled Event2')
         return
+    logging.info("Scheduled Event2 status sent.")
 
 
 def event3(*args):
     """event3 is called every ten minutes
-       checks _HEARTBEAT, if zero or less, then exits the process
-       with a failure code of 1
-       This should cause a systemd restart of this service"""
-    global _HEARTBEAT
-    try:
-        if _HEARTBEAT < 1:
-            sys.exit(1)
-        # _HEARTBEAT is still positive, decrement it
-        _HEARTBEAT -= 1
-    except:
-        # return without action if any failure occurs
+       decrements _COMMS_COUNTDOWN, and checks if zero or less"""
+    global _COMMS_COUNTDOWN
+    state_values = args[0]
+    if _COMMS_COUNTDOWN < 1:
+        logging.critical('Communications with main server has been lost.')
+        state_values['comms'] = False
         return
+    # _COMMS_COUNTDOWN is still positive, decrement it
+    state_values['comms'] = True
+    _COMMS_COUNTDOWN -= 1
+    logging.info("Scheduled Event3 _COMMS_COUNTDOWN is %s.", _COMMS_COUNTDOWN)
 
 
 ### scheduled actions to occur at set times each hour ###
@@ -232,17 +258,20 @@ class ScheduledEvents(object):
     def __init__(self, state_values):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
-        self.event_list = [(event1, 1),   # event1 at one minute past the hour
-                           (event2, 9),   # event 2 at 9 minutes past the hour
-                           (event2, 24),  # event 2 again at 24 minutes past the hour
-                           (event2, 39),  # etc.,
-                           (event2, 54),
-                           (event3, 2),   # heartbeat check every ten minutes
-                           (event3, 12),
-                           (event3, 22),
-                           (event3, 32),
-                           (event3, 42),
-                           (event3, 52)]
+        event_list = [ (event1, 1),   # event1 at one minute past the hour
+                       (event2, 9),   # event 2 at 9 minutes past the hour
+                       (event2, 24),  # event 2 again at 24 minutes past the hour
+                       (event2, 39),  # etc.,
+                       (event2, 54),
+                       (event3, 2),   # heartbeat check every ten minutes
+                       (event3, 12),
+                       (event3, 22),
+                       (event3, 32),
+                       (event3, 42),
+                       (event3, 52)]
+        # sort the list
+        self.event_list = sorted(event_list, key=lambda x: x[1])
+
         self.state_values = state_values
         self.schedule = sched.scheduler(time.time, time.sleep)
 

@@ -44,12 +44,12 @@ _INPUTS = {"input01" : ('boolean', True, 23, "BCM 23 - Limit switch, when ON the
 
 
 
-import time, random
+import time, random, logging
 
 _gpio_control = True
 try:
     import RPi.GPIO as GPIO            # import RPi.GPIO module  
-except:
+except Exception:
     _gpio_control = False
 
 
@@ -138,9 +138,10 @@ def set_boolean_output(name, value):
         return
     if (value is True) or (value == 'True') or (value == 'ON'):
         GPIO.output(_OUTPUTS[name][2], 1)
+        logging.info("Output %s set ON : %s", _OUTPUTS[name][3])
     else:
         GPIO.output(_OUTPUTS[name][2], 0)
-
+        logging.info("Output %s set OFF : %s", _OUTPUTS[name][3])
 
 
 def get_input_names():
@@ -299,7 +300,7 @@ def get_temperature():
             return 0.0
         temp_string = lines[1].strip()[temp_output+2:]
         temperature = float(temp_string) / 1000.0
-    except:
+    except Exception:
         return 0.0
     return temperature
 

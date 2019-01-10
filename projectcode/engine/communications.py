@@ -3,6 +3,7 @@
 # can set outputs and
 # reply by publishing the status
 
+import logging
 
 from .. import hardware
 
@@ -44,15 +45,22 @@ def input_status(input_name, mqtt_client, message=''):
         return
     value = hardware.get_input(input_name)
     topic = from_topic() + '/Inputs/' + input_name
-    if value is None:
-        mqtt_client.publish(topic=topic, payload='UNKNOWN')
-    elif value is True:
-        mqtt_client.publish(topic=topic, payload='ON')
-    elif value is False:
-        mqtt_client.publish(topic=topic, payload='OFF')
-    else:
-        # could be string, integer or float
-        mqtt_client.publish(topic=topic, payload=str(value))
+    try:
+        if value is None:
+            logging.info("Status %s : UNKNOWN", input_name)
+            mqtt_client.publish(topic=topic, payload='UNKNOWN')
+        elif value is True:
+            logging.info("Status %s : ON", input_name)
+            mqtt_client.publish(topic=topic, payload='ON')
+        elif value is False:
+            logging.info("Status %s : OFF", input_name)
+            mqtt_client.publish(topic=topic, payload='OFF')
+        else:
+            # could be string, integer or float
+            logging.info("Status %s : %s", input_name, str(value))
+            mqtt_client.publish(topic=topic, payload=str(value))
+    except Exception:
+        logging.error("Failed to publish input status via MQTT")
 
 
 ###### OUTPUTS ######
@@ -60,14 +68,21 @@ def input_status(input_name, mqtt_client, message=''):
 
 def action(mqtt_client, state_values, message):
     "Deals with setting Outputs"
+
+    # wait until a lock is aquired and block anyone else from changing an output
+    # Lock.acquire()
+
     payload = message.payload.decode("utf-8")
     if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01'):
         if payload == "ON":
-            output01_ON(mqtt_client, state_values, message)
+            output01_ON(state_values, mqtt_client)
         elif payload == "OFF":
-            output01_OFF(mqtt_client, state_values, message)
+            output01_OFF(state_values, mqtt_client)
         else:
             output01_status(mqtt_client, state_values, message)
+
+    # allow other threads to set outputs
+    # Lock.release()
 
 
 def output_status(output_name, mqtt_client, state_values, message=''):
@@ -87,33 +102,52 @@ def output_status(output_name, mqtt_client, state_values, message=''):
 def output01_status(mqtt_client, state_values, message=''):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
-    if mqtt_client is None:
-        return
-    hardvalue = hardware.get_boolean_output("output01")
-    # if unable to get pin output, respond with state store value
-    # primarily for test usage on a none-raspberry pi pc
-    if hardvalue is None:
-        hardvalue = state_values['door'].output01
-    topic = from_topic() + '/Outputs/output01'
-    if hardvalue:
-        mqtt_client.publish(topic=topic, payload='ON')
-    else:
-        mqtt_client.publish(topic=topic, payload='OFF')
+    try:
+        if mqtt_client is None:
+            return
+        hardvalue = hardware.get_boolean_output("output01")
+        # if unable to get pin output, respond with state store value
+        # primarily for test usage on a none-raspberry pi pc
+        if hardvalue is None:
+            hardvalue = state_values['door'].output01
+        topic = from_topic() + '/Outputs/output01'
+        if hardvalue:
+            logging.info("Status output01 : ON")
+            mqtt_client.publish(topic=topic, payload='ON')
+        else:
+            logging.info("Status output01 : OFF")
+            mqtt_client.publish(topic=topic, payload='OFF')
+    except Exception:
+        # return without action if any failure occurs
+        logging.error("Failed to publish output01 status via MQTT")
 
-def output01_ON(mqtt_client, state_values, message):
+
+def output01_ON(state_values, mqtt_client=None):
     "set output01 pin high"
-    hardware.set_boolean_output("output01", True)
-    # Set output value in the state 'door'
-    state_values['door'].output01 = True
-    # respond with output01 status
-    output01_status(mqtt_client, state_values)
+    try:
+        hardware.set_boolean_output("output01", True)
+        # Set output value in the state 'door'
+        state_values['door'].output01 = True
+        # respond with output01 status
+        if mqtt_client is not None:
+            output01_status(mqtt_client, state_values)
+    except Exception:
+        # return without action if any failure occurs
+        return
 
-def output01_OFF(mqtt_client, state_values, message):
+
+def output01_OFF(state_values, mqtt_client=None):
     "set output01 pin low"
-    hardware.set_boolean_output("output01", False)
-    # Set output value in the state 'door'
-    state_values['door'].output01 = False
-    # respond with output01 status
-    output01_status(mqtt_client, state_values)
+    try:
+        hardware.set_boolean_output("output01", False)
+        # Set output value in the state 'door'
+        state_values['door'].output01 = False
+        # respond with output01 status
+        if mqtt_client is not None:
+            output01_status(mqtt_client, state_values)
+    except Exception:
+        # return without action if any failure occurs
+        return
+
 
 

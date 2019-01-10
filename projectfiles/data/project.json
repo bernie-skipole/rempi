@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.5.0",
-"skipole": "2.0.0",
+"skipole": "2.1.0",
 "subprojects": {
 "lib": {
 "path": "/lib/"
@@ -18,6 +18,12 @@
 "jquery_core": "lib,jquery_core",
 "no_javascript": "lib,no_javascript",
 "redirector": "lib,redirector",
+"rempi_log": 29,
+"rempi_log1": 21,
+"rempi_log2": 22,
+"rempi_log3": 23,
+"rempi_log4": 24,
+"rempi_log5": 25,
 "sensors": 2,
 "server_error": "lib,server_error",
 "set_output01": 3001,
@@ -252,6 +258,69 @@
 "filepath": "rempi/static/css/w3-theme-ski.css",
 "enable_cache": true,
 "mimetype": "text/css"
+}
+}
+}
+},
+"logs": {
+"ident": 20,
+"brief": "folder for log files",
+"default_page_name": "index",
+"restricted": false,
+"folders": {},
+"pages": {
+"rempi.log": {
+"ident": 29,
+"brief": "current log file",
+"FilePage": {
+"filepath": "rempi/rempi.log",
+"enable_cache": false,
+"mimetype": "text/plain"
+}
+},
+"rempi.log.1": {
+"ident": 21,
+"brief": "rotated log file 1",
+"FilePage": {
+"filepath": "rempi/rempi.log.1",
+"enable_cache": false,
+"mimetype": "text/plain"
+}
+},
+"rempi.log.2": {
+"ident": 22,
+"brief": "rotated log file 2",
+"FilePage": {
+"filepath": "rempi/rempi.log.2",
+"enable_cache": false,
+"mimetype": "text/plain"
+}
+},
+"rempi.log.3": {
+"ident": 23,
+"brief": "rotated log file 3",
+"FilePage": {
+"filepath": "rempi/rempi.log.3",
+"enable_cache": false,
+"mimetype": "text/plain"
+}
+},
+"rempi.log.4": {
+"ident": 24,
+"brief": "rotated log file 4",
+"FilePage": {
+"filepath": "rempi/rempi.log.4",
+"enable_cache": false,
+"mimetype": "text/plain"
+}
+},
+"rempi.log.5": {
+"ident": 25,
+"brief": "rotated log file 5",
+"FilePage": {
+"filepath": "rempi/rempi.log.5",
+"enable_cache": false,
+"mimetype": "text/plain"
 }
 }
 }
@@ -1384,6 +1453,195 @@
 "escape": true,
 "linebreaks": true,
 "decode": false
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Logs",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Event Log files"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "current log",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log}"
+},
+"parts": [
+[
+"Text",
+"rempi.log"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "log 1",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log.1",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log1}"
+},
+"parts": [
+[
+"Text",
+"rempi.log.1"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "log 2",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log.2",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log2}"
+},
+"parts": [
+[
+"Text",
+"rempi.log.2"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "log 3",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log.3",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log3}"
+},
+"parts": [
+[
+"Text",
+"rempi.log.3"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "log 4",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log.4",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log4}"
+},
+"parts": [
+[
+"Text",
+"rempi.log.4"
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "log 5",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "a",
+"brief": "link to rempi.log.5",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"href": "{rempi_log5}"
+},
+"parts": [
+[
+"Text",
+"rempi.log.5"
+]
+]
 }
 ]
 ]
