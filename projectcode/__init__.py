@@ -61,8 +61,23 @@ def start_project(project, projectfiles, path, option):
     # door.set_state(door_open, door_closed, door_opening, door_closing)
     # door.start()
 
+    # comms is True if communications to the server is working, this
+    # is initially assumed True and gets set to False if no comms received after
+    # about twenty minutes
 
-    proj_data = {'door':door, 'comms':True, 'lock':threading.Lock()}
+    # lock is a threading lock which is aquired whenever an output is to be set
+    # by a local action from this rempi web service or JSON request, or a
+    # remote action by MQTT from the web server
+
+    # enable_web_control is True if this accepts output commands via MQTT from
+    # the web server, and can be set to False via the rempi web interface,
+    # to ignore such commands 
+
+
+    proj_data = {'door':door,
+                 'comms':True,
+                 'lock':threading.Lock(),
+                 'enable_web_control':True}
 
     # Create the mqtt client connection
 

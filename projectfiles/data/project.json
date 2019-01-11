@@ -2,7 +2,7 @@
 "url": "/",
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
-"version": "0.5.0",
+"version": "0.5.1",
 "skipole": "2.1.0",
 "subprojects": {
 "lib": {
@@ -635,6 +635,61 @@
 "This page activates control outputs:"
 ]
 ]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "about web control",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Outputs are normally activated by the main Internet facing web server, rather than here. This facility is for test purposes.\r\nTo avoid confusion during testing, you can disable the Internet web server from setting outputs."
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.ParaText",
+"name": "web_control",
+"brief": "Shows status of web control",
+"fields": {
+"para_text": "",
+"show": true,
+"widget_class": "",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "links.ButtonLink2",
+"name": "toggle_web_control",
+"brief": "Toggles the Internet web server enable/disable",
+"fields": {
+"button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_text": "Web Control",
+"button_wait_text": "Please wait...",
+"buttondiv_class": "ski_mid_button",
+"buttondiv_style": "",
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"get_field1": "",
+"get_field2": "",
+"hide": false,
+"json_ident": "",
+"link_ident": "10",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
 }
 ],
 [
@@ -2505,6 +2560,25 @@
 "original_fields": {
 "show_error": "Example validate error message"
 }
+}
+},
+"web_control": {
+"ident": 10,
+"brief": "Toggles the web control facility",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"fail_ident": "control",
+"submit_list": [
+"control",
+"toggle_web_control"
+],
+"target_ident": "control"
+},
+"original_fields": {}
 }
 }
 }

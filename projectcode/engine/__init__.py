@@ -70,7 +70,8 @@ def _on_message(client, userdata, message):
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
         _COMMS_COUNTDOWN = 4
         proj_data['comms'] = True
-        communications.action(client, proj_data, message)
+        if proj_data['enable_web_control']:
+            communications.action(client, proj_data, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
         _COMMS_COUNTDOWN = 4

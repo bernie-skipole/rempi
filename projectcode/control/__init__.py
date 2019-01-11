@@ -1,4 +1,4 @@
-import collections
+import collections, logging
 
 from ... import FailPage, GoTo, ValidateError, ServerError
 
@@ -8,6 +8,13 @@ from .. import hardware, engine
 
 def control_page(skicall):
     """Populate the control page, by setting widget values, and then the results values"""
+    # display web_control status
+    if skicall.proj_data['enable_web_control']:
+        skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is ENABLED"
+        skicall.page_data['toggle_web_control', 'button_text'] = "Disable Internet Control"
+    else:
+        skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is DISABLED"
+        skicall.page_data['toggle_web_control', 'button_text'] = "Enable Internet Control"
     # display output description
     skicall.page_data['output01_description', 'para_text'] = hardware.get_output_description('output01')
     # widget output01 is boolean radio and expects a binary True, False value
@@ -19,6 +26,15 @@ def control_page(skicall):
     # finally fill in all results fields
     refresh_results(skicall)
 
+
+def toggle_web_control(skicall):
+    "Enable / disable the enable_web_control flag in proj_data"
+    if skicall.proj_data['enable_web_control']:
+        skicall.proj_data['enable_web_control'] = False
+        logging.warning("Internet control has been disabled")
+    else:
+        skicall.proj_data['enable_web_control'] = True
+        logging.warning("Internet control has been enabled")
 
 def refresh_results(skicall):
     """Fill in the control page results fields"""

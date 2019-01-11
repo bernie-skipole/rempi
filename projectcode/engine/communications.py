@@ -73,8 +73,10 @@ def action(mqtt_client, proj_data, message):
     with proj_data['lock']:
         if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01'):
             if payload == "ON":
+                logging.info("Request received via MQTT - set output01 : ON")
                 output01_ON(proj_data, mqtt_client)
             elif payload == "OFF":
+                logging.info("Request received via MQTT - set output01 : OFF")
                 output01_OFF(proj_data, mqtt_client)
             else:
                 output01_status(mqtt_client, proj_data, message)
