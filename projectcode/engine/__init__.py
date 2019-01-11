@@ -60,7 +60,7 @@ def from_topic():
 def _on_message(client, userdata, message):
     "Callback when a message is received"
 
-    state_values = userdata
+    proj_data = userdata
 
     global _COMMS_COUNTDOWN
 
@@ -69,18 +69,18 @@ def _on_message(client, userdata, message):
     
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
         _COMMS_COUNTDOWN = 4
-        state_values['comms'] = True
-        communications.action(client, state_values, message)
+        proj_data['comms'] = True
+        communications.action(client, proj_data, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
         _COMMS_COUNTDOWN = 4
-        state_values['comms'] = True
+        proj_data['comms'] = True
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            communications.status_request(client, state_values, message)
+            communications.status_request(client, proj_data, message)
     elif message.topic == 'From_ServerEngine/HEARTBEAT':
         # sent by the server every six minutes to maintain _COMMS_COUNTDOWN
-        state_values['comms'] = True
+        proj_data['comms'] = True
         _COMMS_COUNTDOWN = 4
 
 
@@ -104,7 +104,7 @@ def _on_disconnect(client, userdata, rc):
     _mqtt_connected = False
 
 
-def create_mqtt(state_values):
+def create_mqtt(proj_data):
     """Creates an mqtt client,
        with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
        and running a threaded loop
@@ -126,7 +126,7 @@ def create_mqtt(state_values):
 
     try:
         # create an mqtt client instance
-        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name(), userdata=state_values)
+        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name(), userdata=proj_data)
 
         # attach callback function to client
         MQTT_CLIENT.on_connect = _on_connect
@@ -153,25 +153,26 @@ def create_mqtt(state_values):
     logging.info("MQTT client started")
 
 
+
 ### set outputs ###
 
-def set_output(output_name, value, state_values, mqtt_client=None):
+def set_output(output_name, value, proj_data, mqtt_client=None):
     """Sets an output, given the output name and value"""
     if output_name == 'output01':
         if (value is True) or (value == 'True') or (value == 'ON'):
-            communications.output01_ON(state_values, mqtt_client)
+            communications.output01_ON(proj_data, mqtt_client)
         else:
-            communications.output01_OFF(state_values, mqtt_client)
+            communications.output01_OFF(proj_data, mqtt_client)
     # other output names to be checked here
 
 
 
 ### status request ###
 
-def output_status(output_name, state_values):
+def output_status(output_name, proj_data):
     """If a request for an output status has been received, respond to it"""
     global MQTT_CLIENT
-    communications.output_status(output_name, MQTT_CLIENT, state_values)
+    communications.output_status(output_name, MQTT_CLIENT, proj_data)
 
 
 def input_status(input_name):
@@ -183,7 +184,7 @@ def input_status(input_name):
 ###  input pin changes ###
 
 
-def _inputcallback(input_name, state_values):
+def _inputcallback(input_name, proj_data):
     "Callback when an input pin changes, name is the pin name"
     global MQTT_CLIENT
     if MQTT_CLIENT is None:
@@ -192,10 +193,10 @@ def _inputcallback(input_name, state_values):
         input_status(input_name)
 
 
-def listen_to_inputs(state_values):
+def listen_to_inputs(proj_data):
     """create an input Listen object (defined in hardware.py),
        which calls _inputcallback on a pin change"""
-    listen = hardware.Listen(_inputcallback, state_values)
+    listen = hardware.Listen(_inputcallback, proj_data)
     listen.start_loop()
     return listen
 
@@ -208,10 +209,10 @@ def event1(*args):
     try:
         if _mqtt_mod is None:
             return
-        state_values = args[0]
+        proj_data = args[0]
         if _mqtt_connected:
             communications.input_status("input01", MQTT_CLIENT)
-            communications.output_status("output01", MQTT_CLIENT, state_values)
+            communications.output_status("output01", MQTT_CLIENT, proj_data)
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event1')
@@ -224,11 +225,11 @@ def event2(*args):
     try:
         if _mqtt_mod is None:
             return
-        state_values = args[0]
+        proj_data = args[0]
         if _mqtt_connected:
             communications.input_status("input01", MQTT_CLIENT)
             communications.input_status("input03", MQTT_CLIENT)     # temperature
-            communications.output_status("output01", MQTT_CLIENT, state_values)
+            communications.output_status("output01", MQTT_CLIENT, proj_data)
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event2')
@@ -240,13 +241,13 @@ def event3(*args):
     """event3 is called every ten minutes
        decrements _COMMS_COUNTDOWN, and checks if zero or less"""
     global _COMMS_COUNTDOWN
-    state_values = args[0]
+    proj_data = args[0]
     if _COMMS_COUNTDOWN < 1:
         logging.critical('Communications with main server has been lost.')
-        state_values['comms'] = False
+        proj_data['comms'] = False
         return
     # _COMMS_COUNTDOWN is still positive, decrement it
-    state_values['comms'] = True
+    proj_data['comms'] = True
     _COMMS_COUNTDOWN -= 1
     logging.info("Scheduled Event3 _COMMS_COUNTDOWN is %s.", _COMMS_COUNTDOWN)
 
@@ -255,7 +256,7 @@ def event3(*args):
 
 class ScheduledEvents(object):
 
-    def __init__(self, state_values):
+    def __init__(self, proj_data):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
         event_list = [ (event1, 1),   # event1 at one minute past the hour
@@ -272,7 +273,7 @@ class ScheduledEvents(object):
         # sort the list
         self.event_list = sorted(event_list, key=lambda x: x[1])
 
-        self.state_values = state_values
+        self.proj_data = proj_data
         self.schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -304,7 +305,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.state_values,)
+                                   argument = (self.proj_data,)
                                    )
 
         # schedule a final event to occur 30 seconds after last event
@@ -345,7 +346,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.state_values,)
+                                       argument = (self.proj_data,)
                                        )
 
         # schedule a final event to occur 30 seconds after last event
@@ -368,7 +369,7 @@ class ScheduledEvents(object):
 # add them in time order to the self.event_list attribute, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents(state_values)
+# scheduled_events = ScheduledEvents(proj_data)
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread

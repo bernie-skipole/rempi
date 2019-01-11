@@ -136,12 +136,17 @@ def set_boolean_output(name, value):
         return
     if _OUTPUTS[name][0] != 'boolean':
         return
-    if (value is True) or (value == 'True') or (value == 'ON'):
-        GPIO.output(_OUTPUTS[name][2], 1)
-        logging.info("Output %s set ON : %s", _OUTPUTS[name][3])
-    else:
-        GPIO.output(_OUTPUTS[name][2], 0)
-        logging.info("Output %s set OFF : %s", _OUTPUTS[name][3])
+    try:
+        if (value is True) or (value == 'True') or (value == 'ON'):
+            GPIO.output(_OUTPUTS[name][2], 1)
+            logging.info("Output %s set ON : %s", _OUTPUTS[name][3])
+        else:
+            GPIO.output(_OUTPUTS[name][2], 0)
+            logging.info("Output %s set OFF : %s", _OUTPUTS[name][3])
+    except Exception:
+        logging.error("Unable to set output %s, BCM %s", name, _OUTPUTS[name][2])
+        # re raise the exception to indicate to caller that this has failed
+        raise
 
 
 def get_input_names():
@@ -248,9 +253,9 @@ class Listen(object):
       
     """ 
 
-    def __init__(self, callbackfunction, state_values):
+    def __init__(self, callbackfunction, proj_data):
         self.set_callback = callbackfunction
-        self.state_values = state_values
+        self.proj_data = proj_data
 
     def input_state(self, name):
         return get_boolean_input(name)
@@ -260,9 +265,9 @@ class Listen(object):
 
     def _pincallback(self, channel):
         """This is the callback added to each pin, in turn it calls
-           callbackfunction(name, state_values)"""
+           callbackfunction(name, proj_data)"""
         name = get_input_name(channel)
-        self.set_callback(name, self.state_values)
+        self.set_callback(name, self.proj_data)
 
     def start_loop(self):
         "Sets up listenning threads"

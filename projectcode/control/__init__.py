@@ -76,14 +76,13 @@ def _set_output(name, value, skicall):
     """Sets an output, given the output name and value"""
 
     # wait until a lock is aquired and block anyone else from changing an output
-    # Lock.acquire()
 
-    engine.set_output(name, value, skicall.proj_data)
-    # publish output status by mqtt
-    engine.output_status(name, skicall.proj_data)
+    lock = skicall.proj_data['lock']
+    with lock:
+        engine.set_output(name, value, skicall.proj_data)
+        # publish output status by mqtt
+        engine.output_status(name, skicall.proj_data)
 
-    # allow other threads to set outputs
-    # Lock.release()
 
 
 

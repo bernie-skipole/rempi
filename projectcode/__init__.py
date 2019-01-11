@@ -40,7 +40,7 @@ def start_project(project, projectfiles, path, option):
        Note: it may be called multiple times if your web server starts multiple processes.
        This function should return a dictionary (typically an empty dictionary if this value is not used).
        Can be used to set any initial parameters, and the dictionary returned will be passed as
-       'proj_data' to subsequent start_call functions."""
+       'skicall.proj_data' to subsequent start_call functions."""
 
     logfile = os.path.join(projectfiles, project, 'rempi.log')
     handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
@@ -61,23 +61,25 @@ def start_project(project, projectfiles, path, option):
     # door.set_state(door_open, door_closed, door_opening, door_closing)
     # door.start()
 
-    # Create the mqtt client connection, with state values
-    state_values = {'door':door, 'comms':True}
 
-    engine.create_mqtt(state_values)
+    proj_data = {'door':door, 'comms':True, 'lock':threading.Lock()}
+
+    # Create the mqtt client connection
+
+    engine.create_mqtt(proj_data)
 
     # create an input listener, which publishes messages on an input pin change
-    listen = engine.listen_to_inputs(state_values)
+    listen = engine.listen_to_inputs(proj_data)
 
     # create an event schedular to do periodic actions
-    scheduled_events = engine.ScheduledEvents(state_values)
+    scheduled_events = engine.ScheduledEvents(proj_data)
     # this is a callable which runs scheduled events, it
     # needs to be called in its own thread
     run_scheduled_events = threading.Thread(target=scheduled_events)
     # and start the thread
     run_scheduled_events.start()
 
-    return state_values
+    return proj_data
 
 
 def start_call(called_ident, skicall):
