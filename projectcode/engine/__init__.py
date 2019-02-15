@@ -67,7 +67,7 @@ def _on_message(client, userdata, message):
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
-    if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
+    if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
         _COMMS_COUNTDOWN = 4
         proj_data['comms'] = True
         if proj_data['enable_web_control']:
@@ -83,6 +83,13 @@ def _on_message(client, userdata, message):
         # sent by the server every six minutes to maintain _COMMS_COUNTDOWN
         proj_data['comms'] = True
         _COMMS_COUNTDOWN = 4
+    elif message.topic == 'From_RemControl/status':
+        # a status request from the terminal remscope control program
+        _COMMS_COUNTDOWN = 4
+        proj_data['comms'] = True
+        payload = message.payload.decode("utf-8")
+        if payload == 'door':
+            communications.output01_status(client, proj_data, message)
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -96,8 +103,8 @@ def _on_connect(client, userdata, flags, rc):
     print("MQTT client connected")
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
-    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
-    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#" and "From_RemControl/#"
+    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0), ("From_RemControl/#", 0)] )
 
 
 def _on_disconnect(client, userdata, rc):
@@ -107,7 +114,7 @@ def _on_disconnect(client, userdata, rc):
 
 def create_mqtt(proj_data):
     """Creates an mqtt client,
-       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/#
+       with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/# and From_RemControl/#
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""
@@ -127,7 +134,7 @@ def create_mqtt(proj_data):
 
     try:
         # create an mqtt client instance
-        MQTT_CLIENT = mqtt.Client(client_id=hardware.get_name(), userdata=proj_data)
+        MQTT_CLIENT = mqtt.Client(userdata=proj_data)
 
         # attach callback function to client
         MQTT_CLIENT.on_connect = _on_connect
