@@ -13,33 +13,33 @@ def from_topic():
     return 'From_' + hardware.get_name()
 
 
-def status_request(mqtt_client, proj_data, message=''):
+def status_request(mqtt_client, status_data, message=''):
     "Request received for general status request"
     # call each pin status in turn
-    output01_status(mqtt_client, proj_data, message)
+    output01_status(mqtt_client, status_data, message)
     input_names = hardware.get_input_names()
     for name in input_names:
-        input_status(name, mqtt_client, message)
+        input_status(name, mqtt_client, status_data, message)
 
 
 ###### INPUTS ######
 
 
-def read(mqtt_client, message):
+def read(mqtt_client, status_data, message):
     "Deals with a request to read a specific Input"
     payload = message.payload.decode("utf-8")
     if message.topic == 'From_WebServer/Inputs/input01':
         if payload == "status_request":
-            input_status('input01', mqtt_client, message)
+            input_status('input01', mqtt_client, status_data, message)
     if message.topic == 'From_WebServer/Inputs/input02':
         if payload == "status_request":
-            input_status('input02', mqtt_client, message)
+            input_status('input02', mqtt_client, status_data, message)
     if message.topic == 'From_WebServer/Inputs/input03':
         if payload == "status_request":
-            input_status('input03', mqtt_client, message)
+            input_status('input03', mqtt_client, status_data, message)
 
 
-def input_status(input_name, mqtt_client, message=''):
+def input_status(input_name, mqtt_client, status_data, message=''):
     """If a request for an input status has been received, respond to it"""
     if mqtt_client is None:
         return
@@ -66,28 +66,28 @@ def input_status(input_name, mqtt_client, message=''):
 ###### OUTPUTS ######
 
 
-def action(mqtt_client, proj_data, message):
+def action(mqtt_client, status_data, message):
     "Sets outputs when message received via MQTT"
     payload = message.payload.decode("utf-8")
     # wait until a lock is aquired, then set output while blocking anyone else
-    with proj_data['lock']:
+    with status_data['lock']:
         if (message.topic == 'From_WebServer/Outputs/output01') or (message.topic == 'From_ServerEngine/Outputs/output01') or (message.topic == 'From_RemControl/Outputs/output01'):
             if payload == "ON":
                 logging.info("Request received via MQTT - set output01 : ON")
-                output01_ON(proj_data, mqtt_client)
+                output01_ON(status_data, mqtt_client)
             elif payload == "OFF":
                 logging.info("Request received via MQTT - set output01 : OFF")
-                output01_OFF(proj_data, mqtt_client)
+                output01_OFF(status_data, mqtt_client)
             else:
-                output01_status(mqtt_client, proj_data, message)
+                output01_status(mqtt_client, status_data, message)
 
 
-def output_status(output_name, mqtt_client, proj_data, message=''):
+def output_status(output_name, mqtt_client, status_data, message=''):
     """If a request for an output status has been received, respond to it"""
     if mqtt_client is None:
         return
     if output_name == 'output01':
-        output01_status(mqtt_client, proj_data, message)
+        output01_status(mqtt_client, status_data, message)
     # add elif's as further outputs defined
 
 
@@ -96,7 +96,7 @@ def output_status(output_name, mqtt_client, proj_data, message=''):
 
 ###### output01 #####
 
-def output01_status(mqtt_client, proj_data, message=''):
+def output01_status(mqtt_client, status_data, message=''):
     """If a request for output01 status has been received,
        check gpio pins and respond to it"""
     try:
@@ -106,7 +106,7 @@ def output01_status(mqtt_client, proj_data, message=''):
         # if unable to get pin output, respond with state store value
         # primarily for test usage on a none-raspberry pi pc
         if hardvalue is None:
-            hardvalue = proj_data['door'].output01
+            hardvalue = status_data['door'].output01
         topic = from_topic() + '/Outputs/output01'
         if hardvalue:
             logging.info("Status output01 : ON")
@@ -119,29 +119,29 @@ def output01_status(mqtt_client, proj_data, message=''):
         logging.error("Failed to publish output01 status via MQTT")
 
 
-def output01_ON(proj_data, mqtt_client=None):
+def output01_ON(status_data, mqtt_client=None):
     "set output01 pin high"
     try:
         hardware.set_boolean_output("output01", True)
         # Set output value in the state 'door'
-        proj_data['door'].output01 = True
+        status_data['door'].output01 = True
         # respond with output01 status
         if mqtt_client is not None:
-            output01_status(mqtt_client, proj_data)
+            output01_status(mqtt_client, status_data)
     except Exception:
         # return without action if any failure occurs
         return
 
 
-def output01_OFF(proj_data, mqtt_client=None):
+def output01_OFF(status_data, mqtt_client=None):
     "set output01 pin low"
     try:
         hardware.set_boolean_output("output01", False)
         # Set output value in the state 'door'
-        proj_data['door'].output01 = False
+        status_data['door'].output01 = False
         # respond with output01 status
         if mqtt_client is not None:
-            output01_status(mqtt_client, proj_data)
+            output01_status(mqtt_client, status_data)
     except Exception:
         # return without action if any failure occurs
         return

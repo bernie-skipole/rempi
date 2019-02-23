@@ -34,11 +34,6 @@ try:
 except Exception:
     _mqtt_mod = False
 
-# initially assume no mqtt connection
-_mqtt_connected = False
-
-# The mqtt_client
-MQTT_CLIENT = None
 
 # _COMMS_COUNTDOWN starts with a value of 4 and decremented every 10 minutes
 # set to 4 every time a command is received
@@ -60,47 +55,48 @@ def from_topic():
 def _on_message(client, userdata, message):
     "Callback when a message is received"
 
-    proj_data = userdata
+    # userdata is the status_data dictionary
+    status_data = userdata
 
     global _COMMS_COUNTDOWN
+
+    # If no other message received, a heartbeat with topic 'From_ServerEngine/HEARTBEAT':
+    # is sent by the server every six minutes to maintain _COMMS_COUNTDOWN
+
+    status_data['comms'] = True
+    _COMMS_COUNTDOWN = 4
 
     # uncomment for testing
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
-        _COMMS_COUNTDOWN = 4
-        proj_data['comms'] = True
-        if proj_data['enable_web_control']:
-            communications.action(client, proj_data, message)
+        if status_data['enable_web_control']:
+            communications.action(client, status_data, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
-        _COMMS_COUNTDOWN = 4
-        proj_data['comms'] = True
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
-            communications.status_request(client, proj_data, message)
-    elif message.topic == 'From_ServerEngine/HEARTBEAT':
-        # sent by the server every six minutes to maintain _COMMS_COUNTDOWN
-        proj_data['comms'] = True
-        _COMMS_COUNTDOWN = 4
+            communications.status_request(client, status_data, message)
     elif message.topic == 'From_RemControl/status':
         # a status request from the terminal remscope control program
-        _COMMS_COUNTDOWN = 4
-        proj_data['comms'] = True
         payload = message.payload.decode("utf-8")
         if payload == 'door':
-            communications.output01_status(client, proj_data, message)
+            communications.output01_status(client, status_data, message)
 
 
 # The callback for when the client receives a CONNACK response from the server.
 def _on_connect(client, userdata, flags, rc):
-    global _mqtt_connected
-    if rc != 0:
-        # client not connected
-        _mqtt_connected = False
-        return
-    _mqtt_connected = True
-    print("MQTT client connected")
+    "Comms now available, renew subscriptions"
+
+    global _COMMS_COUNTDOWN
+    _COMMS_COUNTDOWN = 4
+
+    # userdata is the status_data dictionary
+    status_data = userdata
+    status_data['comms'] = True
+
+    logging.info("MQTT client connected")
+
     # Subscribing in on_connect() means that if we lose the connection and
     # reconnect then subscriptions will be renewed.
     # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#" and "From_RemControl/#"
@@ -108,18 +104,21 @@ def _on_connect(client, userdata, flags, rc):
 
 
 def _on_disconnect(client, userdata, rc):
-    global _mqtt_connected
-    _mqtt_connected = False
+    "The client has disconnected, set status_data['comms'] = False"
+    # userdata is the status_data dictionary
+    status_data = userdata
+    status_data['comms'] = False
+    logging.info("MQTT client disconnected")
 
 
-def create_mqtt(proj_data):
+def create_mqtt(status_data):
     """Creates an mqtt client,
        with the mqtt client subscribed to From_WebServer/# and From_ServerEngine/# and From_RemControl/#
        and running a threaded loop
        and with an on_message callback that calls further functions
        within this package"""
 
-    global MQTT_CLIENT
+    mqtt_client = None
 
     # Get the mqtt server parameters from hardware.py
     mqtt_ip, mqtt_port, mqtt_username, mqtt_password = hardware.get_mqtt()
@@ -134,43 +133,47 @@ def create_mqtt(proj_data):
 
     try:
         # create an mqtt client instance
-        MQTT_CLIENT = mqtt.Client(userdata=proj_data)
+        mqtt_client = mqtt.Client(userdata=status_data)
 
         # attach callback function to client
-        MQTT_CLIENT.on_connect = _on_connect
-        MQTT_CLIENT.on_disconnect = _on_disconnect
-        MQTT_CLIENT.on_message = _on_message
+        mqtt_client.on_connect = _on_connect
+        mqtt_client.on_disconnect = _on_disconnect
+        mqtt_client.on_message = _on_message
 
         # If a username/password is set on the mqtt server
         if mqtt_username and mqtt_password:
-            MQTT_CLIENT.username_pw_set(username = mqtt_username, password = mqtt_password)
+            mqtt_client.username_pw_set(username = mqtt_username, password = mqtt_password)
         elif mqtt_username:
-            MQTT_CLIENT.username_pw_set(username = mqtt_username)
+            mqtt_client.username_pw_set(username = mqtt_username)
 
         # connect to the server
-        MQTT_CLIENT.connect(host=mqtt_ip, port=mqtt_port)
+        mqtt_client.connect(host=mqtt_ip, port=mqtt_port)
 
         # start a threaded loop
-        MQTT_CLIENT.loop_start()
+        mqtt_client.loop_start()
     except Exception as e:
-        MQTT_CLIENT = None
+        mqtt_client = None
 
-    if MQTT_CLIENT is None:
+    if mqtt_client is None:
         print("Failed to create mqtt_client", file=sys.stderr)
         logging.critical('Failed to create mqtt_client')
-    logging.info("MQTT client started")
+    else:
+        logging.info("MQTT client started")
+
+    return mqtt_client
 
 
 
 ### set outputs ###
 
-def set_output(output_name, value, proj_data, mqtt_client=None):
+def set_output(output_name, value, proj_data):
     """Sets an output, given the output name and value"""
+    mqtt_client = proj_data['mqtt_client']
     if output_name == 'output01':
         if (value is True) or (value == 'True') or (value == 'ON'):
-            communications.output01_ON(proj_data, mqtt_client)
+            communications.output01_ON(proj_data['status'], mqtt_client)
         else:
-            communications.output01_OFF(proj_data, mqtt_client)
+            communications.output01_OFF(proj_data['status'], mqtt_client)
     # other output names to be checked here
 
 
@@ -179,14 +182,18 @@ def set_output(output_name, value, proj_data, mqtt_client=None):
 
 def output_status(output_name, proj_data):
     """If a request for an output status has been received, respond to it"""
-    global MQTT_CLIENT
-    communications.output_status(output_name, MQTT_CLIENT, proj_data)
+    mqtt_client = proj_data['mqtt_client']
+    if mqtt_client is None:
+        return
+    communications.output_status(output_name, mqtt_client, proj_data['status'])
 
 
-def input_status(input_name):
+def input_status(input_name, proj_data):
     """If a request for an input status has been received, respond to it"""
-    global MQTT_CLIENT
-    communications.input_status(input_name, MQTT_CLIENT)
+    mqtt_client = proj_data['mqtt_client']
+    if mqtt_client is None:
+        return
+    communications.input_status(input_name, mqtt_client, proj_data['status'])
 
 
 ###  input pin changes ###
@@ -194,11 +201,10 @@ def input_status(input_name):
 
 def _inputcallback(input_name, proj_data):
     "Callback when an input pin changes, name is the pin name"
-    global MQTT_CLIENT
-    if MQTT_CLIENT is None:
+    mqtt_client = proj_data['mqtt_client']
+    if mqtt_client is None:
         return
-    if _mqtt_connected:
-        input_status(input_name)
+    input_status(input_name, proj_data)
 
 
 def listen_to_inputs(proj_data):
@@ -218,9 +224,8 @@ def event1(*args):
         if _mqtt_mod is None:
             return
         proj_data = args[0]
-        if _mqtt_connected:
-            communications.input_status("input01", MQTT_CLIENT)
-            communications.output_status("output01", MQTT_CLIENT, proj_data)
+        input_status("input01", proj_data)
+        output_status("output01", proj_data)
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event1')
@@ -234,10 +239,9 @@ def event2(*args):
         if _mqtt_mod is None:
             return
         proj_data = args[0]
-        if _mqtt_connected:
-            communications.input_status("input01", MQTT_CLIENT)
-            communications.input_status("input03", MQTT_CLIENT)     # temperature
-            communications.output_status("output01", MQTT_CLIENT, proj_data)
+        input_status("input01", proj_data)
+        input_status("input03", proj_data)     # temperature
+        output_status("output01", proj_data)
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event2')
@@ -252,10 +256,10 @@ def event3(*args):
     proj_data = args[0]
     if _COMMS_COUNTDOWN < 1:
         logging.critical('Communications with main server has been lost.')
-        proj_data['comms'] = False
+        proj_data['status']['comms'] = False
         return
     # _COMMS_COUNTDOWN is still positive, decrement it
-    proj_data['comms'] = True
+    proj_data['status']['comms'] = True
     _COMMS_COUNTDOWN -= 1
     logging.info("Scheduled Event3 _COMMS_COUNTDOWN is %s.", _COMMS_COUNTDOWN)
 

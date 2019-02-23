@@ -66,22 +66,25 @@ def start_project(project, projectfiles, path, option):
     # about twenty minutes
 
     # lock is a threading lock which is aquired whenever an output is to be set
-    # by a local action from this rempi web service or JSON request, or a
-    # remote action by MQTT from the web server
+    # by a local action from this rempi web service or JSON request
 
     # enable_web_control is True if this accepts output commands via MQTT from
     # the web server, and can be set to False via the rempi web interface,
     # to ignore such commands 
 
 
-    proj_data = {'door':door,
-                 'comms':True,
-                 'lock':threading.Lock(),
-                 'enable_web_control':True}
+    status_data = {'door':door,
+                   'enable_web_control':True,
+                   'comms':True
+                  }
+
+    proj_data = {'status': status_data,
+                 'lock':threading.Lock(),       # lock object enables commands from web server to seize lock
+                 'mqtt_client':None}
 
     # Create the mqtt client connection
 
-    engine.create_mqtt(proj_data)
+    proj_data['mqtt_client'] = engine.create_mqtt(status_data)
 
     # create an input listener, which publishes messages on an input pin change
     listen = engine.listen_to_inputs(proj_data)

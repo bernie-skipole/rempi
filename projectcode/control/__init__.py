@@ -9,7 +9,7 @@ from .. import hardware, engine
 def control_page(skicall):
     """Populate the control page, by setting widget values, and then the results values"""
     # display web_control status
-    if skicall.proj_data['enable_web_control']:
+    if skicall.proj_data['status']['enable_web_control']:
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is ENABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Disable Internet Control"
     else:
@@ -29,11 +29,11 @@ def control_page(skicall):
 
 def toggle_web_control(skicall):
     "Enable / disable the enable_web_control flag in proj_data"
-    if skicall.proj_data['enable_web_control']:
-        skicall.proj_data['enable_web_control'] = False
+    if skicall.proj_data['status']['enable_web_control']:
+        skicall.proj_data['status']['enable_web_control'] = False
         logging.warning("Internet control has been disabled")
     else:
-        skicall.proj_data['enable_web_control'] = True
+        skicall.proj_data['status']['enable_web_control'] = True
         logging.warning("Internet control has been enabled")
 
 def refresh_results(skicall):
@@ -111,7 +111,7 @@ def _get_output(name, skicall):
         if hardvalue is not None:
             return hardvalue
     # if hardvalue not available, reads the stored output from the door state
-    if skicall.proj_data['door'].output01:
+    if skicall.proj_data['status']['door'].output01:
         return 'ON'
     else:
         return 'OFF' 
