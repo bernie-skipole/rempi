@@ -61,29 +61,28 @@ def start_project(project, projectfiles, path, option):
     # door.set_state(door_open, door_closed, door_opening, door_closing)
     # door.start()
 
+    # status_data is a dictionary that will be used by the mqtt communications
+
     # comms is True if communications to the server is working, this
     # is initially assumed True and gets set to False if no comms received after
     # about twenty minutes
-
-    # lock is a threading lock which is aquired whenever an output is to be set
-    # by a local action from this rempi web service or JSON request
 
     # enable_web_control is True if this accepts output commands via MQTT from
     # the web server, and can be set to False via the rempi web interface,
     # to ignore such commands 
 
+    # lock is a threading lock which is aquired whenever an output is to be set
 
     status_data = {'door':door,
                    'enable_web_control':True,
-                   'comms':True
+                   'comms':True,
+                   'lock':threading.Lock()
                   }
 
     proj_data = {'status': status_data,
-                 'lock':threading.Lock(),       # lock object enables commands from web server to seize lock
                  'mqtt_client':None}
 
     # Create the mqtt client connection
-
     proj_data['mqtt_client'] = engine.create_mqtt(status_data)
 
     # create an input listener, which publishes messages on an input pin change

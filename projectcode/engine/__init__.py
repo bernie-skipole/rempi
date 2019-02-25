@@ -125,6 +125,7 @@ def create_mqtt(status_data):
 
     if not _mqtt_mod:
         print("paho.mqtt.client not loaded", file=sys.stderr)
+        status_data['comms'] = False
         logging.critical('paho.mqtt.client not loaded')
         return
 
@@ -153,8 +154,6 @@ def create_mqtt(status_data):
         mqtt_client.loop_start()
     except Exception as e:
         mqtt_client = None
-
-    if mqtt_client is None:
         print("Failed to create mqtt_client", file=sys.stderr)
         logging.critical('Failed to create mqtt_client')
     else:

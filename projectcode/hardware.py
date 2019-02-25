@@ -139,10 +139,10 @@ def set_boolean_output(name, value):
     try:
         if (value is True) or (value == 'True') or (value == 'ON'):
             GPIO.output(_OUTPUTS[name][2], 1)
-            logging.info("Output %s set ON : %s", _OUTPUTS[name][3])
+            logging.info("Output %s set ON : %s", name, _OUTPUTS[name][3])
         else:
             GPIO.output(_OUTPUTS[name][2], 0)
-            logging.info("Output %s set OFF : %s", _OUTPUTS[name][3])
+            logging.info("Output %s set OFF : %s", name, _OUTPUTS[name][3])
     except Exception:
         logging.error("Unable to set output %s, BCM %s", name, _OUTPUTS[name][2])
         # re raise the exception to indicate to caller that this has failed

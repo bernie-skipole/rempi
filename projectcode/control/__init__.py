@@ -93,7 +93,7 @@ def _set_output(name, value, skicall):
 
     # wait until a lock is aquired and block anyone else from changing an output
 
-    lock = skicall.proj_data['lock']
+    lock = skicall.proj_data['status']['lock']
     with lock:
         engine.set_output(name, value, skicall.proj_data)
         # publish output status by mqtt
