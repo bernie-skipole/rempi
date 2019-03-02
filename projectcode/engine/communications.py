@@ -43,6 +43,8 @@ def input_status(input_name, mqtt_client, status_data, message=''):
     """If a request for an input status has been received, respond to it"""
     if mqtt_client is None:
         return
+    if not status_data['comms']:
+        return
     value = hardware.get_input(input_name)
     topic = from_topic() + '/Inputs/' + input_name
     try:
@@ -101,6 +103,8 @@ def output01_status(mqtt_client, status_data, message=''):
        check gpio pins and respond to it"""
     try:
         if mqtt_client is None:
+            return
+        if not status_data['comms']:
             return
         hardvalue = hardware.get_boolean_output("output01")
         # if unable to get pin output, respond with state store value

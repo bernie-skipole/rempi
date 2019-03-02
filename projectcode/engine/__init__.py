@@ -89,18 +89,22 @@ def _on_connect(client, userdata, flags, rc):
     "Comms now available, renew subscriptions"
 
     global _COMMS_COUNTDOWN
-    _COMMS_COUNTDOWN = 4
 
     # userdata is the status_data dictionary
     status_data = userdata
-    status_data['comms'] = True
 
-    logging.info("MQTT client connected")
+    if rc == 0:
+        _COMMS_COUNTDOWN = 4
+        status_data['comms'] = True
+        logging.info("MQTT client connected")
+        # Subscribing in on_connect() means that if we lose the connection and
+        # reconnect then subscriptions will be renewed.
+        # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#" and "From_RemControl/#"
+        client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0), ("From_RemControl/#", 0)] )
 
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#" and "From_RemControl/#"
-    client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0), ("From_RemControl/#", 0)] )
+    else:
+        status_data['comms'] = False
+        logging.critical('MQTT client not connected, code %s' % rc)
 
 
 def _on_disconnect(client, userdata, rc):
@@ -223,6 +227,8 @@ def event1(*args):
         if _mqtt_mod is None:
             return
         proj_data = args[0]
+        if not proj_data['status']['comms']:
+            return
         input_status("input01", proj_data)
         output_status("output01", proj_data)
     except Exception:
@@ -238,6 +244,8 @@ def event2(*args):
         if _mqtt_mod is None:
             return
         proj_data = args[0]
+        if not proj_data['status']['comms']:
+            return
         input_status("input01", proj_data)
         input_status("input03", proj_data)     # temperature
         output_status("output01", proj_data)
@@ -258,7 +266,6 @@ def event3(*args):
         proj_data['status']['comms'] = False
         return
     # _COMMS_COUNTDOWN is still positive, decrement it
-    proj_data['status']['comms'] = True
     _COMMS_COUNTDOWN -= 1
     logging.info("Scheduled Event3 _COMMS_COUNTDOWN is %s.", _COMMS_COUNTDOWN)
 
