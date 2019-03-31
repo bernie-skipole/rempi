@@ -182,6 +182,11 @@ if __name__ == "__main__":
     from waitress import serve
     serve(application, host='0.0.0.0', port=8000)
 
+    # the above line serves on 8000 for development
+    # but for deployment, use the following instead
+
+    # serve(application, host='0.0.0.0', port=80)
+
 
 
 
