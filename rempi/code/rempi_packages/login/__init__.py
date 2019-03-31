@@ -2,7 +2,7 @@
 from base64 import b64decode
 
 
-from ... import FailPage, GoTo, ValidateError, ServerError
+from skipole import FailPage, GoTo, ValidateError, ServerError
 
 
 # This is the access username
