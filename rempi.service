@@ -4,9 +4,8 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/rempi/__main__.py -w -p 80
+ExecStart=/usr/bin/python3 /opt/rempi/rempi/code/rempi.py
 
-WorkingDirectory=/opt/rempi
 Restart=on-failure
 
 # Connects standard output to /dev/null

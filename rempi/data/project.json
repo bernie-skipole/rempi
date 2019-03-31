@@ -4,20 +4,15 @@
 "brief": "Raspberry pi for remscope",
 "version": "0.7",
 "skipole": "2.4.2",
-"subprojects": {
-"lib": {
-"path": "/lib/"
-}
-},
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
 "general_json": 2006,
 "home": 1,
 "information": 4,
-"jquery_core": "lib,jquery_core",
-"no_javascript": "lib,no_javascript",
-"redirector": "lib,redirector",
+"jquery_core": "skis,jquery_core",
+"no_javascript": "skis,no_javascript",
+"redirector": "skis,redirector",
 "rempi_log": 29,
 "rempi_log1": 21,
 "rempi_log2": 22,
@@ -25,38 +20,38 @@
 "rempi_log4": 24,
 "rempi_log5": 25,
 "sensors": 2,
-"server_error": "lib,server_error",
+"server_error": "skis,server_error",
 "set_output01": 3001,
 "set_output01_json": 3002,
-"ski_basic": "lib,ski_basic",
-"ski_checkbox": "lib,ski_checkbox",
-"ski_confirm": "lib,ski_confirm",
+"ski_basic": "skis,ski_basic",
+"ski_checkbox": "skis,ski_checkbox",
+"ski_confirm": "skis,ski_confirm",
 "ski_css": 1006,
-"ski_debug_tools": "lib,ski_debug_tools",
-"ski_dropdown": "lib,ski_dropdown",
-"ski_error_messages": "lib,ski_error_messages",
-"ski_footers": "lib,ski_footers",
-"ski_headers": "lib,ski_headers",
-"ski_info": "lib,ski_info",
-"ski_inputforms": "lib,ski_inputforms",
-"ski_inputtables": "lib,ski_inputtables",
-"ski_inputtext": "lib,ski_inputtext",
-"ski_links": "lib,ski_links",
-"ski_lists": "lib,ski_lists",
-"ski_logins": "lib,ski_logins",
-"ski_paras": "lib,ski_paras",
-"ski_paths": "lib,ski_paths",
-"ski_radio": "lib,ski_radio",
-"ski_svgbasics": "lib,ski_svgbasics",
-"ski_svggraphs": "lib,ski_svggraphs",
-"ski_svgmeters": "lib,ski_svgmeters",
-"ski_tables": "lib,ski_tables",
-"ski_textarea": "lib,ski_textarea",
-"ski_upload": "lib,ski_upload",
-"skipole_js": "lib,skipole_js",
-"url_not_found": "lib,url_not_found",
-"validate_error": "lib,validate_error",
-"w3_css": "lib,w3_css",
+"ski_debug_tools": "skis,ski_debug_tools",
+"ski_dropdown": "skis,ski_dropdown",
+"ski_error_messages": "skis,ski_error_messages",
+"ski_footers": "skis,ski_footers",
+"ski_headers": "skis,ski_headers",
+"ski_info": "skis,ski_info",
+"ski_inputforms": "skis,ski_inputforms",
+"ski_inputtables": "skis,ski_inputtables",
+"ski_inputtext": "skis,ski_inputtext",
+"ski_links": "skis,ski_links",
+"ski_lists": "skis,ski_lists",
+"ski_logins": "skis,ski_logins",
+"ski_paras": "skis,ski_paras",
+"ski_paths": "skis,ski_paths",
+"ski_radio": "skis,ski_radio",
+"ski_svgbasics": "skis,ski_svgbasics",
+"ski_svggraphs": "skis,ski_svggraphs",
+"ski_svgmeters": "skis,ski_svgmeters",
+"ski_tables": "skis,ski_tables",
+"ski_textarea": "skis,ski_textarea",
+"ski_upload": "skis,ski_upload",
+"skipole_js": "skis,skipole_js",
+"url_not_found": "skis,url_not_found",
+"validate_error": "skis,validate_error",
+"w3_css": "skis,w3_css",
 "w3_theme_ski_css": 1004
 },
 "sections": {
@@ -343,7 +338,7 @@
 ],
 "alternate_ident": "home",
 "fail_ident": "control",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "set_output_from_browser"
 ],
@@ -368,7 +363,7 @@
 ],
 "alternate_ident": "home",
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "set_output_from_browser"
 ],
@@ -1757,7 +1752,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": 1,
-"submit_list": [
+"submit_list": ["rempi_packages",
 "login",
 "request_login"
 ],
@@ -1773,7 +1768,7 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "return_output"
 ]
@@ -2358,7 +2353,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "server_error",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "sensors",
 "temperature"
 ],
@@ -2375,7 +2370,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "sensors",
 "temperature"
 ],
@@ -2396,7 +2391,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "control_page"
 ],
@@ -2413,7 +2408,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "refresh_results"
 ],
@@ -2429,7 +2424,7 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "controls_json_api"
 ]
@@ -2445,7 +2440,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": 2001,
-"submit_list": [
+"submit_list": ["rempi_packages",
 "home",
 "index_page"
 ],
@@ -2462,7 +2457,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "information",
 "information_page"
 ],
@@ -2479,7 +2474,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "sensors",
 "sensor_table"
 ],
@@ -2495,7 +2490,7 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "sensors",
 "sensors_json_api"
 ]
@@ -2511,7 +2506,7 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "sensors",
 "sensor_table"
 ],
@@ -2527,7 +2522,7 @@
 "class": "Accept",
 "original_args": {
 "fail_ident": 2005,
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "set_output"
 ],
@@ -2572,7 +2567,7 @@
 2003
 ],
 "fail_ident": "control",
-"submit_list": [
+"submit_list": ["rempi_packages",
 "control",
 "toggle_web_control"
 ],
