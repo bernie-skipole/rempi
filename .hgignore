@@ -7,5 +7,5 @@ syntax: glob
 *.db
 *.log
 skiadmin/*
-skis/*
+
 
