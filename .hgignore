@@ -5,6 +5,7 @@ syntax: glob
 *~
 *.tar.gz
 *.db
+*.log
 skiadmin/*
 skis/*
 
