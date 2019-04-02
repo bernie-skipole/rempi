@@ -29,6 +29,22 @@ class LED(object):
         return self._state
 
 
+    def get_output(self):
+        "Called to get the led state from the hardware, saves it in redis"
+        # the led is called 'output01' in the hardware module
+        try:
+            self._output = hardware.get_boolean_output("output01")
+        except Exception:
+            self._state = False
+            return
+        if self._output:
+            self.redis.set('led', 'ON')
+            return 'ON'
+        else:
+            self.redis.set('led', 'OFF')
+            return 'OFF'
+
+
     def set_output(self, output):
         """Called to set the LED, output should be True or ON to turn on, anything else to turn off
            Sets the requested output into Redis"""
@@ -47,6 +63,7 @@ class LED(object):
         else:
             self.redis.set('led', 'OFF')
             return 'OFF'
+
 
     def status(self):
         """Provides the LED status, one of;

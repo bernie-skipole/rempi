@@ -53,6 +53,11 @@ state = { 'door': door.Door(redis),
         }
 
 
+# Ensure the hardware values are read
+state['led'].get_output()
+state['temperature'].get_temperature()
+
+
 
 # handlers to deal with incoming messages
 
@@ -69,7 +74,12 @@ def control02_handler(msg):
     message = msg['data']
     led = state['led']
     if message == b"status":
-        print(led.status())
+        # refresh the status from hardware
+        led.get_output()
+    elif message == b"ON":
+        led.set_output("ON")
+    elif message == b"OFF":
+        led.set_output("OFF")
 
 
 def control03_handler(msg):
