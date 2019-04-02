@@ -48,7 +48,7 @@ def temperature_status(client, userdata):
 
 def status_request(client, userdata):
     "a full status request of all values"
-    led_status(client, userdata, message)
+    led_status(client, userdata)
     temperature_status(client, userdata)
 
 

@@ -59,6 +59,7 @@ def initial_setup_outputs():
                 GPIO.setup(bcm[2], GPIO.IN, pull_up_down = GPIO.PUD_UP)
             else:
                 GPIO.setup(bcm[2], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
+    return True
 
 
 
@@ -86,6 +87,7 @@ def get_boolean_power_on_value(name):
 def set_boolean_output(name, value):
     "Given an output name, sets the output pin"
     if not _gpio_control:
+        logging.error("Unable to set output %s, no gpio control", name)
         return
     if name not in _OUTPUTS:
         return

@@ -17,10 +17,11 @@ redis = StrictRedis(host='localhost', port=6379)
 # Device mqtt parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : '192.168.1.91',        # mqtt server, change as required, currently 192.168.1.91
+            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 192.168.1.91
             'mqtt_port' : 1883,
             'mqtt_username' : '',
-            'mqtt_password' : '',
+            'mqtt_password' : ''
+           }
 
 
 
@@ -40,7 +41,7 @@ def _on_message(client, userdata, message):
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
-        if status_data['enable_web_control']:
+        if userdata['enable_web_control']:
             communications.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
@@ -92,7 +93,7 @@ try:
                 'redis':redis}
 
     # create an mqtt client instance
-    mqtt_client = mqtt.Client(userdata=userdata=)
+    mqtt_client = mqtt.Client(userdata=userdata)
 
     # attach callback function to client
     mqtt_client.on_connect = _on_connect
@@ -112,7 +113,6 @@ try:
     mqtt_client.loop_start()
 except Exception:
     sys.exit(2)
-
 
 # create an event schedular to do periodic actions
 scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)

@@ -40,7 +40,9 @@ logging.info('picontrol started')
 
 
 # set up pins
-hardware.initial_setup_outputs()
+result = hardware.initial_setup_outputs()
+if not result:
+    logging.error('Failed hardware initial setup')
 
 # create redis connection
 redis = StrictRedis(host='localhost', port=6379)
@@ -75,19 +77,25 @@ def control02_handler(msg):
     led = state['led']
     if message == b"status":
         # refresh the status from hardware
-        led.get_output()
+        ledout = led.get_output()
+        if ledout is None:
+           logging.error('Failed to read the LED status')
     elif message == b"ON":
         led.set_output("ON")
+        logging.info('LED set ON')
     elif message == b"OFF":
         led.set_output("OFF")
+        logging.info('LED set OFF')
 
 
 def control03_handler(msg):
-    "Handles the pubsub msg for control03 - this requests the temperature"
+    "Handles the pubsub msg for control03 - this requests a hardware read of the temperature"
     message = msg['data']
     temperature = state['temperature']
     if message == b"status":
-        print(temperature.status())
+        tmpt = temperature.get_temperature()
+        if tmpt is None:
+            logging.error('Failed to read the temperature')
 
 
 # subscribe to control01, control02, control03
