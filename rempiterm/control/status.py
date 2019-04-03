@@ -22,6 +22,11 @@ NETWORK_STATUS = 'Lost communications'
 LED_STATUS = 'Unknown'
 NETWORK_KEEPALIVE = 0
 
+# note: though led status is obtained via mqtt, it is not used
+# the terminal display shows a local led status obtained via redis
+
+# the led status via mqtt is kept here since it may be used in future
+
 def get_system_status():
     "Returns a SysStatus named tuple of the system status"
     sys_status = SysStatus(NETWORK_STATUS, LED_STATUS)
@@ -114,10 +119,10 @@ def create_mqtt(mqtt_ip, mqtt_port=1883, mqtt_username='', mqtt_password=''):
    
 def increment_network_keepalive():
     """Increments NETWORK_KEEPALIVE, if not reset by a call to set_network_status, then after eight increments
-       this will cause a 'No Reply from REMPI' to be set."""
+       this will cause a 'MQTT communications failed' to be set."""
     global NETWORK_KEEPALIVE
     if NETWORK_KEEPALIVE > 8:
-        set_network_status("No Reply from REMPI")
+        set_network_status("MQTT communications failed")
         set_led_status("Unknown")
     else:
         NETWORK_KEEPALIVE += 1
