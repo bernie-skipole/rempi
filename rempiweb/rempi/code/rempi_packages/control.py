@@ -14,12 +14,12 @@ def control_page(skicall):
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is DISABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Enable Internet Control"
     # display output description
-    skicall.page_data['output01_description', 'para_text'] = "LED output"
-    # widget output01 is boolean radio and expects a binary True, False value
-    if _get_output('output01', skicall)  == 'ON':
-        skicall.page_data['output01', 'radio_checked'] = True
+    skicall.page_data['led_description', 'para_text'] = "LED output"
+    # widget led is boolean radio and expects a binary True, False value
+    if _get_output('LED', skicall)  == 'ON':
+        skicall.page_data['led', 'radio_checked'] = True
     else:
-        skicall.page_data['output01', 'radio_checked'] = False
+        skicall.page_data['led', 'radio_checked'] = False
     # further widgets for further outputs to be set here
     # finally fill in all results fields
     refresh_results(skicall)
@@ -35,15 +35,15 @@ def toggle_web_control(skicall):
 
 def refresh_results(skicall):
     """Fill in the control page results fields"""
-    if _get_output('output01', skicall)  == 'ON':
-        skicall.page_data['output01_result', 'para_text'] = "The current value of the LED is : On"
+    if _get_output('LED', skicall)  == 'ON':
+        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : On"
     else:
-        skicall.page_data['output01_result', 'para_text'] = "The current value of the LED is : Off"
+        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : Off"
 
 
 def controls_json_api(skicall):
     "Returns json dictionary of output names : output values, used by external api"
-    if _get_output('output01', skicall)  == 'ON':
+    if _get_output('LED', skicall)  == 'ON':
         return collections.OrderedDict([('LED', True)])
     else:
         return collections.OrderedDict([('LED', False)])
@@ -52,9 +52,9 @@ def controls_json_api(skicall):
 
 def set_output_from_browser(skicall):
     """sets given output, called from browser via web page"""
-    if ('output01', 'radio_checked') in skicall.call_data:
+    if ('led', 'radio_checked') in skicall.call_data:
         # set LED
-        _set_output('LED', skicall.call_data['output01', 'radio_checked'], skicall)
+        _set_output('LED', skicall.call_data['led', 'radio_checked'], skicall)
     # further elif statements could set further outputs if they are present in call_data
 
 
@@ -90,7 +90,10 @@ def _set_output(name, value, skicall):
     """Sets an output, given the output name and value"""
     redis = skicall.proj_data['redis']
     if name == "LED":
-        redis.publish("control02", value)
+        if (value is True) or (value == "ON") or (value == "true") or (value == "True"):
+            redis.publish("control02", "ON")
+        else:
+            redis.publish("control02", "OFF")
 
 
 def _get_output(name, skicall):

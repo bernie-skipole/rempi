@@ -114,13 +114,13 @@ if __name__ == "__main__":
 
     ############################### THESE LINES ADD SKIADMIN ######################
     #                                                                              #
-    #set_debug(True)                                                               #
-    #skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
-    #if skiadmin_code not in sys.path:                                             #
-    #    sys.path.append(skiadmin_code)                                            #
-    #import skiadmin                                                               #
-    #skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT) #
-    #application.add_project(skiadmin_application, url='/skiadmin')                #
+    set_debug(True)                                                               #
+    skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
+    if skiadmin_code not in sys.path:                                             #
+        sys.path.append(skiadmin_code)                                            #
+    import skiadmin                                                               #
+    skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT) #
+    application.add_project(skiadmin_application, url='/skiadmin')                #
     #                                                                              #
     ###############################################################################
 

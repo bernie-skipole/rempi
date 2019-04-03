@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.7",
-"skipole": "2.4.2",
+"skipole": "3.0.2",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -21,8 +21,8 @@
 "rempi_log5": 25,
 "sensors": 2,
 "server_error": "skis,server_error",
-"set_output01": 3001,
-"set_output01_json": 3002,
+"set_led": 3001,
+"set_led_json": 3002,
 "ski_basic": "skis,ski_basic",
 "ski_checkbox": "skis,ski_checkbox",
 "ski_confirm": "skis,ski_confirm",
@@ -327,9 +327,9 @@
 "restricted": false,
 "folders": {},
 "pages": {
-"set_output01": {
+"set_led": {
 "ident": 3001,
-"brief": "Sets output 01 and returns control page",
+"brief": "Sets LED and returns control page",
 "RespondPage": {
 "class": "AllowStore",
 "original_args": {
@@ -338,7 +338,8 @@
 ],
 "alternate_ident": "home",
 "fail_ident": "control",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "set_output_from_browser"
 ],
@@ -348,13 +349,13 @@
 "validate_option": false
 },
 "original_fields": {
-"output01:radio_checked": ""
+"led:radio_checked": ""
 }
 }
 },
-"set_output01_json": {
+"set_led_json": {
 "ident": 3002,
-"brief": "Sets output 01 and returns results JSON file",
+"brief": "Sets LED and returns results JSON file",
 "RespondPage": {
 "class": "AllowStore",
 "original_args": {
@@ -363,7 +364,8 @@
 ],
 "alternate_ident": "home",
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "set_output_from_browser"
 ],
@@ -373,7 +375,7 @@
 "validate_option": false
 },
 "original_fields": {
-"output01:radio_checked": ""
+"led:radio_checked": ""
 }
 }
 }
@@ -691,7 +693,7 @@
 "Part",
 {
 "tag_name": "div",
-"brief": "For output 01",
+"brief": "For LED",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -702,13 +704,13 @@
 "Part",
 {
 "tag_name": "h2",
-"brief": "output01 heading",
+"brief": "LED heading",
 "show": true,
 "hide_if_empty": false,
 "parts": [
 [
 "Text",
-"Output 01"
+"LED Output"
 ]
 ]
 }
@@ -717,8 +719,8 @@
 "Widget",
 {
 "class": "paras.DivPara",
-"name": "output01_description",
-"brief": "Description of output01",
+"name": "led_description",
+"brief": "Description of LED",
 "fields": {
 "clear_error": false,
 "error_class": "w3-red",
@@ -736,11 +738,11 @@
 "Widget",
 {
 "class": "inputforms.SubmitForm1",
-"name": "outputform01",
-"brief": "Form for setting boolian option output 01",
+"name": "set_led",
+"brief": "Form for setting LED",
 "fields": {
-"action": "set_output01",
-"action_json": "set_output01_json",
+"action": "set_led",
+"action_json": "set_led_json",
 "button_class": "w3-button w3-theme-d4",
 "button_text": "Submit",
 "button_wait_text": "",
@@ -754,7 +756,7 @@
 "hidden_field3": "",
 "hidden_field4": "",
 "left_class": "ski_left_label",
-"left_label": "Set output 01",
+"left_label": "Set LED",
 "right_class": "",
 "right_label": "",
 "show": true,
@@ -767,8 +769,8 @@
 "Widget",
 {
 "class": "radio.BooleanRadio",
-"name": "output01",
-"brief": "Radio buttons for output 01",
+"name": "led",
+"brief": "Radio buttons for LED",
 "fields": {
 "div_class1": "",
 "div_class2": "",
@@ -794,8 +796,8 @@
 "Widget",
 {
 "class": "paras.DivPara",
-"name": "output01_result",
-"brief": "Shows result of output 01",
+"name": "led_result",
+"brief": "Shows result of led",
 "fields": {
 "clear_error": false,
 "error_class": "w3-red",
@@ -807,6 +809,21 @@
 "widget_class": "w3-section",
 "widget_style": ""
 }
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About result",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Please note: may take a few seconds to refresh with new value."
+]
+]
 }
 ]
 ]
@@ -1398,8 +1415,7 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -1501,8 +1517,7 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": true,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -1727,8 +1742,7 @@
 "failmessage": "TextBlock not found",
 "show": true,
 "escape": false,
-"linebreaks": true,
-"decode": false
+"linebreaks": true
 }
 ]
 ]
@@ -1752,7 +1766,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": 1,
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "login",
 "request_login"
 ],
@@ -1768,7 +1783,8 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "return_output"
 ]
@@ -2353,7 +2369,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "server_error",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "sensors",
 "temperature"
 ],
@@ -2370,7 +2387,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "sensors",
 "temperature"
 ],
@@ -2391,7 +2409,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "control_page"
 ],
@@ -2408,7 +2427,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "refresh_results"
 ],
@@ -2424,7 +2444,8 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "controls_json_api"
 ]
@@ -2440,7 +2461,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": 2001,
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "home",
 "index_page"
 ],
@@ -2457,7 +2479,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "information",
 "information_page"
 ],
@@ -2474,7 +2497,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "home",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "sensors",
 "sensor_table"
 ],
@@ -2490,7 +2514,8 @@
 "class": "SubmitJSON",
 "original_args": {
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "sensors",
 "sensors_json_api"
 ]
@@ -2506,7 +2531,8 @@
 "original_args": {
 "allowed_callers": [],
 "fail_ident": "general_json",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "sensors",
 "sensor_table"
 ],
@@ -2522,7 +2548,8 @@
 "class": "Accept",
 "original_args": {
 "fail_ident": 2005,
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "set_output"
 ],
@@ -2567,7 +2594,8 @@
 2003
 ],
 "fail_ident": "control",
-"submit_list": ["rempi_packages",
+"submit_list": [
+"rempi_packages",
 "control",
 "toggle_web_control"
 ],
