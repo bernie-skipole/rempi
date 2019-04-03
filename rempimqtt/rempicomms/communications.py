@@ -42,7 +42,7 @@ def temperature_status(client, userdata):
     redis = userdata['redis']
     # get temperature from redis
     temperature = redis.get('temperature').decode("utf-8")
-    topic = userdata['from_topic'] + '/Outputs/temperature'
+    topic = userdata['from_topic'] + '/Inputs/temperature'
     client.publish(topic=topic, payload=temperature)
 
 
