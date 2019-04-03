@@ -2,10 +2,7 @@
 This package will be called by the Skipole framework to access your data.
 """
 
-import os, sys, threading, logging
-
-from logging.handlers import RotatingFileHandler
-
+import os, sys
 
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, set_debug, use_submit_list
 
@@ -19,9 +16,7 @@ PROJECTFILES = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(
 PROJECT = 'rempi'
 
 
-from rempi_packages import login, hardware, engine
-
-from rempi_packages.control import state
+from rempi_packages import login
 
 
 # any page not listed here requires basic authentication
@@ -45,60 +40,17 @@ _PUBLIC_PAGES = [1,  # index
               5002   # weather by JSON
                ]
 
-logfile = os.path.join(PROJECTFILES, PROJECT, 'rempi.log')
-handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
 
 
-logging.info('start_project called')
+from redis import StrictRedis
 
-# create door state
-door = state.Door()
-door.output01 = hardware.get_boolean_power_on_value('output01')
+# create redis connection
+redis = StrictRedis(host='localhost', port=6379)
 
-# setup hardware
-hardware.initial_setup_outputs()
-
-# set state of door
-# still to be done as it depends on hardware
-# door.set_state(door_open, door_closed, door_opening, door_closing)
-# door.start()
-
-# status_data is a dictionary that will be used by the mqtt communications
-
-# comms is True if communications to the server is working, this
-# is initially assumed True and gets set to False if no comms received after
-# about twenty minutes
-
-# enable_web_control is True if this accepts output commands via MQTT from
-# the web server, and can be set to False via the rempi web interface,
-# to ignore such commands 
-
-# lock is a threading lock which is aquired whenever an output is to be set
-
-status_data = {'door':door,
-               'enable_web_control':True,
-               'comms':True,
-               'lock':threading.Lock()
-              }
-
-proj_data = {'status': status_data,
-             'mqtt_client':None}
-
-# Create the mqtt client connection
-proj_data['mqtt_client'] = engine.create_mqtt(status_data)
-
-# create an input listener, which publishes messages on an input pin change
-listen = engine.listen_to_inputs(proj_data)
-
-# create an event schedular to do periodic actions
-scheduled_events = engine.ScheduledEvents(proj_data)
-# this is a callable which runs scheduled events, it
-# needs to be called in its own thread
-run_scheduled_events = threading.Thread(target=scheduled_events)
-# and start the thread
-run_scheduled_events.start()
-
+proj_data = {'redis':redis,
+             'status': {'enable_web_control':True
+                       }
+            }
 
 
 

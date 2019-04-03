@@ -1,8 +1,6 @@
-import collections, logging
+import collections
 
 from skipole import FailPage, GoTo, ValidateError, ServerError
-
-from .. import hardware, engine
 
 
 
@@ -16,7 +14,7 @@ def control_page(skicall):
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is DISABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Enable Internet Control"
     # display output description
-    skicall.page_data['output01_description', 'para_text'] = hardware.get_output_description('output01')
+    skicall.page_data['output01_description', 'para_text'] = "LED output"
     # widget output01 is boolean radio and expects a binary True, False value
     if _get_output('output01', skicall)  == 'ON':
         skicall.page_data['output01', 'radio_checked'] = True
@@ -31,33 +29,32 @@ def toggle_web_control(skicall):
     "Enable / disable the enable_web_control flag in proj_data"
     if skicall.proj_data['status']['enable_web_control']:
         skicall.proj_data['status']['enable_web_control'] = False
-        logging.warning("Internet control has been disabled")
     else:
         skicall.proj_data['status']['enable_web_control'] = True
-        logging.warning("Internet control has been enabled")
+
 
 def refresh_results(skicall):
     """Fill in the control page results fields"""
     if _get_output('output01', skicall)  == 'ON':
-        skicall.page_data['output01_result', 'para_text'] = "The current value of output 01 is : On"
+        skicall.page_data['output01_result', 'para_text'] = "The current value of the LED is : On"
     else:
-        skicall.page_data['output01_result', 'para_text'] = "The current value of output 01 is : Off"
+        skicall.page_data['output01_result', 'para_text'] = "The current value of the LED is : Off"
 
 
 def controls_json_api(skicall):
     "Returns json dictionary of output names : output values, used by external api"
     if _get_output('output01', skicall)  == 'ON':
-        return collections.OrderedDict([('output01', True)])
+        return collections.OrderedDict([('LED', True)])
     else:
-        return collections.OrderedDict([('output01', False)])
+        return collections.OrderedDict([('LED', False)])
 
 
 
 def set_output_from_browser(skicall):
     """sets given output, called from browser via web page"""
     if ('output01', 'radio_checked') in skicall.call_data:
-        # set output01
-        _set_output('output01', skicall.call_data['output01', 'radio_checked'], skicall)
+        # set LED
+        _set_output('LED', skicall.call_data['output01', 'radio_checked'], skicall)
     # further elif statements could set further outputs if they are present in call_data
 
 
@@ -69,7 +66,8 @@ def set_output(skicall):
     if ('name' in received) and ('value' in received):
         name = received['name']
         value = received['value']
-        controls = hardware.get_output_names()
+        # controls is a list - currently only with the single LED element
+        controls = ["LED"]
         if name not in controls:
             return
         _set_output(name, value, skicall)
@@ -90,29 +88,20 @@ def return_output(skicall):
 
 def _set_output(name, value, skicall):
     """Sets an output, given the output name and value"""
-
-    # wait until a lock is aquired and block anyone else from changing an output
-
-    lock = skicall.proj_data['status']['lock']
-    with lock:
-        engine.set_output(name, value, skicall.proj_data)
-        # publish output status by mqtt
-        engine.output_status(name, skicall.proj_data)
-
-
+    redis = skicall.proj_data['redis']
+    if name == "LED":
+        redis.publish("control02", value)
 
 
 def _get_output(name, skicall):
     """Gets an output value, given the output name, return None on failure"""
-    # instructions to get an output from hardware are placed here
-    hardtype = hardware.get_output_type(name)
-    if hardtype == 'boolean':
-        hardvalue = hardware.get_boolean_output(name)
-        if hardvalue is not None:
-            return hardvalue
-    # if hardvalue not available, reads the stored output from the door state
-    if skicall.proj_data['status']['door'].output01:
-        return 'ON'
-    else:
-        return 'OFF' 
+    redis = skicall.proj_data['redis']
+    if name == "LED":
+        # get led status from redis
+        led_status = redis.get('led')
+        if led_status == b"ON":
+            return 'ON'
+        else:
+            return 'OFF'
+
 
