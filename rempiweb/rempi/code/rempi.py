@@ -82,18 +82,11 @@ def submit_data(skicall):
 def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with page_data,
        it can also return an optional ident_data string to embed into forms."""
-
-    # in this example, status is the value on input02
-    status = hardware.get_text_input('input02')
-    if status:
-        skicall.page_data['topnav','status', 'para_text'] = status
-    else:
-        skicall.page_data['topnav','status', 'para_text'] = "Status: input02 unavailable"
-
     if page_type != "TemplatePage":
         return
+    skicall.page_data['topnav','status', 'para_text'] = "Status message"
+    skicall.page_data['leftnav','left_name','large_text'] = "REMPI01"
 
-    skicall.page_data['leftnav','left_name','large_text'] = hardware.get_name()
 
 
 # create the wsgi application

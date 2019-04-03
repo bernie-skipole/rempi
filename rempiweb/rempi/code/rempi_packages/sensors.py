@@ -2,7 +2,6 @@
 import collections
 
 from skipole import FailPage, GoTo, ValidateError, ServerError
-from .. import hardware
 
 
 def sensor_table(skicall):
