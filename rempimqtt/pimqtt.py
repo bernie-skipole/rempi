@@ -32,7 +32,7 @@ def _on_message(client, userdata, message):
     "Callback when a message is received"
 
     # If no other message received, a heartbeat with topic 'From_ServerEngine/HEARTBEAT':
-    # is sent by the server every six minutes to maintain _COMMS_COUNTDOWN
+    # is sent by the server every six minutes to maintain userdata['comms_countdown']
 
     userdata['comms'] = True
     userdata['comms_countdown'] = 4
@@ -53,6 +53,7 @@ def _on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         if payload == 'led':
             communications.led_status(client, userdata)
+
 
 
 # The callback for when the client receives a CONNACK response from the server.
