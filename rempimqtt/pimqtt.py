@@ -28,6 +28,9 @@ _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
 from rempicomms import communications, schedule
 
 
+### MQTT Handlers
+
+
 def _on_message(client, userdata, message):
     "Callback when a message is received"
 
@@ -114,6 +117,33 @@ try:
     mqtt_client.loop_start()
 except Exception:
     sys.exit(2)
+
+
+
+### redis pubsub handlers, these are 'alerts' received from rempicontrol
+### and requesting that info be published via mqtt
+
+def alert02_handler(msg):
+    "Handles the pubsub msg for alert02 - this sends info about led"
+    message = msg['data']
+    if message == b"led status":
+        # send the led status
+        communications.led_status(mqtt_client, userdata)
+
+
+# more alert handlers go here
+
+
+# subscribe to alert01, alert02.., etc
+pubsub = redis.pubsub()  
+#pubsub.subscribe(**{'alert01': alert01_handler})
+pubsub.subscribe(**{'alert02': alert02_handler})
+#pubsub.subscribe(**{'alert03': alert03_handler})
+
+# run the pubsub with the above handlers in a thread
+pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
+
+
 
 # create an event schedular to do periodic actions
 scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)

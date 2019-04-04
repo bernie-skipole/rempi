@@ -62,10 +62,14 @@ class LED(object):
         if self._output:
             self.redis.set('led', 'ON')
             hardware.set_boolean_output("output01", True)
+            # send an alert that the led has changed
+            self.redis.publish('alert02', 'led status')
             return 'ON'
         else:
             self.redis.set('led', 'OFF')
             hardware.set_boolean_output("output01", False)
+            # send an alert that the led has changed
+            self.redis.publish('alert02', 'led status')
             return 'OFF'
 
 
