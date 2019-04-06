@@ -17,11 +17,9 @@ import sys, sched, time, logging
 ###  scheduled actions ###
 
 
-def event1(*args):
+def event1(redis, state):
     "event1 is to store temperature"
     try:
-        redis = args[0]
-        state = args[1]
         # this logs the temperature to redis
         state['temperature'].get_temperature()
     except Exception:
@@ -81,14 +79,11 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.redis, self.state)
+                                   kwargs= {"redis":self.redis, "state":self.state}
                                    )
 
-        # schedule a final event to occur 30 seconds after last event
-        last_event = self.event_list[-1]
- 
-        final_event_time = nexthour + last_event[1]*60 + 30
-        self.schedule.enterabs(time = final_event_time,
+        # schedule a final event to occur 5 seconds before the end of nexthour
+        self.schedule.enterabs(time = nexthour + 3595,
                                priority = 1,
                                action = self._create_next_hour_events
                                )
@@ -122,14 +117,11 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.redis, self.state)
+                                       kwargs= {"redis":self.redis, "state":self.state}
                                        )
 
-        # schedule a final event to occur 30 seconds after last event
-        last_event = self.event_list[-1]
-        
-        final_event_time = thishour + last_event[1]*60 + 30
-        self.schedule.enterabs(time = final_event_time,
+        # schedule a final event to occur 5 seconds before the end of thishour
+        self.schedule.enterabs(time = thishour + 3595,
                                priority = 1,
                                action = self._create_next_hour_events
                                )
@@ -145,7 +137,7 @@ class ScheduledEvents(object):
 # add them to event_list  in the class __init__, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents(state)
+# scheduled_events = ScheduledEvents(redis,state)
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread

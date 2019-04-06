@@ -20,10 +20,8 @@ from . import communications
 
 
 
-def event1(*args):
+def event1(mqtt_client, userdata):
     "event1 is to publish status"
-    mqtt_client = args[0]
-    userdata = args[1]
     if not userdata['comms']:
         return
     try:
@@ -33,11 +31,9 @@ def event1(*args):
         pass
 
 
-def event2(*args):
+def event2(mqtt_client, userdata):
     """event2 is called every ten minutes
        decrements userdata['comms_countdown'], and checks if zero or less"""
-    mqtt_client = args[0]
-    userdata = args[1]
     if not userdata['comms']:
         return
     if userdata['comms_countdown'] < 1:
@@ -104,17 +100,15 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   argument = (self.mqtt_client,self.userdata)
+                                   kwargs= {"mqtt_client":self.mqtt_client, "userdata":self.userdata}
                                    )
 
-        # schedule a final event to occur 30 seconds after last event
-        last_event = self.event_list[-1]
- 
-        final_event_time = nexthour + last_event[1]*60 + 30
-        self.schedule.enterabs(time = final_event_time,
+        # schedule a final event to occur 5 seconds before the end of nexthour
+        self.schedule.enterabs(time = nexthour + 3595,
                                priority = 1,
                                action = self._create_next_hour_events
                                )
+
 
 
     def __call__(self): 
@@ -145,14 +139,11 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       argument = (self.mqtt_client,self.userdata)
+                                       kwargs= {"mqtt_client":self.mqtt_client, "userdata":self.userdata}
                                        )
 
-        # schedule a final event to occur 30 seconds after last event
-        last_event = self.event_list[-1]
-        
-        final_event_time = thishour + last_event[1]*60 + 30
-        self.schedule.enterabs(time = final_event_time,
+        # schedule a final event to occur 5 seconds before the end of thishour
+        self.schedule.enterabs(time = thishour + 3595,
                                priority = 1,
                                action = self._create_next_hour_events
                                )
