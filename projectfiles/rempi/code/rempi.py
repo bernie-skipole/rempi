@@ -36,8 +36,8 @@ _PUBLIC_PAGES = [1,  # index
               1002,  # css
               1004,  # css
               1006,  # css
-              5001,  # weather
-              5002   # weather by JSON
+              5001,  # internet
+              5002   # internet by JSON
                ]
 
 
@@ -105,7 +105,7 @@ if skis_code not in sys.path:
     sys.path.append(skis_code)
 import skis
 skis_application = skis.makeapp(PROJECTFILES)
-application.add_project(skis_application, url='/lib')
+application.add_project(skis_application, url='/rempi01/lib')
 
 
 
