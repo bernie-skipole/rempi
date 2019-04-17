@@ -363,6 +363,7 @@
 "css": {
 "ident": 1001,
 "brief": "Holds CSS pages, available for both local and internet",
+"default_page_name": "index",
 "restricted": false,
 "folders": {},
 "pages": {
@@ -547,27 +548,61 @@
 [
 "Part",
 {
+"tag_name": "p",
+"brief": "About this page",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"This page is served by Raspberry Pi REMPI01 - giving a direct status view as measured by the pi."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Container for svg element",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
 "tag_name": "svg",
-"brief": "Temperature graph",
+"brief": "svg element",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
-"height": "700",
-"width": "700"
+"height": "500",
+"width": "300"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "g",
+"brief": "group tag to scale the contents",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"transform": "scale(0.6,0.6) translate(50,0)"
 },
 "parts": [
 [
 "Widget",
 {
 "class": "svgbasics.SimpleText",
-"name": "temperature_value",
-"brief": "Shows the temperature value",
+"name": "tvalue",
+"brief": "Item value",
 "fields": {
 "dx": "0",
 "dy": "0",
 "fill": "white",
 "font_family": "Arial",
-"font_size": "20",
+"font_size": "30",
 "show": true,
 "stroke": "",
 "stroke_width": "",
@@ -582,22 +617,28 @@
 [
 "Widget",
 {
-"class": "svgmeters.Traditional1",
-"name": "temperature",
-"brief": "Temperature meter",
+"class": "svgmeters.Vertical1",
+"name": "tmeter",
+"brief": "Vertical temperature meter",
 "fields": {
-"arrow_stroke": "grey",
+"arrow_fill": "blue",
 "font_family": "arial",
 "largeintervals": "10",
 "maximum": "40",
 "measurement": "0",
-"minimum": "-10",
+"minimum": "-20",
 "show": true,
-"smallintervals": "2",
-"transform": "translate(10,10)",
+"smallintervals": "5",
+"transform": "translate(10,80)",
 "widget_class": "",
 "widget_style": ""
 }
+}
+]
+]
+}
+]
+]
 }
 ]
 ]
@@ -625,7 +666,7 @@
 "submit_list": [
 "rempi_packages",
 "sensors",
-"temperature"
+"status"
 ],
 "target_ident": 5101
 },
@@ -643,7 +684,7 @@
 "submit_list": [
 "rempi_packages",
 "sensors",
-"temperature"
+"status"
 ],
 "target_ident": "general_json"
 },

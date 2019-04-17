@@ -38,9 +38,9 @@ def _get_sensor_values(sensors, skicall):
     return values
 
 
-def temperature(skicall):
-    "Fills weather station temperature meter"
+def status(skicall):
+    "Fills sensors status internet page"
     redis = skicall.proj_data['redis']
     temperature = redis.get('temperature').decode("utf-8")
-    skicall.page_data["temperature", "measurement"] = temperature
-    skicall.page_data["temperature_value", "text"] = "Temperature : %s" % (temperature,)
+    skicall.page_data["tmeter", "measurement"] = temperature
+    skicall.page_data["tvalue", "text"] = "Temperature : %s" % (temperature,)
