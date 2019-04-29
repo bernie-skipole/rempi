@@ -4,6 +4,7 @@
 #
 ################################################################
 
+import logging
 
 from . import hardware
 
@@ -29,6 +30,13 @@ class Door(object):
         self.output01 = None
         # info stored to redis
         self.redis = redis
+
+
+    def __call__(self, msg):
+        "Handles the pubsub msg"
+        message = msg['data']
+        if message == b"status":
+            logging.info("Door status: " +self.status())
 
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"

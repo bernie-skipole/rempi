@@ -30,7 +30,7 @@ from logging.handlers import RotatingFileHandler
 
 from redis import StrictRedis
 
-from control import hardware, schedule, door, led, temperature
+from control import hardware, schedule, door, led, temperature, motors
 
 # logfile = "/opt/projectfiles/rempi/rempi.log"
 logfile = 'rempi.log'
@@ -48,61 +48,24 @@ if not result:
 redis = StrictRedis(host='localhost', port=6379)
 
 
-### create a dictionary of objects to control
+### create a dictionary of objects to control, these objects are callable handlers
 state = { 'door': door.Door(redis),
           'led': led.LED(redis),
-          'temperature':temperature.Temperature(redis)
+          'temperature':temperature.Temperature(redis),
+          'motor1': motors.Motor('motor1',redis),
+          'motor2': motors.Motor('motor2',redis)
         }
 
 
-# Ensure the hardware values are read
-state['led'].get_output()
-state['temperature'].get_temperature()
+pubsub = redis.pubsub(ignore_subscribe_messages=True)
 
+# subscribe to control channels
 
-
-# handlers to deal with incoming messages
-
-def control01_handler(msg):
-    "Handles the pubsub msg for control01 - this controls the door"
-    message = msg['data']
-    door = state['door']
-    if message == b"status":
-        print(door.status())
-
-
-def control02_handler(msg):
-    "Handles the pubsub msg for control02 - this controls the led"
-    message = msg['data']
-    led = state['led']
-    if message == b"status":
-        # refresh the status from hardware
-        ledout = led.get_output()
-        if ledout is None:
-           logging.error('Failed to read the LED status')
-    elif message == b"ON":
-        led.set_output("ON")
-        logging.info('LED set ON')
-    elif message == b"OFF":
-        led.set_output("OFF")
-        logging.info('LED set OFF')
-
-
-def control03_handler(msg):
-    "Handles the pubsub msg for control03 - this requests a hardware read of the temperature"
-    message = msg['data']
-    temperature = state['temperature']
-    if message == b"status":
-        tmpt = temperature.get_temperature()
-        if tmpt is None:
-            logging.error('Failed to read the temperature')
-
-
-# subscribe to control01, control02, control03
-pubsub = redis.pubsub()  
-pubsub.subscribe(**{'control01': control01_handler})
-pubsub.subscribe(**{'control02': control02_handler})
-pubsub.subscribe(**{'control03': control03_handler})
+pubsub.subscribe(**{'control01': state['door']})
+pubsub.subscribe(**{'control02': state['led']})
+pubsub.subscribe(**{'control03': state['temperature']})
+pubsub.subscribe(**{'motor1control': state['motor1']})
+pubsub.subscribe(**{'motor2control': state['motor2']})
 
 # run the pobsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)

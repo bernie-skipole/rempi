@@ -4,6 +4,7 @@
 #
 ################################################################
 
+import logging
 
 from . import hardware
 
@@ -17,6 +18,19 @@ class Temperature(object):
         self._temperature = 0.0
         # info will be stored to redis
         self.redis = redis
+
+        # Ensure the hardware values are read on startup
+        self.get_temperature()
+
+
+    def __call__(self, msg):
+        "Handles the pubsub msg"
+        message = msg['data']
+        if message == b"status":
+            tmpt = self.get_temperature()
+            if tmpt is None:
+                logging.error('Failed to read the temperature')
+
 
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"

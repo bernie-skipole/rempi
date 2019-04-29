@@ -4,6 +4,8 @@
 #
 ################################################################
 
+import logging
+
 from . import hardware
 
 
@@ -18,6 +20,25 @@ class LED(object):
         self._output = False
         # info stored to redis
         self.redis = redis
+
+        # Ensure the hardware values are read on startup
+        self.get_output()
+
+
+    def __call__(self, msg):
+        "Handles the pubsub msg"
+        message = msg['data']
+        if message == b"status":
+            # refresh the status from hardware
+            ledout = self.get_output()
+            if ledout is None:
+               logging.error('Failed to read the LED status')
+        elif message == b"ON":
+            self.set_output("ON")
+            logging.info('LED set ON')
+        elif message == b"OFF":
+            self.set_output("OFF")
+            logging.info('LED set OFF')
 
 
     def pin_changed(self,input_name):

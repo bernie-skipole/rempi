@@ -29,6 +29,33 @@ def event1(redis, state):
     logging.info("Temperature recorded to redis")
 
 
+# If the redis motor*status flags are left in a funny state - not 'STOPPED'
+# then the motors can never be started, so check every five minutes, and if the
+# motors have not been called for a period, assume the redis entry should be STOPPED
+
+
+def event2(redis, state):
+    "event2 checks if motor1 running"
+    now = time.time()
+    motor1 = state['motor1']
+    if now > motor1.running + 180:
+        # M1 has not been called for two minutes
+        # ensure its status is stopped
+        redis.set('motor1status', 'STOPPED')
+        # and reset the timer
+        motor1.running = time.time()
+
+
+def event3(redis, state):
+    "event3 checks if motor2 running"
+    now = time.time()
+    motor2 = state['motor2']
+    if now > motor2.running + 180:
+        # M2 has not been called for two minutes
+        # ensure its status is stopped
+        redis.set('motor2status', 'STOPPED')
+        # and reset the timer
+        motor2.running = time.time()
 
 
 ### scheduled actions to occur at set times each hour ###
@@ -41,8 +68,12 @@ class ScheduledEvents(object):
 
         # initially start with event1 occurring every five minutes (on minutes 1,6,11,16....56)
         event_list = []
-        for mins in range(1, 61,5):
+        for mins in range(1, 61, 5):
             event_list.append((event1,mins))
+        for mins in range(2, 62, 5):              # event2 occurring every five minutes (on minutes 2,7,12,17....57)
+            event_list.append((event2,mins))
+        for mins in range(3, 63, 5):               # event3 occurring every five minutes (on minutes 3,8,13,18....58)
+            event_list.append((event3,mins))
         # add further events in format event_list.append((event2,mins)) etc.,
         # sort the list
         self.event_list = sorted(event_list, key=lambda x: x[1])

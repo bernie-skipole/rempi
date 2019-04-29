@@ -5,17 +5,22 @@ _CONFIG = {
             'DS18B20': '28-000007e4291f'     # Edit for the correct temperature sensor chip DS18B20
           }
 
+# Note temperature uses one wire working on BCM 4 - which is configured in raspi-confg rather than here.
+
 
 # _OUTPUTS
 
 # This dictionary has keys output names, and values being a tuple of (type, value, BCM number, description)
-# where type is one of 'text', 'boolean', 'integer'
-# value is the power on value
+# where type is one of 'text', 'boolean', 'integer', 'pwm'
+# value is the power on value, or None if not relevant
 # BCM number is the appropriate BCM pin number, or None if not relevant
 
-# Currently only one output 'output01' on BCM 24 is defined
+_OUTPUTS = {"output01" :        ('boolean', False, 24, "When ON lights an LED"),
+            "motor1direction" : ('boolean', False, 27, "When True clockwise False anticlockwise"),
+            "motor2direction" : ('boolean', False, 22, "When True clockwise False anticlockwise"),
+            "motor1pwm" :       ('pwm',     None,  18, "Pule Width Modulation for motor 1"),
+            "motor2pwm" :       ('pwm',     None,  25, "Pule Width Modulation for motor 2")  }
 
-_OUTPUTS = {"output01" : ('boolean', False, 24, "BCM 24 - When ON lights an LED")}
 
 
 # _INPUTS
@@ -60,6 +65,18 @@ def initial_setup_outputs():
             else:
                 GPIO.setup(bcm[2], GPIO.IN, pull_up_down = GPIO.PUD_DOWN)
     return True
+
+
+def makepwm(name):
+    "create a pwm instance, name should be motor1pwm etc.,"
+    if not _gpio_control:
+        return
+    if name not in _OUTPUTS:
+        return
+    if _OUTPUTS[name][0] != 'pwm':
+        return
+    pin = _OUTPUTS[name][2]
+    return GPIO.PWM(pin, 600)   # 600 is the frequency in hz
 
 
 
