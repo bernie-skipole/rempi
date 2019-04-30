@@ -10,6 +10,9 @@ def action(client, userdata, message):
        a redis topic control01, control02 etc.,"""
     payload = message.payload.decode("utf-8")
     redis = userdata['redis']
+    web_control = redis.get('web_control')
+    if web_control == b'DISABLED':
+        return
     if (message.topic == 'From_WebServer/Outputs/led') or (message.topic == 'From_ServerEngine/Outputs/led') or (message.topic == 'From_RemControl/Outputs/led'):
         # led control is on channel control02
         if payload == "ON":

@@ -4,6 +4,8 @@ This package will be called by the Skipole framework to access your data.
 
 import os, sys
 
+from datetime import datetime
+
 from skipole import WSGIApplication, FailPage, GoTo, ValidateError, ServerError, set_debug, use_submit_list
 
 
@@ -47,11 +49,9 @@ from redis import StrictRedis
 # create redis connection
 redis = StrictRedis(host='localhost', port=6379)
 
-proj_data = {'redis':redis,
-             'status': {'enable_web_control':True
-                       }
-            }
+proj_data = {'redis':redis}
 
+redis.set('web_control', 'ENABLED')
 
 
 def start_call(called_ident, skicall):
@@ -82,9 +82,14 @@ def submit_data(skicall):
 def end_call(page_ident, page_type, skicall):
     """This function is called at the end of a call prior to filling the returned page with page_data,
        it can also return an optional ident_data string to embed into forms."""
+    if (page_type == "TemplatePage") or (page_type == "JSON"):
+        if 'status' in skicall.call_data:
+            skicall.page_data['topnav','status', 'para_text'] = skicall.call_data['status']
+        else:
+            now = datetime.utcnow().strftime("%c")
+            skicall.page_data['topnav','status', 'para_text'] = "UTC: " + now
     if page_type != "TemplatePage":
         return
-    skicall.page_data['topnav','status', 'para_text'] = "Status message"
     skicall.page_data['leftnav','left_name','large_text'] = "REMPI01"
 
 

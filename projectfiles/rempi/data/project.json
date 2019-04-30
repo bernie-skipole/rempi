@@ -49,6 +49,7 @@
 "ski_textarea": "skis,ski_textarea",
 "ski_upload": "skis,ski_upload",
 "skipole_js": "skis,skipole_js",
+"status": 11,
 "url_not_found": "skis,url_not_found",
 "validate_error": "skis,validate_error",
 "w3_css": "skis,w3_css",
@@ -814,7 +815,7 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 10,
+"interval": 2,
 "interval_target": 13,
 "lang": "en",
 "backcol": "#ffffff",
@@ -990,29 +991,6 @@
 },
 "parts": [
 [
-"Widget",
-{
-"class": "error_messages.ErrorDiv",
-"name": "top_error",
-"brief": "Error Div providing a widget for the default error field",
-"fields": {
-"clear_error": false,
-"error_class": "",
-"hide": true,
-"show": true,
-"show_error": "",
-"widget_class": "",
-"widget_style": ""
-},
-"container_0": [
-[
-"Text",
-""
-]
-]
-}
-],
-[
 "Part",
 {
 "tag_name": "div",
@@ -1024,6 +1002,29 @@
 "style": "margin-left:20%"
 },
 "parts": [
+[
+"Widget",
+{
+"class": "error_messages.ErrorDiv",
+"name": "top_error",
+"brief": "Error Div providing a widget for the default error field",
+"fields": {
+"clear_error": false,
+"error_class": "w3-panel w3-red",
+"hide": true,
+"show": true,
+"show_error": "hello",
+"widget_class": "",
+"widget_style": ""
+},
+"container_0": [
+[
+"Text",
+""
+]
+]
+}
+],
 [
 "Part",
 {
@@ -1451,6 +1452,22 @@
 }
 ],
 [
+"Widget",
+{
+"class": "error_messages.ErrorPara",
+"name": "motor_error",
+"brief": "Shows error if motor parameters wrong",
+"fields": {
+"clear_error": false,
+"hide": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-red",
+"widget_style": ""
+}
+}
+],
+[
 "Part",
 {
 "tag_name": "div",
@@ -1810,9 +1827,6 @@
 "widget_style": ""
 }
 }
-]
-]
-}
 ],
 [
 "Widget",
@@ -1833,6 +1847,9 @@
 [
 "Text",
 ""
+]
+]
+}
 ]
 ]
 }
@@ -1974,8 +1991,8 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 0,
-"interval_target": null,
+"interval": 2,
+"interval_target": "status",
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -2150,6 +2167,18 @@
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-panel",
+"style": "margin-left:20%"
+},
+"parts": [
+[
 "Widget",
 {
 "class": "error_messages.ErrorDiv",
@@ -2172,18 +2201,6 @@
 ]
 }
 ],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "centre",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel",
-"style": "margin-left:20%"
-},
-"parts": [
 [
 "Part",
 {
@@ -2582,7 +2599,7 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 5,
+"interval": 2,
 "interval_target": 9,
 "lang": "en",
 "backcol": "#ffffff",
@@ -2758,6 +2775,18 @@
 },
 "parts": [
 [
+"Part",
+{
+"tag_name": "div",
+"brief": "centre",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-panel",
+"style": "margin-left:20%"
+},
+"parts": [
+[
 "Widget",
 {
 "class": "error_messages.ErrorDiv",
@@ -2780,18 +2809,6 @@
 ]
 }
 ],
-[
-"Part",
-{
-"tag_name": "div",
-"brief": "centre",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-panel",
-"style": "margin-left:20%"
-},
-"parts": [
 [
 "Part",
 {
@@ -3094,6 +3111,17 @@
 "original_fields": {
 "show_error": "Example validate error message"
 }
+}
+},
+"status": {
+"ident": 11,
+"brief": "No op link to general json",
+"RespondPage": {
+"class": "NoOperation",
+"original_args": {
+"target_ident": "general_json"
+},
+"original_fields": {}
 }
 },
 "web_control": {

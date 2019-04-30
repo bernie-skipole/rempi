@@ -7,7 +7,9 @@ from skipole import FailPage, GoTo, ValidateError, ServerError
 def control_page(skicall):
     """Populate the control page, by setting widget values, and then the results values"""
     # display web_control status
-    if skicall.proj_data['status']['enable_web_control']:
+    redis = skicall.proj_data['redis']
+    web_control = redis.get('web_control')
+    if web_control == b'ENABLED':
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is ENABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Disable Internet Control"
     else:
@@ -20,6 +22,28 @@ def control_page(skicall):
         skicall.page_data['led', 'radio_checked'] = True
     else:
         skicall.page_data['led', 'radio_checked'] = False
+
+    # further widgets for further outputs to be set here
+    # finally fill in all results fields
+    refresh_results(skicall)
+
+
+def toggle_web_control(skicall):
+    "Enable / disable the enable_web_control flag in proj_data"
+    redis = skicall.proj_data['redis']
+    web_control = redis.get('web_control')
+    if web_control == b'ENABLED':
+        redis.set('web_control', 'DISABLED')
+    else:
+        redis.set('web_control', 'ENABLED')
+
+
+def refresh_results(skicall):
+    """Fill in the control page results fields"""
+    if _get_output('LED', skicall)  == 'ON':
+        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : On"
+    else:
+        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : Off"
 
     # get the motor status
     redis = skicall.proj_data['redis']
@@ -45,25 +69,6 @@ def control_page(skicall):
     skicall.page_data['motor1status','para_text'] = motor1status
     skicall.page_data['motor2status','para_text'] = motor2status
 
-    # further widgets for further outputs to be set here
-    # finally fill in all results fields
-    refresh_results(skicall)
-
-
-def toggle_web_control(skicall):
-    "Enable / disable the enable_web_control flag in proj_data"
-    if skicall.proj_data['status']['enable_web_control']:
-        skicall.proj_data['status']['enable_web_control'] = False
-    else:
-        skicall.proj_data['status']['enable_web_control'] = True
-
-
-def refresh_results(skicall):
-    """Fill in the control page results fields"""
-    if _get_output('LED', skicall)  == 'ON':
-        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : On"
-    else:
-        skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : Off"
 
 
 def controls_json_api(skicall):
@@ -131,5 +136,6 @@ def _get_output(name, skicall):
             return 'ON'
         else:
             return 'OFF'
+
 
 
