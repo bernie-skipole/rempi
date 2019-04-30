@@ -300,6 +300,114 @@
 "restricted": false,
 "folders": {},
 "pages": {
+"m1anticlockwise": {
+"ident": 3004,
+"brief": "Set motor 1 anti clockwise",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"motors",
+"m1anticlockwise"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"m1anti:input_text1": "speed",
+"m1anti:input_text2": "duration"
+}
+}
+},
+"m1clockwise": {
+"ident": 3003,
+"brief": "Sets motor 1 clockwise",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"motors",
+"m1clockwise"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"m1clock:input_text1": "speed",
+"m1clock:input_text2": "duration"
+}
+}
+},
+"m2anticlockwise": {
+"ident": 3006,
+"brief": "Set motor 2 anti clockwise",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"motors",
+"m2anticlockwise"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"m2anti:input_text1": "speed",
+"m2anti:input_text2": "duration"
+}
+}
+},
+"m2clockwise": {
+"ident": 3005,
+"brief": "Set motor 2 clockwise",
+"RespondPage": {
+"class": "AllowStoreKeyed",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"motors",
+"m2clockwise"
+],
+"submit_option": true,
+"target_ident": "general_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"m2clock:input_text1": "speed",
+"m2clock:input_text2": "duration"
+}
+}
+},
 "set_led": {
 "ident": 3001,
 "brief": "Sets LED and returns control page",
@@ -1134,6 +1242,370 @@
 [
 "Text",
 "Please note: may take a few seconds to refresh with new value."
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Motor control",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Motors heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Motor Control"
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "Paragraph of text",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Requesting a motor run, will start the motor, which will run for the given duration, and then stop.\r\nCurrently the motors are coded to speed up for eight seconds, to the requested speed, and slow down in the last eight seconds.\r\nIf the total duration is less than 16 seconds, the requested speed may not be reached."
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds form for motor 1",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "clockwise form",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin:30px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TwoInputsSubmit1",
+"name": "m1clock",
+"brief": "Form for motor1 clockwise rotation",
+"fields": {
+"action": "no_javascript",
+"action_json": "3003",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Run Motor 1 Clockwise",
+"clear_error": false,
+"disabled1": false,
+"disabled2": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"input_accepted_class": "ski_input_accepted",
+"input_class1": "ski_input",
+"input_class2": "ski_input  w3-margin-left",
+"input_errored_class": "ski_input_errored",
+"input_text1": "",
+"input_text2": "",
+"inputdiv_class": "",
+"label": "Set speed (1-100) and duration (seconds):",
+"label_class": "ski_left_label",
+"maxlength1": "3",
+"maxlength2": "3",
+"pattern1": "",
+"pattern2": "",
+"required1": true,
+"required2": true,
+"set_input_accepted1": false,
+"set_input_accepted2": false,
+"set_input_errored1": false,
+"set_input_errored2": false,
+"show": true,
+"show_error": "",
+"size1": "3",
+"size2": "3",
+"title1": "",
+"title2": "",
+"type1": "text",
+"type2": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "anti clockwise form",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin:30px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TwoInputsSubmit1",
+"name": "m1anti",
+"brief": "Form for motor1 anti clockwise rotation",
+"fields": {
+"action": "no_javascript",
+"action_json": "3004",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Run Motor 1 Anti Clockwise",
+"clear_error": false,
+"disabled1": false,
+"disabled2": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"input_accepted_class": "ski_input_accepted",
+"input_class1": "ski_input",
+"input_class2": "ski_input  w3-margin-left",
+"input_errored_class": "ski_input_errored",
+"input_text1": "",
+"input_text2": "",
+"inputdiv_class": "",
+"label": "Set speed (1-100) and duration (seconds):",
+"label_class": "ski_left_label",
+"maxlength1": "3",
+"maxlength2": "3",
+"pattern1": "",
+"pattern2": "",
+"required1": true,
+"required2": true,
+"set_input_accepted1": false,
+"set_input_accepted2": false,
+"set_input_errored1": false,
+"set_input_errored2": false,
+"show": true,
+"show_error": "",
+"size1": "3",
+"size2": "3",
+"title1": "",
+"title2": "",
+"type1": "text",
+"type2": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "motor1status",
+"brief": "Shows Motor 1 status",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "Motor 1 Stopped",
+"pre_line": true,
+"show": true,
+"show_error": "Unknown status",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "Holds form for motor 2",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "clockwise form",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin:30px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TwoInputsSubmit1",
+"name": "m2clock",
+"brief": "Form for motor2 clockwise rotation",
+"fields": {
+"action": "no_javascript",
+"action_json": "3005",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Run Motor 2 Clockwise",
+"clear_error": false,
+"disabled1": false,
+"disabled2": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"input_accepted_class": "ski_input_accepted",
+"input_class1": "ski_input",
+"input_class2": "ski_input  w3-margin-left",
+"input_errored_class": "ski_input_errored",
+"input_text1": "",
+"input_text2": "",
+"inputdiv_class": "",
+"label": "Set speed (1-100) and duration (seconds):",
+"label_class": "ski_left_label",
+"maxlength1": "3",
+"maxlength2": "3",
+"pattern1": "",
+"pattern2": "",
+"required1": true,
+"required2": true,
+"set_input_accepted1": false,
+"set_input_accepted2": false,
+"set_input_errored1": false,
+"set_input_errored2": false,
+"show": true,
+"show_error": "",
+"size1": "3",
+"size2": "3",
+"title1": "",
+"title2": "",
+"type1": "text",
+"type2": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "anti clockwise form",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"style": "margin:30px;"
+},
+"parts": [
+[
+"Widget",
+{
+"class": "inputtext.TwoInputsSubmit1",
+"name": "m2anti",
+"brief": "Form for motor2 anti clockwise rotation",
+"fields": {
+"action": "no_javascript",
+"action_json": "3006",
+"button_class": "w3-button w3-theme-d4 w3-margin-left",
+"button_text": "Run Motor 2 Anti Clockwise",
+"clear_error": false,
+"disabled1": false,
+"disabled2": false,
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"input_accepted_class": "ski_input_accepted",
+"input_class1": "ski_input",
+"input_class2": "ski_input  w3-margin-left",
+"input_errored_class": "ski_input_errored",
+"input_text1": "",
+"input_text2": "",
+"inputdiv_class": "",
+"label": "Set speed (1-100) and duration (seconds):",
+"label_class": "ski_left_label",
+"maxlength1": "3",
+"maxlength2": "3",
+"pattern1": "",
+"pattern2": "",
+"required1": true,
+"required2": true,
+"set_input_accepted1": false,
+"set_input_accepted2": false,
+"set_input_errored1": false,
+"set_input_errored2": false,
+"show": true,
+"show_error": "",
+"size1": "3",
+"size2": "3",
+"title1": "",
+"title2": "",
+"type1": "text",
+"type2": "text",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "motor2status",
+"brief": "Shows Motor 2 status",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "Motor 2 Stopped",
+"pre_line": true,
+"show": true,
+"show_error": "Unknown status",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
 ]
 ]
 }

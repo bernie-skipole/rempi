@@ -1,32 +1,10 @@
 
 
+# These functions are called by responders to control the motors
+
+
+
 from skipole import FailPage, GoTo, ValidateError, ServerError
-
-
-def get_motor_status(skicall):
-    "Called to get the motor status - sets up motor control page"
-    redis = skicall.proj_data['redis']
-    motor1status = redis.get('motor1status')
-    if motor1status == b"CLOCKWISE":
-        motor1status = "Motor 1 running clockwise"
-    elif motor1status == b"ANTICLOCKWISE":
-        motor1status = "Motor 1 running anti clockwise"
-    elif motor1status == b"STOPPED":
-        motor1status = "Motor 1 stopped"
-    else:
-        motor1status = "Motor 1 status : unknown"
-    motor2status = redis.get('motor2status')
-    if motor2status == b"CLOCKWISE":
-        motor2status = "Motor 2 running clockwise"
-    elif motor2status == b"ANTICLOCKWISE":
-        motor2status = "Motor 2 running anti clockwise"
-    elif motor2status == b"STOPPED":
-        motor2status = "Motor 2 stopped"
-    else:
-        motor2status = "Motor 2 status : unknown"
-    # Set the status in the paragraph widgets
-    skicall.page_data['motor1status','para_text'] = motor1status
-    skicall.page_data['motor2status','para_text'] = motor2status
 
 
 def m1clockwise(skicall):
