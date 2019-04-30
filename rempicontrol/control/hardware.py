@@ -18,8 +18,8 @@ _CONFIG = {
 _OUTPUTS = {"output01" :        ('boolean', False, 24, "When ON lights an LED"),
             "motor1direction" : ('boolean', False, 27, "When True clockwise False anticlockwise"),
             "motor2direction" : ('boolean', False, 22, "When True clockwise False anticlockwise"),
-            "motor1pwm" :       ('pwm',     None,  18, "Pule Width Modulation for motor 1"),
-            "motor2pwm" :       ('pwm',     None,  25, "Pule Width Modulation for motor 2")  }
+            "motor1pwm" :       ('pwm',     None,  18, "Pulse Width Modulation for motor 1"),
+            "motor2pwm" :       ('pwm',     None,  25, "Pulse Width Modulation for motor 2")  }
 
 
 

@@ -67,7 +67,7 @@ pubsub.subscribe(**{'control03': state['temperature']})
 pubsub.subscribe(**{'motor1control': state['motor1']})
 pubsub.subscribe(**{'motor2control': state['motor2']})
 
-# run the pobsub with the above handlers in a thread
+# run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
 
 
