@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.8",
-"skipole": "3.0.2",
+"skipole": "3.2.0",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -955,7 +955,7 @@
 "brief": "Left navigation",
 "section_name": "leftnav",
 "placename": "leftnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -965,7 +965,7 @@
 "brief": "top navigation",
 "section_name": "topnav",
 "placename": "topnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -975,7 +975,7 @@
 "brief": "top space",
 "section_name": "topspace",
 "placename": "topspace",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -1010,6 +1010,7 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
+"container_class": "",
 "error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
@@ -1836,6 +1837,7 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
+"container_class": "",
 "error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
@@ -2131,7 +2133,7 @@
 "brief": "Left navigation",
 "section_name": "leftnav",
 "placename": "leftnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2141,7 +2143,7 @@
 "brief": "top navigation",
 "section_name": "topnav",
 "placename": "topnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2151,7 +2153,7 @@
 "brief": "top space",
 "section_name": "topspace",
 "placename": "topspace",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2186,6 +2188,7 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
+"container_class": "",
 "error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
@@ -2739,7 +2742,7 @@
 "brief": "Left navigation",
 "section_name": "leftnav",
 "placename": "leftnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2749,7 +2752,7 @@
 "brief": "top navigation",
 "section_name": "topnav",
 "placename": "topnav",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2759,7 +2762,7 @@
 "brief": "top space",
 "section_name": "topspace",
 "placename": "topspace",
-"multiplier": 1,
+"multiplier": 0,
 "mtag": "div"
 }
 ],
@@ -2794,6 +2797,7 @@
 "brief": "Error Div providing a widget for the default error field",
 "fields": {
 "clear_error": false,
+"container_class": "",
 "error_class": "w3-panel w3-red",
 "hide": true,
 "show": true,
