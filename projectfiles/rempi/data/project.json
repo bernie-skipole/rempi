@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.8",
-"skipole": "3.2.0",
+"skipole": "3.5.0",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -465,13 +465,13 @@
 },
 "rempi01": {
 "ident": 5000,
-"brief": "Folder for internet pages",
+"brief": "Folder for summary status pages",
 "default_page_name": "index",
 "restricted": false,
 "folders": {
 "css": {
 "ident": 1001,
-"brief": "Holds CSS pages, available for both local and internet",
+"brief": "Holds CSS pages, held beneath rempi01 to aid proxy forwarding",
 "default_page_name": "index",
 "restricted": false,
 "folders": {},
@@ -498,14 +498,14 @@
 },
 "restricted": {
 "ident": 5100,
-"brief": "Restricetd folder for internet template",
+"brief": "Restricetd folder for summary template",
 "default_page_name": "index",
 "restricted": true,
 "folders": {},
 "pages": {
-"internet_template": {
+"summary_template": {
 "ident": 5101,
-"brief": "Template page for internet page",
+"brief": "Template page for summary page",
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
@@ -766,7 +766,7 @@
 "pages": {
 "index": {
 "ident": 5001,
-"brief": "Fills internet page",
+"brief": "Fills summary page",
 "RespondPage": {
 "class": "SubmitData",
 "original_args": {
@@ -2895,11 +2895,11 @@
 "Widget",
 {
 "class": "links.ButtonLink2",
-"name": "internetstatus",
-"brief": "Link to internet visible status page",
+"name": "summarystatus",
+"brief": "Link to summary status page",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
-"button_text": "Internet status page",
+"button_text": "Summary status page",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",
 "buttondiv_style": "",
