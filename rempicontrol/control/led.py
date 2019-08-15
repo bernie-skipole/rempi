@@ -14,10 +14,6 @@ class LED(object):
     def __init__(self, redis):
         "set up an LED object"
 
-        # routine should be provided here to set self._state to True
-        self._state = True
-        # the actual led output
-        self._output = False
         # info stored to redis
         self.redis = redis
 
@@ -29,7 +25,7 @@ class LED(object):
         "Handles the pubsub msg"
         message = msg['data']
         if message == b"status":
-            # refresh the status from hardware
+            # refresh redis from hardware
             ledout = self.get_output()
             if ledout is None:
                logging.error('Failed to read the LED status')
@@ -47,20 +43,14 @@ class LED(object):
         pass
 
 
-    def check_state(self):
-        "Checks the hardware for the state of the led"
-        return self._state
-
-
     def get_output(self):
         "Called to get the led state from the hardware, saves it in redis"
         # the led is called 'output01' in the hardware module
         try:
-            self._output = hardware.get_boolean_output("output01")
+            out = hardware.get_boolean_output("output01")
         except Exception:
-            self._state = False
             return
-        if self._output:
+        if out:
             self.redis.set('led', 'ON')
             return 'ON'
         else:
@@ -72,15 +62,15 @@ class LED(object):
         """Called to set the LED, output should be True or ON to turn on, anything else to turn off
            Sets the requested output into Redis"""
         if not output:
-            self._output = False
+            out = False
         elif output is True:
-            self._output = True
+            out = True
         elif output == "ON":
-            self._output = True
+            out = True
         else:
-            self._output = False
+            out = False
 
-        if self._output:
+        if out:
             self.redis.set('led', 'ON')
             hardware.set_boolean_output("output01", True)
             # send an alert that the led has changed
@@ -94,14 +84,3 @@ class LED(object):
             return 'OFF'
 
 
-    def status(self):
-        """Provides the LED status, one of;
-            'UNKNOWN'
-            'ON'
-            'OFF'
-        """
-        if not self._state:
-            return 'UNKNOWN'
-        if self._output:
-            return 'ON'
-        return 'OFF'

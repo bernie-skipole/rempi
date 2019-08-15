@@ -61,11 +61,11 @@ pubsub = redis.pubsub(ignore_subscribe_messages=True)
 
 # subscribe to control channels
 
-pubsub.subscribe(**{'control01': state['door']})
-pubsub.subscribe(**{'control02': state['led']})
-pubsub.subscribe(**{'control03': state['temperature']})
-pubsub.subscribe(**{'motor1control': state['motor1']})
-pubsub.subscribe(**{'motor2control': state['motor2']})
+pubsub.subscribe(control01=state['door'])
+pubsub.subscribe(control02=state['led'])
+pubsub.subscribe(control03=state['temperature'])
+pubsub.subscribe(motor1control=state['motor1'])
+pubsub.subscribe(motor2control=state['motor2'])
 
 # run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
@@ -76,7 +76,7 @@ pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
 def inputcallback(input_name, state):
     "Callback when an input pin changes, name is the pin name as listed in hardware._INPUTS"
     logging.info('%s has changed state' % (input_name,))
-    for item in state.keys():
+    for item in state.values():
         # tell each item a pin has changed, it is up to the
         # item whether it is interested or not
         item.pin_changed(input_name)
