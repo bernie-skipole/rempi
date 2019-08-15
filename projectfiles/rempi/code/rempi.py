@@ -138,6 +138,9 @@ if __name__ == "__main__":
     host = "127.0.0.1"
     port = 8000
 
+    # host = "0.0.0.0"
+    # port = 80
+
     httpd = make_server(host, port, application)
     httpd.serve_forever()
 

@@ -33,14 +33,21 @@ def _get_sensor_values(sensors, skicall):
                 value = 'OFF'
             values.append(value)
         if name == "TEMPERATURE":
-            value = redis.get('temperature').decode("utf-8")
-            values.append(value)
+            value = redis.get('temperature')
+            if value is None:
+                values.append("0.0")
+            else:
+                values.append(value.decode("utf-8"))
     return values
 
 
 def status(skicall):
     "Fills sensors status internet page"
     redis = skicall.proj_data['redis']
-    temperature = redis.get('temperature').decode("utf-8")
+    temperature = redis.get('temperature')
+    if temperature is None:
+        temperature = "0.0"
+    else:
+        temperature = temperature.decode("utf-8")
     skicall.page_data["tmeter", "measurement"] = temperature
     skicall.page_data["tvalue", "text"] = "Temperature : %s" % (temperature,)
