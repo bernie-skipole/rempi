@@ -129,14 +129,17 @@ if __name__ == "__main__":
     #                                                                              #
     ###############################################################################
 
-    from waitress import serve
-    serve(application, host='0.0.0.0', port=8000)
+    #from waitress import serve
+    #serve(application, host='0.0.0.0', port=8000)
 
-    # the above line serves on 8000 for development
-    # but for deployment, use the following instead
+    from wsgiref.simple_server import make_server
 
-    # serve(application, host='0.0.0.0', port=80)
+    # serve the application
+    host = "127.0.0.1"
+    port = 8000
 
+    httpd = make_server(host, port, application)
+    httpd.serve_forever()
 
 
 
