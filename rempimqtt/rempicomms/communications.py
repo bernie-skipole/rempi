@@ -53,10 +53,25 @@ def temperature_status(client, userdata):
     client.publish(topic=topic, payload=temperature)
 
 
+def door_status(client, userdata):
+    "Get the door from redis and publish it via MQTT"
+    if not userdata['comms']:
+        return
+    redis = userdata['redis']
+    # get staus from redis
+    status = redis.get('door_status')
+    if status is None:
+        status = "UNKNOWN"
+    else:
+        status = status.decode("utf-8")
+    topic = userdata['from_topic'] + '/Inputs/door'
+    client.publish(topic=topic, payload=status)
+
+
 def status_request(client, userdata):
     "a full status request of all values"
     led_status(client, userdata)
     temperature_status(client, userdata)
-
+    door_status(client, userdata)
 
 

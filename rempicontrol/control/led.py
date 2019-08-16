@@ -83,4 +83,3 @@ class LED(object):
             self.redis.publish('alert02', 'led status')
             return 'OFF'
 
-

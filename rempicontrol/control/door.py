@@ -12,95 +12,46 @@ class Door(object):
 
     def __init__(self, redis):
         "set up the door state"
-        # state is False if unknown, True if Known
-        self._state = True
-        # routine should be provided here to set self._state to True
-
-        # stopped is True if stopped, False if in operation
-        self._stopped = False
-        # if opening is True, the door is being opened
-        self._opening = False
-        # if open is True, the door is open
-        self._open = False
-        # if closed is True, the door is closed
-        self._closed = False
-        # if closing is True, the door is being closed
-        self._closing = False
-        # stores actual outputs
-        self.output01 = None
         # info stored to redis
         self.redis = redis
+        # Ensure the door position is found on startup
+        self.status()
 
 
     def __call__(self, msg):
         "Handles the pubsub msg"
         message = msg['data']
         if message == b"status":
-            logging.info("Door status: " +self.status())
+            status = self.status()
+            if status is None:
+                logging.error('Failed to read the door status')
+            else:
+                logging.info("Door status: " + status)
+        # followed by elif's
+        # which would handle open, close and stop requests
+
 
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"
+        # this would typically set the redis 'door_status'
+        # and would send an alert such as 
+        # self.redis.publish('alert01', 'door status')
+        # pimqtt.py would define an alert01_handler - and would read the redis door_status
+        # and send it by mqtt
         pass
 
-
-    def check_state(self):
-        "Checks the hardware for the state of the door"
-        return self._state
-
-
-    def stop(self):
-        "Called to stop (disable) the door"
-        self._stopped = True
-
-
-    def start(self):
-        "Called to start (enable) the door"
-        self._stopped = False
-
-
-    def start_open(self):
-        "Called to start the door opening action"
-        self._opening = True
-        self._closed = False
-
-
-    def opened(self):
-        "Called to indicate the door is fully opened"
-        self._open = True
-        self._opening = False
-
-
-    def start_close(self):
-        "Called to start the door closing action"
-        self._closing = True
-        self._closed = False
-
-
-    def closed(self):
-        "Called to indicate the door is fully closed"
-        self._closed = True
-        self._closing = False
 
 
     def status(self):
         """Provides the door status, one of;
-            'UNKNOWN'
+            None - with 'UNKNOWN' set in redis 'door_status'
             'STOPPED'
             'OPEN'
             'CLOSED'
             'OPENING'
             'CLOSING'
         """
-        if not self._state:
-            return 'UNKNOWN'
-        if self._stopped:
-            return 'STOPPED'
-        if self._open:
-            return 'OPEN'
-        if self._opening:
-            return 'OPENING'
-        if self._closed:
-            return 'CLOSED'
-        if self._closing:
-            return 'CLOSING'
-        return 'UNKNOWN'
+        # check hardware, if error, return None, and set UNKNOWN
+        # currently no hardware tests done, so door is always 'UNKNOWN'
+        self.redis.set('door_status', 'UNKNOWN')
+        return

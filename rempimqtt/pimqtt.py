@@ -136,9 +136,9 @@ def alert02_handler(msg):
 
 # subscribe to alert01, alert02.., etc
 pubsub = redis.pubsub()  
-#pubsub.subscribe(**{'alert01': alert01_handler})
-pubsub.subscribe(**{'alert02': alert02_handler})
-#pubsub.subscribe(**{'alert03': alert03_handler})
+#pubsub.subscribe(alert01 = alert01_handler)
+pubsub.subscribe(alert02 = alert02_handler)
+#pubsub.subscribe(alert03 = alert03_handler)
 
 # run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
