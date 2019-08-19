@@ -31,11 +31,8 @@ class LED(object):
                logging.error('Failed to read the LED status')
         elif message == b"ON":
             self.set_output("ON")
-            logging.info('LED set ON')
         elif message == b"OFF":
             self.set_output("OFF")
-            logging.info('LED set OFF')
-
 
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"
@@ -71,14 +68,16 @@ class LED(object):
             out = False
 
         if out:
-            self.redis.set('led', 'ON')
             hardware.set_boolean_output("output01", True)
+            self.redis.set('led', 'ON')
+            logging.info('LED set ON')
             # send an alert that the led has changed
             self.redis.publish('alert02', 'led status')
             return 'ON'
         else:
-            self.redis.set('led', 'OFF')
             hardware.set_boolean_output("output01", False)
+            self.redis.set('led', 'OFF')
+            logging.info('LED set OFF')
             # send an alert that the led has changed
             self.redis.publish('alert02', 'led status')
             return 'OFF'

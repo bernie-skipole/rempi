@@ -56,7 +56,8 @@ def _on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         if payload == 'led':
             communications.led_status(client, userdata)
-
+        elif payload == 'door':
+            communications.door_status(client, userdata)
 
 
 # The callback for when the client receives a CONNACK response from the server.
@@ -123,6 +124,14 @@ except Exception:
 ### redis pubsub handlers, these are 'alerts' received from rempicontrol
 ### and requesting that info be published via mqtt
 
+def alert01_handler(msg):
+    "Handles the pubsub msg for alert01 - this sends info about the door"
+    message = msg['data']
+    if message == b"door status":
+        # send the door status
+        communications.door_status(mqtt_client, userdata)
+
+
 def alert02_handler(msg):
     "Handles the pubsub msg for alert02 - this sends info about led"
     message = msg['data']
@@ -136,7 +145,7 @@ def alert02_handler(msg):
 
 # subscribe to alert01, alert02.., etc
 pubsub = redis.pubsub()  
-#pubsub.subscribe(alert01 = alert01_handler)
+pubsub.subscribe(alert01 = alert01_handler)
 pubsub.subscribe(alert02 = alert02_handler)
 #pubsub.subscribe(alert03 = alert03_handler)
 

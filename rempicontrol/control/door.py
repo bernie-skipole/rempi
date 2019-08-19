@@ -15,20 +15,22 @@ class Door(object):
         # info stored to redis
         self.redis = redis
         # Ensure the door position is found on startup
-        self.status()
+        self.get_door()
 
 
     def __call__(self, msg):
         "Handles the pubsub msg"
         message = msg['data']
         if message == b"status":
-            status = self.status()
+            status = self.get_door()
             if status is None:
                 logging.error('Failed to read the door status')
             else:
                 logging.info("Door status: " + status)
-        # followed by elif's
-        # which would handle open, close and stop requests
+        elif message == b"OPEN":
+            self.set_door("OPEN")
+        elif message == b"CLOSE":
+            self.set_door("CLOSE")
 
 
     def pin_changed(self,input_name):
@@ -41,8 +43,7 @@ class Door(object):
         pass
 
 
-
-    def status(self):
+    def get_door(self):
         """Provides the door status, one of;
             None - with 'UNKNOWN' set in redis 'door_status'
             'STOPPED'
@@ -51,7 +52,34 @@ class Door(object):
             'OPENING'
             'CLOSING'
         """
-        # check hardware, if error, return None, and set UNKNOWN
-        # currently no hardware tests done, so door is always 'UNKNOWN'
-        self.redis.set('door_status', 'UNKNOWN')
-        return
+        # should check hardware, if error, return None, and set UNKNOWN
+        # self.redis.set('door_status', 'UNKNOWN')
+        # otherwise set the appropriate status
+
+        # in this case however, as hardware not done yet, instead of hardware test
+        # just read redis
+        status = redis.get('door_status'):
+        if status is None:
+            return 'UNKNOWN'
+        elif status == b"OPEN":
+            return "OPEN"
+        elif status == b"CLOSE":
+            return "CLOSE"
+
+
+    def set_door(self, action):
+        """Called to set the door, action should be OPEN or CLOSE
+           Sets the requested output into Redis"""
+        if action == 'OPEN':
+            # set door in hardware
+            self.redis.set('door_status', 'OPEN')
+            logging.info('Door set to open')
+            self.redis.publish('alert01', 'door status')
+            return 'OPEN'
+        else:
+            # set door in hardware
+            self.redis.set('door_status', 'CLOSE')
+            logging.info('Door set to close')
+            self.redis.publish('alert01', 'door status')
+            return 'CLOSE'
+

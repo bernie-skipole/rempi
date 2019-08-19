@@ -44,6 +44,8 @@ def main(stdscr, redis, pubsub):
     menu1win.addstr(2,5,"Choose an option:")
     menu1win.addstr(4,10,"1 - To turn on the LED")
     menu1win.addstr(5,10,"2 - To turn off the LED")
+    menu1win.addstr(6,10,"3 - To turn open the door")
+    menu1win.addstr(7,10,"4 - To turn close the door")
     menu1win.addstr(9,10,"Q - To quit the program")
     menu1win.noutrefresh()
 
@@ -64,6 +66,18 @@ def main(stdscr, redis, pubsub):
             redis.publish("control02", "OFF")
             curses.doupdate()
             continue
+        elif c == ord('3'):
+            showstatus(statuswin, redis, "Door OPEN request")
+            redis.publish("control01", "OPEN")
+            curses.doupdate()
+            continue
+        elif c == ord('4'):
+            showstatus(statuswin, redis, "Door CLOSE request")
+            redis.publish("control01", "CLOSE")
+            curses.doupdate()
+            continue
+
+
         # Final menu option q for quit
         elif c == ord('q') or c == ord('Q'):
             break  # Exit the while loop
@@ -88,11 +102,18 @@ def showstatus(statuswin, redis, status_message):
         led_status = "LED: ON"
     else:
         led_status = "LED: OFF"
+
+    door = redis.get('door_status')
+    if door is None:
+        door_status = "Door: UNKNOWN"
+    else:
+        door_status = "Door: " + door.decode("utf-8")
     statuswin.clear()
     statuswin.box(0,0)
     statuswin.addstr(2,5,"REMScope Status:")
     statuswin.addstr(3,10,status_message)
     statuswin.addstr(4,10,led_status)
+    statuswin.addstr(5,10,door_status)
     statuswin.noutrefresh()
 
 
@@ -103,6 +124,7 @@ if __name__ == "__main__":
     redis = StrictRedis(host='localhost', port=6379)
 
     pubsub = redis.pubsub(ignore_subscribe_messages=True)
+    pubsub.subscribe('alert01')
     pubsub.subscribe('alert02')
 
     # start the curses screen

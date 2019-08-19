@@ -22,6 +22,15 @@ def action(client, userdata, message):
         else:
             # it must be an led status request
             led_status(client, userdata)
+    elif (message.topic == 'From_WebServer/Outputs/door') or (message.topic == 'From_ServerEngine/Outputs/door') or (message.topic == 'From_RemControl/Outputs/door'):
+        # door control is on channel control01
+        if payload == "OPEN":
+            redis.publish('control01', 'OPEN')
+        elif payload == "CLOSE":
+            redis.publish('control01', 'CLOSE')
+        else:
+            # it must be a door status request
+            door_status(client, userdata)
 
 
 def led_status(client, userdata):
