@@ -58,7 +58,7 @@ class Door(object):
 
         # in this case however, as hardware not done yet, instead of hardware test
         # just read redis
-        status = redis.get('door_status'):
+        status = self.redis.get('door_status')
         if status is None:
             return 'UNKNOWN'
         elif status == b"OPEN":
