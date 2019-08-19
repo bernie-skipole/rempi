@@ -63,8 +63,15 @@ class Door(object):
             return 'UNKNOWN'
         elif status == b"OPEN":
             return "OPEN"
-        elif status == b"CLOSE":
-            return "CLOSE"
+        elif status == b"OPENING":
+            return "OPENING"
+        elif status == b"CLOSED":
+            return "CLOSED"
+        elif status == b"CLOSING":
+            return "CLOSING"
+        elif status == b"STOPPED":
+            return "STOPPED"
+        return "UNKNOWN"
 
 
     def set_door(self, action):
@@ -72,13 +79,13 @@ class Door(object):
            Sets the requested output into Redis"""
         if action == 'OPEN':
             # set door in hardware
-            self.redis.set('door_status', 'OPEN')
+            self.redis.set('door_status', 'OPENING')
             logging.info('Door set to open')
             self.redis.publish('alert01', 'door status')
             return 'OPEN'
         else:
             # set door in hardware
-            self.redis.set('door_status', 'CLOSE')
+            self.redis.set('door_status', 'CLOSING')
             logging.info('Door set to close')
             self.redis.publish('alert01', 'door status')
             return 'CLOSE'

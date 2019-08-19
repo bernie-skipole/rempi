@@ -6,10 +6,9 @@ from skipole import FailPage, GoTo, ValidateError, ServerError
 
 def sensor_table(skicall):
     """sets three lists for sensor table into page data"""
-    sensors = ["LED", "TEMPERATURE"]
-    skicall.page_data['sensors', 'col1'] = sensors
-    skicall.page_data['sensors', 'col2'] = _get_sensor_values(sensors, skicall)
-    skicall.page_data['sensors', 'col3'] = ["LED attached to pi", "Temperature from probe"]
+    skicall.page_data['sensors', 'col1'] = ["LED", "DOOR", "TEMPERATURE"]
+    skicall.page_data['sensors', 'col2'] = _get_sensor_values(skicall)
+    skicall.page_data['sensors', 'col3'] = ["LED attached to pi", "Observatory door", "Temperature from probe"]
 
 
 def sensors_json_api(skicall):
@@ -23,8 +22,7 @@ def _get_sensor_values(sensors, skicall):
     "Returns list of sensor values"
     redis = skicall.proj_data['redis']
     values = []
-    for name in sensors:
-        if name == "LED":
+
             # get led status from redis
             led_status = redis.get('led')
             if led_status == b"ON":
@@ -32,7 +30,25 @@ def _get_sensor_values(sensors, skicall):
             else:
                 value = 'OFF'
             values.append(value)
-        if name == "TEMPERATURE":
+
+            # get door
+            door_status = redis.get('door_status')
+            if door_status is None:
+                values.append("UNKNOWN")
+            elif door_status == b"CLOSED":
+                values.append("CLOSED")
+            elif door_status == b"CLOSING":
+                values.append("CLOSING")
+            elif door_status == b"OPEN":
+                values.append("OPEN")
+            elif door_status == b"OPENING":
+                values.append("OPENING")
+            elif door_status == b"STOPPED":
+                values.append("STOPPED")
+            else:
+                values.append("UNKNOWN")
+
+            # get temperature
             value = redis.get('temperature')
             if value is None:
                 values.append("0.0")
