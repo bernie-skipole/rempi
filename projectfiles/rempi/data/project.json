@@ -2229,39 +2229,6 @@
 "Part",
 {
 "tag_name": "div",
-"brief": "Holds link to control results",
-"show": true,
-"hide_if_empty": false,
-"attribs": {
-"class": "w3-container"
-},
-"parts": [
-[
-"Widget",
-{
-"class": "links.Link",
-"name": "control_json",
-"brief": "Links to control results json file",
-"fields": {
-"content": "/controls.json",
-"force_ident": false,
-"get_field1": "",
-"get_field2": "",
-"link_ident": 6,
-"show": true,
-"target": "",
-"widget_class": "",
-"widget_style": ""
-}
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "div",
 "brief": "holds link to sensors results",
 "show": true,
 "hide_if_empty": false,
@@ -2286,42 +2253,6 @@
 "widget_class": "",
 "widget_style": ""
 }
-}
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "h2",
-"brief": "Remote control",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"Text",
-"Remote Control"
-]
-]
-}
-],
-[
-"Part",
-{
-"tag_name": "p",
-"brief": "About set_output",
-"show": true,
-"hide_if_empty": false,
-"parts": [
-[
-"TextBlock",
-{
-"textref": "information.03",
-"failmessage": "TextBlock not found",
-"show": true,
-"escape": true,
-"linebreaks": true
 }
 ]
 ]
@@ -2576,22 +2507,6 @@
 "request_login"
 ],
 "target_ident": 1
-},
-"original_fields": {}
-}
-},
-"return_output": {
-"ident": 2005,
-"brief": "Returns JSON file of required output",
-"RespondPage": {
-"class": "SubmitJSON",
-"original_args": {
-"fail_ident": "general_json",
-"submit_list": [
-"rempi_packages",
-"control",
-"return_output"
-]
 },
 "original_fields": {}
 }
@@ -2970,22 +2885,6 @@
 "original_fields": {}
 }
 },
-"controls.json": {
-"ident": 6,
-"brief": "Returns JSON dictionary of sensors as external api",
-"RespondPage": {
-"class": "SubmitJSON",
-"original_args": {
-"fail_ident": "general_json",
-"submit_list": [
-"rempi_packages",
-"control",
-"controls_json_api"
-]
-},
-"original_fields": {}
-}
-},
 "index": {
 "ident": 1,
 "brief": "Fills in the home template",
@@ -3070,23 +2969,6 @@
 "sensor_table"
 ],
 "target_ident": "general_json"
-},
-"original_fields": {}
-}
-},
-"set_output": {
-"ident": 8,
-"brief": "Responder to set an output",
-"RespondPage": {
-"class": "Accept",
-"original_args": {
-"fail_ident": 2005,
-"submit_list": [
-"rempi_packages",
-"control",
-"set_output"
-],
-"target_ident": 2005
 },
 "original_fields": {}
 }

@@ -25,7 +25,6 @@ from rempi_packages import login
 _PUBLIC_PAGES = [1,  # index
                  2,  # sensors
                  4,  # information
-                 6,  # controls.json
                  7,  # sensors.json
                  9,  # sensors_refresh
                 11,  # status called from information page

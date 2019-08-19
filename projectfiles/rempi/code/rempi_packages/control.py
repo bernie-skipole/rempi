@@ -71,15 +71,6 @@ def refresh_results(skicall):
 
 
 
-def controls_json_api(skicall):
-    "Returns json dictionary of output names : output values, used by external api"
-    if _get_output('LED', skicall)  == 'ON':
-        return collections.OrderedDict([('LED', True)])
-    else:
-        return collections.OrderedDict([('LED', False)])
-
-
-
 def set_output_from_browser(skicall):
     """sets given output, called from browser via web page"""
     if ('led', 'radio_checked') in skicall.call_data:
@@ -87,33 +78,6 @@ def set_output_from_browser(skicall):
         _set_output('LED', skicall.call_data['led', 'radio_checked'], skicall)
     # further elif statements could set further outputs if they are present in call_data
 
-
-def set_output(skicall):
-    "External api call"
-    if 'received_data' not in skicall.submit_dict:
-        return
-    received = skicall.submit_dict['received_data']
-    if ('name' in received) and ('value' in received):
-        name = received['name']
-        value = received['value']
-        # controls is a list - currently only with the single LED element
-        controls = ["LED"]
-        if name not in controls:
-            return
-        _set_output(name, value, skicall)
-        skicall.call_data['OUTPUT'] = name
-           
-
-def return_output(skicall):
-    """{outputname:value} returned as a result of external api call,
-           outputname should have previously been set in call_data['OUTPUT']"""
-    if 'OUTPUT' not in skicall.call_data:
-        return {}
-    outputname = skicall.call_data['OUTPUT']
-    value = _get_output(outputname, skicall)
-    if value is None:
-        return {}
-    return {outputname:value}
 
 
 def _set_output(name, value, skicall):
