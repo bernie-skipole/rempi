@@ -1,6 +1,6 @@
 {
   "html5shiv": "<!--[if lt IE 9]>\r\n<script src=\"//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js\"></script>\r\n<![endif]-->",
   "information.01": "This device is a Raspberry Pi serving these web pages which display sensor inputs, and controls various outputs.\r\n\r\nAs well as these pages, this server generates a dynamic JSON file which can provide the sensor table. This is available at:",
-  "information.02": "This web software has been created by Bernard Czenkusz using the skipole framework.\r\n\r\nFurther details of the framework can be found at:\r\n\r\n<a href=\"https://pypi.org/project/skipole\">skipole at Pypi</a>\r\n\r\nand at:\r\n\r\n<a href=\"https://skipole.bitbucket.io\">skipole.bitbucket.io</a>\r\n\r\nThe project development repository is here:\r\n\r\n<a href=\"https://bitbucket.org/skipole/rempi\">https://bitbucket.org/skipole/rempi</a>",
+  "information.02": "This web software has been created by Bernard Czenkusz using the skipole framework. Further details of the framework can be found at:\r\n\r\n<a href=\"https://skipole.bitbucket.io\">skipole.bitbucket.io</a>\r\n\r\nThe 'rempi' project development repository is here:\r\n\r\n<a href=\"https://bitbucket.org/skipole/rempi\">https://bitbucket.org/skipole/rempi</a>",
   "no_javascript_text": "JAVASCRIPT FAILURE\r\n\r\nThis page is shown because the script on the previous page has failed to run.\r\n\r\nThis could be due to either a failure in the script, or your browser has javascript disabled."
 }

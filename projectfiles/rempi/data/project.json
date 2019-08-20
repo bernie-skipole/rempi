@@ -21,6 +21,8 @@
 "rempi_log5": 25,
 "sensors": 2,
 "server_error": "skis,server_error",
+"set_door": 3009,
+"set_door_json": 3010,
 "set_led": 3001,
 "set_led_json": 3002,
 "ski_basic": "skis,ski_basic",
@@ -406,6 +408,58 @@
 "original_fields": {
 "m2clock:input_text1": "speed",
 "m2clock:input_text2": "duration"
+}
+}
+},
+"set_door": {
+"ident": 3009,
+"brief": "Sets Door and returns control page",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "control",
+"submit_list": [
+"rempi_packages",
+"control",
+"set_output_from_browser"
+],
+"submit_option": true,
+"target_ident": "control",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"door:radio_checked": ""
+}
+}
+},
+"set_door_json": {
+"ident": 3010,
+"brief": "Sets Door and returns results JSON file",
+"RespondPage": {
+"class": "AllowStore",
+"original_args": {
+"allowed_callers": [
+2003
+],
+"alternate_ident": "home",
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"control",
+"set_output_from_browser"
+],
+"submit_option": true,
+"target_ident": "control_results_json",
+"validate_fail_ident": null,
+"validate_option": false
+},
+"original_fields": {
+"door:radio_checked": ""
 }
 }
 },
@@ -1140,25 +1194,6 @@
 [
 "Widget",
 {
-"class": "paras.DivPara",
-"name": "led_description",
-"brief": "Description of LED",
-"fields": {
-"clear_error": false,
-"error_class": "w3-red",
-"para_class": "",
-"para_text": "",
-"pre_line": true,
-"show": true,
-"show_error": "",
-"widget_class": "w3-section",
-"widget_style": ""
-}
-}
-],
-[
-"Widget",
-{
 "class": "inputforms.SubmitForm1",
 "name": "set_led",
 "brief": "Form for setting LED",
@@ -1225,6 +1260,127 @@
 "error_class": "w3-red",
 "para_class": "",
 "para_text": "The result of output 01 is :",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Part",
+{
+"tag_name": "p",
+"brief": "About result",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Please note: may take a few seconds to refresh with new value."
+]
+]
+}
+]
+]
+}
+],
+[
+"Part",
+{
+"tag_name": "div",
+"brief": "For Door",
+"show": true,
+"hide_if_empty": false,
+"attribs": {
+"class": "w3-section"
+},
+"parts": [
+[
+"Part",
+{
+"tag_name": "h2",
+"brief": "Door heading",
+"show": true,
+"hide_if_empty": false,
+"parts": [
+[
+"Text",
+"Door Control"
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "inputforms.SubmitForm1",
+"name": "set_door",
+"brief": "Form for opening/closing ther door",
+"fields": {
+"action": "set_door",
+"action_json": "set_door_json",
+"button_class": "w3-button w3-theme-d4",
+"button_text": "Submit",
+"button_wait_text": "",
+"clear_error": false,
+"container_class": "",
+"div_class": "",
+"enctype": "",
+"error_class": "w3-panel w3-red",
+"hidden_field1": "",
+"hidden_field2": "",
+"hidden_field3": "",
+"hidden_field4": "",
+"left_class": "ski_left_label",
+"left_label": "Set Door",
+"right_class": "",
+"right_label": "",
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+},
+"container_0": [
+[
+"Widget",
+{
+"class": "radio.BooleanRadio",
+"name": "door",
+"brief": "Radio buttons for Door",
+"fields": {
+"div_class1": "",
+"div_class2": "",
+"left_class1": "ski_left_label",
+"left_class2": "ski_left_label",
+"left_label1": "Open",
+"left_label2": "Close",
+"radio_checked": true,
+"right_class1": "",
+"right_class2": "",
+"right_label1": "",
+"right_label2": "",
+"show": true,
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+]
+]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "door_result",
+"brief": "Shows result of door control",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "The door status is :",
 "pre_line": true,
 "show": true,
 "show_error": "",

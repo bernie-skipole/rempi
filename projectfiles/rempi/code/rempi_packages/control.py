@@ -15,13 +15,19 @@ def control_page(skicall):
     else:
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is DISABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Enable Internet Control"
-    # display output description
-    skicall.page_data['led_description', 'para_text'] = "LED output"
+
     # widget led is boolean radio and expects a binary True, False value
-    if _get_output('LED', skicall)  == 'ON':
+    if _get_led(redis) == 'ON':
         skicall.page_data['led', 'radio_checked'] = True
     else:
         skicall.page_data['led', 'radio_checked'] = False
+
+    # set door widget
+    door_status = _get_door(redis)
+    if door_status in ["CLOSED", "CLOSING"]:
+        skicall.page_data['door', 'radio_checked'] = True
+    else:
+        skicall.page_data['door', 'radio_checked'] = False
 
     # further widgets for further outputs to be set here
     # finally fill in all results fields
@@ -40,13 +46,19 @@ def toggle_web_control(skicall):
 
 def refresh_results(skicall):
     """Fill in the control page results fields"""
-    if _get_output('LED', skicall)  == 'ON':
+    redis = skicall.proj_data['redis']
+
+    if _get_led(redis) == 'ON':
         skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : On"
     else:
         skicall.page_data['led_result', 'para_text'] = "The current value of the LED is : Off"
 
+    # get the door status
+    door_status = _get_door(redis)
+    skicall.page_data['door_result', 'para_text'] = "The current door status is : " + door_status
+
+
     # get the motor status
-    redis = skicall.proj_data['redis']
     motor1status = redis.get('motor1status')
     if motor1status == b"CLOCKWISE":
         motor1status = "Motor 1 running clockwise"
@@ -73,33 +85,50 @@ def refresh_results(skicall):
 
 def set_output_from_browser(skicall):
     """sets given output, called from browser via web page"""
-    if ('led', 'radio_checked') in skicall.call_data:
-        # set LED
-        _set_output('LED', skicall.call_data['led', 'radio_checked'], skicall)
-    # further elif statements could set further outputs if they are present in call_data
-
-
-
-def _set_output(name, value, skicall):
-    """Sets an output, given the output name and value"""
     redis = skicall.proj_data['redis']
-    if name == "LED":
+    if ('led', 'radio_checked') in skicall.call_data:
+        value = skicall.call_data['led', 'radio_checked']
+        # set LED
         if (value is True) or (value == "ON") or (value == "true") or (value == "True"):
             redis.publish("control02", "ON")
         else:
             redis.publish("control02", "OFF")
-
-
-def _get_output(name, skicall):
-    """Gets an output value, given the output name, return None on failure"""
-    redis = skicall.proj_data['redis']
-    if name == "LED":
-        # get led status from redis
-        led_status = redis.get('led')
-        if led_status == b"ON":
-            return 'ON'
+    elif ('door', 'radio_checked') in skicall.call_data:
+        value = skicall.call_data['door', 'radio_checked']
+        # set Door
+        if (value is True) or (value == "OPEN") or (value == "true") or (value == "True"):
+            redis.publish("control01", "OPEN")
         else:
-            return 'OFF'
+            redis.publish("control01", "CLOSE")
+
+
+
+def _get_led(redis):
+    """Gets LED status from redis"""
+    led_status = redis.get('led')
+    if led_status == b"ON":
+        return 'ON'
+    else:
+        return 'OFF'
+
+def _get_door(redis):
+    "Get door status from redis"
+    door_status = redis.get('door_status')
+    if door_status is None:
+        return "UNKNOWN"
+    elif door_status == b"CLOSED":
+        return "CLOSED"
+    elif door_status == b"CLOSING":
+        return "CLOSING"
+    elif door_status == b"OPEN":
+        return "OPEN"
+    elif door_status == b"OPENING":
+        return "OPENING"
+    elif door_status == b"STOPPED":
+        return "STOPPED"
+    else:
+        return "UNKNOWN"
+
 
 
 
