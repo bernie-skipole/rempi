@@ -44,8 +44,8 @@ def main(stdscr, redis, pubsub):
     menu1win.addstr(2,5,"Choose an option:")
     menu1win.addstr(4,10,"1 - To turn on the LED")
     menu1win.addstr(5,10,"2 - To turn off the LED")
-    menu1win.addstr(6,10,"3 - To turn open the door")
-    menu1win.addstr(7,10,"4 - To turn close the door")
+    menu1win.addstr(6,10,"3 - To open the door")
+    menu1win.addstr(7,10,"4 - To close the door")
     menu1win.addstr(9,10,"Q - To quit the program")
     menu1win.noutrefresh()
 
