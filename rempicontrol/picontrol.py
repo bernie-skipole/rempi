@@ -32,8 +32,7 @@ from redis import StrictRedis
 
 from control import hardware, schedule, door, led, temperature, motors
 
-# logfile = "/opt/projectfiles/rempi/rempi.log"
-logfile = 'rempi.log'
+logfile = "/opt/projectfiles/rempi/rempi.log"
 handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
 logging.info('picontrol started')
