@@ -17,7 +17,7 @@ redis = StrictRedis(host='localhost', port=6379)
 # Device mqtt parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 192.168.1.91
+            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 192.168.1.92
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : ''

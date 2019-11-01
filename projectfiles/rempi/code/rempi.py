@@ -117,8 +117,8 @@ application.add_project(skis_application, url='/rempi01/lib')
 if __name__ == "__main__":
 
 
-    ############################### THESE LINES ADD SKIADMIN ######################
-    #                                                                              #
+    ####### THESE LINES ADD SKIADMIN ### REMOVE WHEN DEPLOYED #####################
+    #                                                                             #
     set_debug(True)                                                               #
     skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
     if skiadmin_code not in sys.path:                                             #
@@ -126,20 +126,14 @@ if __name__ == "__main__":
     import skiadmin                                                               #
     skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT) #
     application.add_project(skiadmin_application, url='/skiadmin')                #
-    #                                                                              #
+    #                                                                             #
     ###############################################################################
-
-    #from waitress import serve
-    #serve(application, host='0.0.0.0', port=8000)
 
     from wsgiref.simple_server import make_server
 
     # serve the application
-    host = "127.0.0.1"
+    host = ""
     port = 8000
-
-    # host = "0.0.0.0"
-    # port = 80
 
     httpd = make_server(host, port, application)
     httpd.serve_forever()
