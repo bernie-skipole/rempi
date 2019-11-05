@@ -19,14 +19,18 @@ import sys, sched, time, logging
 
 def event1(redis, state):
     "event1 is to store temperature"
+    temperature = 0.0
     try:
-        # this logs the temperature to redis
-        state['temperature'].get_temperature()
+        # the get_temperature method logs the temperature to redis
+        temperature = state['temperature'].get_temperature()
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event1')
         return
-    logging.info("Temperature recorded to redis")
+    if temperature is None:
+        logging.error('Failed to read the temperature')
+    else:
+        logging.info("Temperature recorded to redis %s" % (temperature,))
 
 
 # If the redis motor*status flags are left in a funny state - not 'STOPPED'

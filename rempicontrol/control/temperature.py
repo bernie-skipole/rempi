@@ -40,9 +40,15 @@ class Temperature(object):
         # the temperature input is called 'input03' in the hardware module
         try:
             temperature = hardware.get_input("input03")
+        except RuntimeError as e:
+            self.redis.set('temperature', 0.0)
+            logging.error(str(e))
+            return
         except Exception:
+            self.redis.set('temperature', 0.0)
             return
         if temperature is None:
+            self.redis.set('temperature', 0.0)
             return
         # round to one digit
         temperature = round(float(temperature), 1)
