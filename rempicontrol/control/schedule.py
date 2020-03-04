@@ -17,7 +17,7 @@ import sys, sched, time, logging
 ###  scheduled actions ###
 
 
-def event1(redis, state):
+def event1(rconn, state):
     "event1 is to store temperature"
     temperature = 0.0
     try:
@@ -33,31 +33,31 @@ def event1(redis, state):
         logging.info("Temperature recorded to redis %s" % (temperature,))
 
 
-# If the redis motor*status flags are left in a funny state - not 'STOPPED'
+# If the rconn motor*status flags are left in a funny state - not 'STOPPED'
 # then the motors can never be started, so check every five minutes, and if the
-# motors have not been called for a period, assume the redis entry should be STOPPED
+# motors have not been called for a period, assume the rconn entry should be STOPPED
 
 
-def event2(redis, state):
+def event2(rconn, state):
     "event2 checks if motor1 running"
     now = time.time()
     motor1 = state['motor1']
     if now > motor1.running + 180:
         # M1 has not been called for two minutes
         # ensure its status is stopped
-        redis.set('motor1status', 'STOPPED')
+        rconn.set('motor1status', 'STOPPED')
         # and reset the timer
         motor1.running = time.time()
 
 
-def event3(redis, state):
+def event3(rconn, state):
     "event3 checks if motor2 running"
     now = time.time()
     motor2 = state['motor2']
     if now > motor2.running + 180:
         # M2 has not been called for two minutes
         # ensure its status is stopped
-        redis.set('motor2status', 'STOPPED')
+        rconn.set('motor2status', 'STOPPED')
         # and reset the timer
         motor2.running = time.time()
 
@@ -66,7 +66,7 @@ def event3(redis, state):
 
 class ScheduledEvents(object):
 
-    def __init__(self, redis, state):
+    def __init__(self, rconn, state):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
 
@@ -82,7 +82,7 @@ class ScheduledEvents(object):
         # sort the list
         self.event_list = sorted(event_list, key=lambda x: x[1])
         self.state = state
-        self.redis = redis
+        self.rconn = rconn
         self.schedule = sched.scheduler(time.time, time.sleep)
 
 
@@ -114,7 +114,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   kwargs= {"redis":self.redis, "state":self.state}
+                                   kwargs= {"rconn":self.rconn, "state":self.state}
                                    )
 
         # schedule a final event to occur 5 seconds before the end of nexthour
@@ -152,7 +152,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       kwargs= {"redis":self.redis, "state":self.state}
+                                       kwargs= {"rconn":self.rconn, "state":self.state}
                                        )
 
         # schedule a final event to occur 5 seconds before the end of thishour
@@ -172,7 +172,7 @@ class ScheduledEvents(object):
 # add them to event_list  in the class __init__, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
-# scheduled_events = ScheduledEvents(redis,state)
+# scheduled_events = ScheduledEvents(rconn,state)
 # this is a callable, use it as a thread target
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread

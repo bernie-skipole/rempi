@@ -30,9 +30,10 @@ from logging.handlers import RotatingFileHandler
 
 from redis import StrictRedis
 
-from control import hardware, schedule, door, led, temperature, motors
+from control import hardware, schedule, door, led, temperature, motors, telescope
 
-logfile = "/opt/projectfiles/rempi/rempi.log"
+#logfile = "/opt/projectfiles/rempi/rempi.log"
+logfile = "/home/bernard/rempi.log"
 handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
 logging.info('picontrol started')
@@ -44,19 +45,20 @@ if not result:
     logging.error('Failed hardware initial setup')
 
 # create redis connection
-redis = StrictRedis(host='localhost', port=6379)
+rconn = StrictRedis(host='localhost', port=6379)
 
 
 ### create a dictionary of objects to control, these objects are callable handlers
-state = { 'door': door.Door(redis),
-          'led': led.LED(redis),
-          'temperature':temperature.Temperature(redis),
-          'motor1': motors.Motor('motor1',redis),
-          'motor2': motors.Motor('motor2',redis)
+state = { 'door': door.Door(rconn),
+          'led': led.LED(rconn),
+          'temperature':temperature.Temperature(rconn),
+          'motor1': motors.Motor('motor1',rconn),
+          'motor2': motors.Motor('motor2',rconn),
+          'telescope': telescope.Telescope(rconn)
         }
 
 
-pubsub = redis.pubsub(ignore_subscribe_messages=True)
+pubsub = rconn.pubsub(ignore_subscribe_messages=True)
 
 # subscribe to control channels
 
@@ -65,6 +67,8 @@ pubsub.subscribe(control02=state['led'])
 pubsub.subscribe(control03=state['temperature'])
 pubsub.subscribe(motor1control=state['motor1'])
 pubsub.subscribe(motor2control=state['motor2'])
+pubsub.subscribe(goto=state['telescope'].goto)       # calls the goto message of the telescope.Telescope object
+pubsub.subscribe(altaz=state['telescope'].altaz)      # calls the altaz message of the telescope.Telescope object
 
 # run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
@@ -87,7 +91,7 @@ listen.start_loop()
 
 
 # create an event schedular to do periodic actions
-scheduled_events = schedule.ScheduledEvents(redis, state)
+scheduled_events = schedule.ScheduledEvents(rconn, state)
 # this is a callable which runs scheduled events
 # it is a blocking call, and could be run in a separate thread
 # however in this case it just runs here

@@ -10,10 +10,10 @@ from . import hardware
 
 class Door(object):
 
-    def __init__(self, redis):
+    def __init__(self, rconn):
         "set up the door state"
-        # info stored to redis
-        self.redis = redis
+        # info stored to rconn
+        self.rconn = rconn
         # Ensure the door position is found on startup
         self.get_door()
 
@@ -31,34 +31,36 @@ class Door(object):
             self.set_door("OPEN")
         elif message == b"CLOSE":
             self.set_door("CLOSE")
+        elif message == b"HALT":
+            self.set_door("HALT")
 
 
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"
-        # this would typically set the redis 'door_status'
+        # this would typically set the rconn 'door_status'
         # and would send an alert such as 
-        # self.redis.publish('alert01', 'door status')
-        # pimqtt.py would define an alert01_handler - and would read the redis door_status
+        # self.rconn.publish('alert01', 'door status')
+        # pimqtt.py would define an alert01_handler - and would read the rconn door_status
         # and send it by mqtt
         pass
 
 
     def get_door(self):
         """Provides the door status, one of;
-            None - with 'UNKNOWN' set in redis 'door_status'
-            'STOPPED'
+            None - with 'UNKNOWN' set in rconn 'door_status'
+            'STOPPED'   set if HALT received or other hardware interrupt
             'OPEN'
             'CLOSED'
             'OPENING'
             'CLOSING'
         """
         # should check hardware, if error, return None, and set UNKNOWN
-        # self.redis.set('door_status', 'UNKNOWN')
+        # self.rconn.set('door_status', 'UNKNOWN')
         # otherwise set the appropriate status
 
         # in this case however, as hardware not done yet, instead of hardware test
-        # just read redis
-        status = self.redis.get('door_status')
+        # just read rconn
+        status = self.rconn.get('door_status')
         if status is None:
             return 'UNKNOWN'
         elif status == b"OPEN":
@@ -75,18 +77,26 @@ class Door(object):
 
 
     def set_door(self, action):
-        """Called to set the door, action should be OPEN or CLOSE
-           Sets the requested output into Redis"""
+        """Called to set the door, action should be OPEN, CLOSE or HALT
+           Sets the requested output into redis"""
         if action == 'OPEN':
-            # set door in hardware
-            self.redis.set('door_status', 'OPENING')
+            # set open door in hardware
+            self.rconn.set('door_status', 'OPENING')
             logging.info('Door set to open')
-            self.redis.publish('alert01', 'door status')
+            self.rconn.publish('alert01', 'door status')
             return 'OPEN'
-        else:
-            # set door in hardware
-            self.redis.set('door_status', 'CLOSING')
+        elif action == 'CLOSE':
+            # set close door in hardware
+            self.rconn.set('door_status', 'CLOSING')
             logging.info('Door set to close')
-            self.redis.publish('alert01', 'door status')
+            self.rconn.publish('alert01', 'door status')
             return 'CLOSE'
+        else:
+            # set door stopped in hardware
+            self.rconn.set('door_status', 'STOPPED')
+            logging.info('Door halted')
+            self.rconn.publish('alert01', 'door status')
+            return 'STOPPED'
+
+
 

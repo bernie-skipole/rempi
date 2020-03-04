@@ -11,11 +11,11 @@ from . import hardware
 
 class LED(object):
 
-    def __init__(self, redis):
+    def __init__(self, rconn):
         "set up an LED object"
 
-        # info stored to redis
-        self.redis = redis
+        # info stored to rconn
+        self.rconn = rconn
 
         # Ensure the hardware values are read on startup
         self.get_output()
@@ -41,23 +41,23 @@ class LED(object):
 
 
     def get_output(self):
-        "Called to get the led state from the hardware, saves it in redis"
+        "Called to get the led state from the hardware, saves it in rconn"
         # the led is called 'output01' in the hardware module
         try:
             out = hardware.get_boolean_output("output01")
         except Exception:
             return
         if out:
-            self.redis.set('led', 'ON')
+            self.rconn.set('led', 'ON')
             return 'ON'
         else:
-            self.redis.set('led', 'OFF')
+            self.rconn.set('led', 'OFF')
             return 'OFF'
 
 
     def set_output(self, output):
         """Called to set the LED, output should be True or ON to turn on, anything else to turn off
-           Sets the requested output into Redis"""
+           Sets the requested output into rconn"""
         if not output:
             out = False
         elif output is True:
@@ -69,16 +69,16 @@ class LED(object):
 
         if out:
             hardware.set_boolean_output("output01", True)
-            self.redis.set('led', 'ON')
+            self.rconn.set('led', 'ON')
             logging.info('LED set ON')
             # send an alert that the led has changed
-            self.redis.publish('alert02', 'led status')
+            self.rconn.publish('alert02', 'led status')
             return 'ON'
         else:
             hardware.set_boolean_output("output01", False)
-            self.redis.set('led', 'OFF')
+            self.rconn.set('led', 'OFF')
             logging.info('LED set OFF')
             # send an alert that the led has changed
-            self.redis.publish('alert02', 'led status')
+            self.rconn.publish('alert02', 'led status')
             return 'OFF'
 

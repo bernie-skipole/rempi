@@ -12,12 +12,12 @@ except Exception:
 from redis import StrictRedis
 
 # create redis connection
-redis = StrictRedis(host='localhost', port=6379)
+rconn = StrictRedis(host='localhost', port=6379)
 
 # Device mqtt parameters
 
 _CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 192.168.1.92
+            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 'bernard-HP-Compaq-dc7900-Small-Form-Factor'
             'mqtt_port' : 1883,
             'mqtt_username' : '',
             'mqtt_password' : ''
@@ -44,8 +44,13 @@ def _on_message(client, userdata, message):
     # print(message.payload.decode("utf-8"))
     
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
-        if userdata['enable_web_control']:
-            communications.action(client, userdata, message)
+        communications.action(client, userdata, message)
+    elif message.topic == 'From_ServerEngine/Telescope/track':
+        communications.telescope_track(client, userdata, message)
+    elif message.topic == 'From_WebServer/Telescope/goto':
+        communications.telescope_goto(client, userdata, message)
+    elif message.topic == 'From_WebServer/Telescope/altaz':
+        communications.telescope_altaz(client, userdata, message)
     elif message.topic == 'From_ServerEngine/Inputs':
         # an initial full status request
         payload = message.payload.decode("utf-8")
@@ -93,9 +98,8 @@ try:
 
     userdata = {'comms':True,
                 'comms_countdown':4,
-                'enable_web_control':True,
                 'from_topic':'From_' + _CONFIG['name'],
-                'redis':redis}
+                'rconn':rconn}
 
     # create an mqtt client instance
     mqtt_client = mqtt.Client(userdata=userdata)
@@ -144,15 +148,13 @@ def alert02_handler(msg):
 
 
 # subscribe to alert01, alert02.., etc
-pubsub = redis.pubsub()  
+pubsub = rconn.pubsub()  
 pubsub.subscribe(alert01 = alert01_handler)
 pubsub.subscribe(alert02 = alert02_handler)
 #pubsub.subscribe(alert03 = alert03_handler)
 
 # run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
-
-
 
 # create an event schedular to do periodic actions
 scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)

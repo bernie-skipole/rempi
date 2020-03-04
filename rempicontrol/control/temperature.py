@@ -11,10 +11,10 @@ from . import hardware
 
 class Temperature(object):
 
-    def __init__(self, redis):
+    def __init__(self, rconn):
         "set up a Temperature object"
         # info will be stored to redis
-        self.redis = redis
+        self.rconn = rconn
         # Ensure the hardware values are read on startup
         self.get_temperature()
 
@@ -41,18 +41,18 @@ class Temperature(object):
         try:
             temperature = hardware.get_input("input03")
         except RuntimeError as e:
-            self.redis.set('temperature', 0.0)
+            self.rconn.set('temperature', 0.0)
             logging.error(str(e))
             return
         except Exception:
-            self.redis.set('temperature', 0.0)
+            self.rconn.set('temperature', 0.0)
             return
         if temperature is None:
-            self.redis.set('temperature', 0.0)
+            self.rconn.set('temperature', 0.0)
             return
         # round to one digit
         temperature = round(float(temperature), 1)
-        self.redis.set('temperature', temperature)
+        self.rconn.set('temperature', temperature)
         return temperature
 
 
