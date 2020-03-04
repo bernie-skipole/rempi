@@ -8,6 +8,12 @@ import logging
 
 from struct import pack, unpack
 
+from datetime import datetime, timezone, timedelta
+
+from time import sleep
+
+from scipy.optimize import curve_fit
+
 # telescope has states:
 
 # slewing - heading fast towards a given alt, az
@@ -33,6 +39,12 @@ class Telescope(object):
         self.alt = 0.0           # initial conditions, could be changed to a 'parking' state
         self.az = 0.0
 
+        targettime = datetime.utcnow()
+        self.timestamp = int(targettime.replace(tzinfo=timezone.utc).timestamp())
+        # this value is subtracted from subsequent timestamps to reduce the size of the numbers
+
+
+
     def goto(self, msg):
         "Handles the pubsub msg"
         # positions consists of target_name, ra, dec and 20 sets of timestamp,alt,az which is a string and 62 floats,
@@ -44,7 +56,7 @@ class Telescope(object):
         self.rconn.delete('track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
         # note positions[3:] is used as the first three elements are the name, ra and dec
-        time_altaz = { tstmp: (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
+        time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         self.curves = self.createcurves(time_altaz)
         self.alt = None
         self.az = None
@@ -59,26 +71,30 @@ class Telescope(object):
       
         # first five timestamps
         # dictionary records the curve coefficients against the first timestamp
-        curves[timelist[0]] = curve_maker(timelist[:5], time_altaz)
+        curves[timelist[0]] = self.curve_maker(timelist[:5], time_altaz)
 
         # next five timestamps
         # dictionary records the curve coefficients
-        curves[timelist[5]] = curve_maker(timelist[5:10], time_altaz)
+        curves[timelist[5]] = self.curve_maker(timelist[5:10], time_altaz)
 
         # next five timestamps
         # dictionary records the curve coefficients
-        curves[timelist[10]] = curve_maker(timelist[10:15], time_altaz)
+        curves[timelist[10]] = self.curve_maker(timelist[10:15], time_altaz)
 
         # last five timestamps
         # dictionary records the curve coefficients
-        curves[timelist[15]] = curve_maker(timelist[15:], time_altaz)
+        curves[timelist[15]] = self.curve_maker(timelist[15:], time_altaz)
+
+        return curves
+
 
 
     def curve_maker(self, timeseries, time_altaz):
-        "Returns quadratic coefficients for curves fitting alt and az values over the given timeseries
+        "Returns quadratic coefficients for curves fitting alt and az values over the given timeseries"
         # altitudes for the timestamps in timeseries
         altseries = [ time_altaz[tm][0] for tm in timeseries ]
         popt_alt, pcov_alt = curve_fit(_qcurve, timeseries, altseries)
+
         # popt_alt is a, b, c parameters for quadratic curve which fits altseries
 
         # azimuths for the timestamps in timeseries
@@ -93,9 +109,9 @@ class Telescope(object):
                 break
         if discontinuity:
             # add 360 for points which are less than 90
-            azseries = [ az if az > 90 else az+360 for az in azseries ]
+            new_azseries = [ az if az > 90 else az+360 for az in azseries ]
+            azseries = new_azseries
        
-
         popt_az, pcov_az = curve_fit(_qcurve, timeseries, azseries)
         # popt_az is a, b, c parameters for quadratic curve which fits azseries
 
@@ -111,28 +127,30 @@ class Telescope(object):
 
     def target_alt_az(self, at_time):
         "Returns the wanted target alt, az at the given timestamp at_time"
+        reduced_time = at_time - self.timestamp
         if not self.curves:
             return self.alt, self.az
         curvetimes = list(self.curves.keys())
         curvetimes.sort()
-        if at_time >= curvetimes[3]:
+        if reduced_time >= curvetimes[3]:
             # check if more positions have been given, if so load them
             if loadpositions():
                 # self.curves has been updated, so call this function again
                 return self.target_alt_az(at_time)
             popt_alt, popt_az = self.curves[curvetimes[3]]
-        elif at_time >= curvetimes[2]:
+        elif reduced_time >= curvetimes[2]:
             popt_alt, popt_az = self.curves[curvetimes[2]]
-        elif at_time >= curvetimes[1]:
+        elif reduced_time >= curvetimes[1]:
             popt_alt, popt_az = self.curves[curvetimes[1]]
         else:
            popt_alt, popt_az = self.curves[curvetimes[0]]
-        alt = _qcurve(at_time, *popt_alt)
+
+        alt = _qcurve(reduced_time, *popt_alt)
         if alt > 90.0:
             alt = 90.0
         if alt < -90.0:
             alt = -90.0
-        az =  _qcurve(at_time, *popt_az)
+        az =  _qcurve(reduced_time, *popt_az)
         if az > 360.0:
             az = az - 360.0
         if az < 0:
@@ -171,9 +189,46 @@ class Telescope(object):
         dec = positions[2]
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
         # note positions[3:] is used as the first three elements are the name, ra and dec
-        time_altaz = { tstmp: (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
+        time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         self.curves = self.createcurves(time_altaz)
         return True
+
+
+
+def worker(state):
+    "This actually runs the telescope"
+    telescope = state['telescope']
+
+
+    targettime = datetime.utcnow()
+    timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
+    wanted_position = telescope.target_alt_az(timestamp)
+    wanted_speed = telescope.tracking_speed(timestamp)
+
+    print("\nTime: {:1.3f}".format(timestamp))
+    print("Initial wanted Telescope position ALT: {:1.5f}\xb0 AZ: {:1.5f}\xb0".format(*wanted_position))
+    print("Initial wanted speed  ALT: {:1.5f}\xb0 per second, AZ: {:1.5f}\xb0 per second".format(*wanted_speed))
+    while True:
+        # wait ten seconds
+        sleep(10)
+        # check if scope wanted position and speed has changed
+
+        targettime = datetime.utcnow()
+        timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
+        wanted_position = telescope.target_alt_az(timestamp)
+        wanted_speed = telescope.tracking_speed(timestamp)
+
+        print("\nTime: {:1.3f}".format(timestamp))
+        print("Telescope wanted position ALT: {:1.5f}\xb0 AZ: {:1.5f}\xb0".format(*wanted_position))
+        print("Telescope wanted speed  ALT: {:1.5f}\xb0 per second, AZ: {:1.5f}\xb0 per second".format(*wanted_speed))
+
+        ### todo
+
+        # get actual position/speed of telescope
+        # send instructions to motors to match actual to wanted
+        
+        
+
 
 
  

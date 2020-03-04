@@ -89,14 +89,17 @@ def inputcallback(input_name, state):
 listen = hardware.Listen(inputcallback, state)
 listen.start_loop()
 
-
 # create an event schedular to do periodic actions
 scheduled_events = schedule.ScheduledEvents(rconn, state)
-# this is a callable which runs scheduled events
-# it is a blocking call, and could be run in a separate thread
-# however in this case it just runs here
+# this is a callable which runs scheduled events, it
+# needs to be called in its own thread
+run_scheduled_events = threading.Thread(target=scheduled_events)
+# and start the scheduled thread
+run_scheduled_events.start()
 logging.info('picontrol schedular started')
-scheduled_events()
+
+# and run the telescope worker
+telescope.worker(state)
 
 
 
