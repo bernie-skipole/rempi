@@ -51,7 +51,7 @@ redis = StrictRedis(host='localhost', port=6379)
 
 proj_data = {'redis':redis}
 
-redis.set('web_control', 'ENABLED')
+redis.set('rempi01_web_control', 'ENABLED')
 
 
 def start_call(called_ident, skicall):

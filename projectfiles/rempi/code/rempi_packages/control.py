@@ -8,7 +8,7 @@ def control_page(skicall):
     """Populate the control page, by setting widget values, and then the results values"""
     # display web_control status
     redis = skicall.proj_data['redis']
-    web_control = redis.get('web_control')
+    web_control = redis.get('rempi01_web_control')
     if web_control == b'ENABLED':
         skicall.page_data['web_control', 'para_text'] = "Control from the Internet web server is ENABLED"
         skicall.page_data['toggle_web_control', 'button_text'] = "Disable Internet Control"
@@ -37,11 +37,11 @@ def control_page(skicall):
 def toggle_web_control(skicall):
     "Enable / disable the enable_web_control flag in proj_data"
     redis = skicall.proj_data['redis']
-    web_control = redis.get('web_control')
+    web_control = redis.get('rempi01_web_control')
     if web_control == b'ENABLED':
-        redis.set('web_control', 'DISABLED')
+        redis.set('rempi01_web_control', 'DISABLED')
     else:
-        redis.set('web_control', 'ENABLED')
+        redis.set('rempi01_web_control', 'ENABLED')
 
 
 def refresh_results(skicall):
@@ -105,7 +105,7 @@ def set_output_from_browser(skicall):
 
 def _get_led(redis):
     """Gets LED status from redis"""
-    led_status = redis.get('led')
+    led_status = redis.get('rempi01_led')
     if led_status == b"ON":
         return 'ON'
     else:
@@ -113,7 +113,7 @@ def _get_led(redis):
 
 def _get_door(redis):
     "Get door status from redis"
-    door_status = redis.get('door_status')
+    door_status = redis.get('rempi01_door_status')
     if door_status is None:
         return "UNKNOWN"
     elif door_status == b"CLOSED":

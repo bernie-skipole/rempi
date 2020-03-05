@@ -32,7 +32,7 @@ def event1(mqtt_client, userdata):
 
 
 def event2(mqtt_client, userdata):
-    """event2 is called every ten minutes
+    """event2 is called every ten minutes to maintain a communications heartbeat
        decrements userdata['comms_countdown'], and checks if zero or less"""
     if not userdata['comms']:
         return
@@ -43,7 +43,10 @@ def event2(mqtt_client, userdata):
     userdata['comms_countdown'] -= 1
 
 
-
+# Note: in pimqtt.py, the comms is set to True, and comms_countdown is set to 4
+# whenever function _on_message is run - that is, whenever a message is received from the main
+# web server.  So comms is only set to False after a period set by event2 being called 4 times
+# without anything received.
 
 ### scheduled actions to occur at set times each hour ###
 
@@ -112,7 +115,7 @@ class ScheduledEvents(object):
 
 
     def __call__(self): 
-        "Schedule Events, and run the scheduler, this is a blocking call, so run in a thread"
+        "Schedule Events, and run the scheduler, this is a blocking call"
         # set the scheduled events for the current hour
 
         # get a time tuple for now
@@ -155,17 +158,14 @@ class ScheduledEvents(object):
 
 # How to use
 
-# create event callback functions
+# create event callback functions with whatever action is required
+
 # add them to event_list  in the class __init__, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
 # scheduled_events = ScheduledEvents(mqtt_client, userdata)
-# this is a callable, use it as a thread target
-# run_scheduled_events = threading.Thread(target=scheduled_events)
-# and start the thread
-# run_scheduled_events.start()
 
-# the event callbacks should be set with whatever action is required
-
+# this is a callable, use it as a blocking call to run the schedule
+# scheduled_events()
 
 

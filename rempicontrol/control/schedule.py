@@ -168,7 +168,7 @@ class ScheduledEvents(object):
 
 # How to use
 
-# create event callback functions
+# create event callback functions which should be set with whatever action is required
 # add them to event_list  in the class __init__, as tuples of (event function, minutes after the hour)
 
 # create a ScheduledEvents instance
@@ -177,8 +177,5 @@ class ScheduledEvents(object):
 # run_scheduled_events = threading.Thread(target=scheduled_events)
 # and start the thread
 # run_scheduled_events.start()
-
-# the event callbacks should be set with whatever action is required
-
 
 

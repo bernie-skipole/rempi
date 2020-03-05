@@ -1,16 +1,26 @@
 
 
+############################################################################
+#
+# communications.py - this module relays messages between mqtt
+#
+# (from the main server) and redis (read by other processes on this pi)
+#
+#############################################################################
+
 from struct import pack, unpack
 
 
 def action(client, userdata, message):
     """called to initiate a control action by publishing to
        a redis topic control01, control02 etc.,"""
-    payload = message.payload.decode("utf-8")
+    # check if control via the main web server is enabled
     rconn = userdata['rconn']
-    web_control = rconn.get('web_control')
+    web_control = rconn.get('rempi01_web_control')
     if web_control == b'DISABLED':
         return
+
+    payload = message.payload.decode("utf-8")
     if (message.topic == 'From_WebServer/Outputs/led') or (message.topic == 'From_ServerEngine/Outputs/led') or (message.topic == 'From_RemControl/Outputs/led'):
         # led control is on channel control02
         if payload == "ON":
@@ -36,27 +46,27 @@ def action(client, userdata, message):
 def telescope_goto(client, userdata, message):
     """Called to accept From_WebServer/Telescope/goto topic and publish payload to redis"""
     rconn = userdata['rconn']
-    web_control = rconn.get('web_control')
+    web_control = rconn.get('rempi01_web_control')
     if web_control == b'DISABLED':
         return
     rconn.publish('goto', message.payload)
 
 
 def telescope_track(client, userdata, message):
-    """Called to accept From_ServerEngine/Telescope/goto topic and set values in redis"""
+    """Called to accept From_ServerEngine/Telescope/track topic and set payload in redis"""
     rconn = userdata['rconn']
-    web_control = rconn.get('web_control')
+    web_control = rconn.get('rempi01_web_control')
     if web_control == b'DISABLED':
         return
-    rconn.set('track', message.payload)
+    rconn.set('rempi01_track', message.payload)
     # the track data is set (not published) as the rempicontrol service does not have to act
     # on this immediately, it can read the tracking data as it wants it
 
 
 def telescope_altaz(client, userdata, message):
-    """Called to accept From_WebServer/Telescope/altaz topic and publish to redis"""
+    """Called to accept From_WebServer/Telescope/altaz topic and publish payload to redis"""
     rconn = userdata['rconn']
-    web_control = rconn.get('web_control')
+    web_control = rconn.get('rempi01_web_control')
     if web_control == b'DISABLED':
         return
     rconn.publish('altaz', message.payload)
@@ -67,8 +77,8 @@ def led_status(client, userdata):
     if not userdata['comms']:
         return
     rconn = userdata['rconn']
-    # get led status from rconn
-    led_status = rconn.get('led')
+    # get led status from redis
+    led_status = rconn.get('rempi01_led')
     topic = userdata['from_topic'] + '/Outputs/led'
     if led_status == b"ON":
         client.publish(topic=topic, payload='ON')
@@ -81,8 +91,8 @@ def temperature_status(client, userdata):
     if not userdata['comms']:
         return
     rconn = userdata['rconn']
-    # get temperature from rconn
-    temperature = rconn.get('temperature')
+    # get temperature from redis
+    temperature = rconn.get('rempi01_temperature')
     if temperature is None:
         temperature = "0.0"
     else:
@@ -96,8 +106,8 @@ def door_status(client, userdata):
     if not userdata['comms']:
         return
     rconn = userdata['rconn']
-    # get staus from rconn
-    status = rconn.get('door_status')
+    # get door status from redis
+    status = rconn.get('rempi01_door_status')
     if status is None:
         status = "UNKNOWN"
     else:

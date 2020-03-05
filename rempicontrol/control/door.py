@@ -55,12 +55,12 @@ class Door(object):
             'CLOSING'
         """
         # should check hardware, if error, return None, and set UNKNOWN
-        # self.rconn.set('door_status', 'UNKNOWN')
+        # self.rconn.set('rempi01_door_status', 'UNKNOWN')
         # otherwise set the appropriate status
 
         # in this case however, as hardware not done yet, instead of hardware test
         # just read rconn
-        status = self.rconn.get('door_status')
+        status = self.rconn.get('rempi01_door_status')
         if status is None:
             return 'UNKNOWN'
         elif status == b"OPEN":
@@ -81,19 +81,19 @@ class Door(object):
            Sets the requested output into redis"""
         if action == 'OPEN':
             # set open door in hardware
-            self.rconn.set('door_status', 'OPENING')
+            self.rconn.set('rempi01_door_status', 'OPENING')
             logging.info('Door set to open')
             self.rconn.publish('alert01', 'door status')
             return 'OPEN'
         elif action == 'CLOSE':
             # set close door in hardware
-            self.rconn.set('door_status', 'CLOSING')
+            self.rconn.set('rempi01_door_status', 'CLOSING')
             logging.info('Door set to close')
             self.rconn.publish('alert01', 'door status')
             return 'CLOSE'
         else:
             # set door stopped in hardware
-            self.rconn.set('door_status', 'STOPPED')
+            self.rconn.set('rempi01_door_status', 'STOPPED')
             logging.info('Door halted')
             self.rconn.publish('alert01', 'door status')
             return 'STOPPED'

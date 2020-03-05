@@ -2,34 +2,31 @@
 
 import sys
 
-
-try:
-    import paho.mqtt.client as mqtt
-except Exception:
-    print("Unable to import paho.mqtt.client")
-    sys.exit(1)
+import paho.mqtt.client as mqtt
 
 from redis import StrictRedis
+
+from rempicomms import communications, schedule
 
 # create redis connection
 rconn = StrictRedis(host='localhost', port=6379)
 
-# Device mqtt parameters
+# mqtt parameters
 
-_CONFIG = { 'name' : 'RemPi01',                # This device identifying name
-            'mqtt_ip' : 'localhost',           # mqtt server, change as required, currently 'bernard-HP-Compaq-dc7900-Small-Form-Factor'
-            'mqtt_port' : 1883,
-            'mqtt_username' : '',
-            'mqtt_password' : ''
+mqtt_ip = 'localhost'          # mqtt server, change as required, currently 'bernard-HP-Compaq-dc7900-Small-Form-Factor'
+mqtt_port = 1883
+mqtt_username = ''
+mqtt_password = ''
+
+userdata = {
+            'comms':True,
+            'comms_countdown':4,
+            'from_topic':'From_RemPi01',
+            'rconn':rconn
            }
 
 
-
-from rempicomms import communications, schedule
-
-
 ### MQTT Handlers
-
 
 def _on_message(client, userdata, message):
     "Callback when a message is received"
@@ -39,10 +36,7 @@ def _on_message(client, userdata, message):
 
     userdata['comms'] = True
     userdata['comms_countdown'] = 4
-
-    # uncomment for testing
-    # print(message.payload.decode("utf-8"))
-    
+   
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
         communications.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine/Telescope/track':
@@ -65,9 +59,8 @@ def _on_message(client, userdata, message):
             communications.door_status(client, userdata)
 
 
-# The callback for when the client receives a CONNACK response from the server.
 def _on_connect(client, userdata, flags, rc):
-    "Comms now available, renew subscriptions"
+    "The callback for when the client receives a CONNACK response from the server, renew subscriptions"
 
     if rc == 0:
         userdata['comms_countdown'] = 4
@@ -86,20 +79,8 @@ def _on_disconnect(client, userdata, rc):
     userdata['comms'] = False
 
 
-mqtt_client = None
-
-mqtt_ip = _CONFIG['mqtt_ip']
-mqtt_port = _CONFIG['mqtt_port']
-mqtt_username = _CONFIG['mqtt_username']
-mqtt_password = _CONFIG['mqtt_password']
-
 
 try:
-
-    userdata = {'comms':True,
-                'comms_countdown':4,
-                'from_topic':'From_' + _CONFIG['name'],
-                'rconn':rconn}
 
     # create an mqtt client instance
     mqtt_client = mqtt.Client(userdata=userdata)
@@ -120,9 +101,9 @@ try:
 
     # start a threaded loop
     mqtt_client.loop_start()
-except Exception:
-    sys.exit(2)
 
+except Exception:
+    sys.exit(1)
 
 
 ### redis pubsub handlers, these are 'alerts' received from rempicontrol
@@ -144,23 +125,20 @@ def alert02_handler(msg):
         communications.led_status(mqtt_client, userdata)
 
 
-# more alert handlers go here
-
-
 # subscribe to alert01, alert02.., etc
 pubsub = rconn.pubsub()  
 pubsub.subscribe(alert01 = alert01_handler)
 pubsub.subscribe(alert02 = alert02_handler)
-#pubsub.subscribe(alert03 = alert03_handler)
 
 # run the pubsub with the above handlers in a thread
 pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
 
-# create an event schedular to do periodic actions
+
+### create an event schedular to do periodic actions
+
 scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)
 # this is a callable which runs scheduled events
-# it is a blocking call, and could be run in a separate thread
-# however in this case it just runs here
+# it is a blocking call, and runs here indefinitly
 scheduled_events()
 
 

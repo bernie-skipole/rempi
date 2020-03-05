@@ -48,10 +48,10 @@ class LED(object):
         except Exception:
             return
         if out:
-            self.rconn.set('led', 'ON')
+            self.rconn.set('rempi01_led', 'ON')
             return 'ON'
         else:
-            self.rconn.set('led', 'OFF')
+            self.rconn.set('rempi01_led', 'OFF')
             return 'OFF'
 
 
@@ -69,14 +69,14 @@ class LED(object):
 
         if out:
             hardware.set_boolean_output("output01", True)
-            self.rconn.set('led', 'ON')
+            self.rconn.set('rempi01_led', 'ON')
             logging.info('LED set ON')
             # send an alert that the led has changed
             self.rconn.publish('alert02', 'led status')
             return 'ON'
         else:
             hardware.set_boolean_output("output01", False)
-            self.rconn.set('led', 'OFF')
+            self.rconn.set('rempi01_led', 'OFF')
             logging.info('LED set OFF')
             # send an alert that the led has changed
             self.rconn.publish('alert02', 'led status')

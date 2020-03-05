@@ -24,7 +24,7 @@ def _get_sensor_values(redis):
     values = []
 
     # get led status from redis
-    led_status = redis.get('led')
+    led_status = redis.get('rempi01_led')
     if led_status == b"ON":
         value = 'ON'
     else:
@@ -32,7 +32,7 @@ def _get_sensor_values(redis):
     values.append(value)
 
     # get door
-    door_status = redis.get('door_status')
+    door_status = redis.get('rempi01_door_status')
     if door_status is None:
         values.append("UNKNOWN")
     elif door_status == b"CLOSED":
@@ -49,7 +49,7 @@ def _get_sensor_values(redis):
         values.append("UNKNOWN")
 
     # get temperature
-    value = redis.get('temperature')
+    value = redis.get('rempi01_temperature')
     if value is None:
         values.append("0.0")
     else:
@@ -60,7 +60,7 @@ def _get_sensor_values(redis):
 def status(skicall):
     "Fills sensors status internet page"
     redis = skicall.proj_data['redis']
-    temperature = redis.get('temperature')
+    temperature = redis.get('rempi01_temperature')
     if temperature is None:
         temperature = "0.0"
     else:

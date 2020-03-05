@@ -41,18 +41,18 @@ class Temperature(object):
         try:
             temperature = hardware.get_input("input03")
         except RuntimeError as e:
-            self.rconn.set('temperature', 0.0)
+            self.rconn.set('rempi01_temperature', 0.0)
             logging.error(str(e))
             return
         except Exception:
-            self.rconn.set('temperature', 0.0)
+            self.rconn.set('rempi01_temperature', 0.0)
             return
         if temperature is None:
-            self.rconn.set('temperature', 0.0)
+            self.rconn.set('rempi01_temperature', 0.0)
             return
         # round to one digit
         temperature = round(float(temperature), 1)
-        self.rconn.set('temperature', temperature)
+        self.rconn.set('rempi01_temperature', temperature)
         return temperature
 
 
