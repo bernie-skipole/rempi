@@ -155,7 +155,7 @@ class Telescope(object):
         curvetimes.sort()
         if reduced_time >= curvetimes[3]:
             # check if more positions have been given, if so load them
-            if loadpositions():
+            if self.loadpositions():
                 # self.curves has been updated, so call this function again
                 return self.target_alt_az(timestamp)
             popt_alt, popt_az = self.curves[curvetimes[3]]
@@ -198,7 +198,7 @@ class Telescope(object):
         return alt_speed, az_speed
 
 
-    def loadpositions():
+    def loadpositions(self):
         "Checks if new positions have been received, since lasttime, if so return True, if not, False"
         payload = self.rconn.get('rempi01_track')
         if not payload:
@@ -239,12 +239,12 @@ class Telescope(object):
         if self.ra is None:
             self.rconn.delete("rempi01_target_ra")
         else:
-            self.rconn.set("rempi01_target_ra", self.target_ra)
+            self.rconn.set("rempi01_target_ra", self.ra)
 
         if self.dec is None:
             self.rconn.delete("rempi01_target_dec")
         else:
-            self.rconn.set("rempi01_target_dec", self.target_dec)
+            self.rconn.set("rempi01_target_dec", self.dec)
 
         return wanted_position + wanted_speed
 
