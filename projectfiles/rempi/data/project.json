@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.8",
-"skipole": "3.5.5",
+"skipole": "3.6.3",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -1147,6 +1147,7 @@
 "brief": "Toggles the Internet web server enable/disable",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Web Control",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",
@@ -2032,7 +2033,7 @@
 "Part",
 {
 "tag_name": "div",
-"brief": "centre",
+"brief": "panel",
 "show": true,
 "hide_if_empty": false,
 "attribs": {
@@ -2076,6 +2077,7 @@
 "brief": "Button link to sensors page",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Sensors",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",
@@ -2102,6 +2104,7 @@
 "brief": "Button link to control page",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Control",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",
@@ -2128,6 +2131,7 @@
 "brief": "Button link to information page",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Information",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",
@@ -2147,6 +2151,25 @@
 }
 ]
 ]
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "target",
+"brief": "Shows scope target",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
 }
 ]
 ]
@@ -2986,6 +3009,7 @@
 "brief": "Link to summary status page",
 "fields": {
 "button_class": "w3-button w3-block w3-theme-l1 w3-border",
+"button_style": "",
 "button_text": "Summary status page",
 "button_wait_text": "Please wait...",
 "buttondiv_class": "ski_mid_button",

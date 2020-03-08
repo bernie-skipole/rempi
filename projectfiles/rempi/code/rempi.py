@@ -129,14 +129,14 @@ if __name__ == "__main__":
     #                                                                             #
     ###############################################################################
 
-    from wsgiref.simple_server import make_server
+    from skipole import skilift
 
-    # serve the application
-    host = ""
+    # serve the application with the development server from skilift
+
+    host = "127.0.0.1"
     port = 8000
-
-    httpd = make_server(host, port, application)
-    httpd.serve_forever()
+    print("Serving %s on port %s." % (PROJECT, port))
+    skilift.development_server(host, port, application)
 
 
 
