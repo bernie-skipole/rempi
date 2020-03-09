@@ -7,7 +7,7 @@ from redis import StrictRedis
 
 
 
-def main(stdscr, redis, pubsub):
+def main(stdscr, rconn, pubsub):
     "Sets up the windows, and checks for input"
 
     # no blinking cursor
@@ -31,7 +31,7 @@ def main(stdscr, redis, pubsub):
     # start status window, with colour pair 2
     statuswin = curses.newwin(status_window_height, curses.COLS-2, 1, 1)
     statuswin.bkgd(' ', curses.color_pair(2))
-    showstatus(statuswin, redis, "Terminal started")
+    showstatus(statuswin, rconn, "Terminal started")
 
     # start menu1 window, with colour pair 3
     # the height is full screen height less the status window height and less 2 for the border
@@ -46,6 +46,7 @@ def main(stdscr, redis, pubsub):
     menu1win.addstr(5,10,"2 - To turn off the LED")
     menu1win.addstr(6,10,"3 - To open the door")
     menu1win.addstr(7,10,"4 - To close the door")
+    menu1win.addstr(8,10,"5 - To stop the door")
     menu1win.addstr(9,10,"Q - To quit the program")
     menu1win.noutrefresh()
 
@@ -57,23 +58,28 @@ def main(stdscr, redis, pubsub):
         c = stdscr.getch()
         # For each menu option
         if c == ord('1'):
-            showstatus(statuswin, redis, "LED ON request")
-            redis.publish("control02", "ON")
+            showstatus(statuswin, rconn, "LED ON request")
+            rconn.publish("control02", "ON")
             curses.doupdate()
             continue
         elif c == ord('2'):
-            showstatus(statuswin, redis, "LED OFF request")
-            redis.publish("control02", "OFF")
+            showstatus(statuswin, rconn, "LED OFF request")
+            rconn.publish("control02", "OFF")
             curses.doupdate()
             continue
         elif c == ord('3'):
-            showstatus(statuswin, redis, "Door OPEN request")
-            redis.publish("control01", "OPEN")
+            showstatus(statuswin, rconn, "Door OPEN request")
+            rconn.publish("control01", "OPEN")
             curses.doupdate()
             continue
         elif c == ord('4'):
-            showstatus(statuswin, redis, "Door CLOSE request")
-            redis.publish("control01", "CLOSE")
+            showstatus(statuswin, rconn, "Door CLOSE request")
+            rconn.publish("control01", "CLOSE")
+            curses.doupdate()
+            continue
+        elif c == ord('5'):
+            showstatus(statuswin, rconn, "Door STOP request")
+            rconn.publish("control01", "HALT")
             curses.doupdate()
             continue
 
@@ -87,7 +93,7 @@ def main(stdscr, redis, pubsub):
         if message:
             # Yes it has, so show it as a status
             status_message = "Message received: " + message['data'].decode("utf-8")
-            showstatus(statuswin, redis, status_message)
+            showstatus(statuswin, rconn, status_message)
             curses.doupdate()
 
     # Clear screen and end the program
@@ -95,15 +101,15 @@ def main(stdscr, redis, pubsub):
     stdscr.refresh()
 
 
-def showstatus(statuswin, redis, status_message):
+def showstatus(statuswin, rconn, status_message):
     "fills in the status window"
     # get led status locally
-    if redis.get('led') == b"ON":
+    if rconn.get('rempi01_led') == b"ON":
         led_status = "LED: ON"
     else:
         led_status = "LED: OFF"
 
-    door = redis.get('door_status')
+    door = rconn.get('rempi01_door_status')
     if door is None:
         door_status = "Door: UNKNOWN"
     else:
@@ -121,13 +127,13 @@ if __name__ == "__main__":
 
 
     # create redis connection
-    redis = StrictRedis(host='localhost', port=6379)
+    rconn = StrictRedis(host='localhost', port=6379)
 
-    pubsub = redis.pubsub(ignore_subscribe_messages=True)
+    pubsub = rconn.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe('alert01')
     pubsub.subscribe('alert02')
 
     # start the curses screen
-    curses.wrapper(main, redis, pubsub)
+    curses.wrapper(main, rconn, pubsub)
 
 
