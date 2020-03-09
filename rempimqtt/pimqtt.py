@@ -37,7 +37,7 @@ def _on_message(client, userdata, message):
     userdata['comms'] = True
     userdata['comms_countdown'] = 4
    
-    if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs') or message.topic.startswith('From_RemControl/Outputs'):
+    if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
         communications.action(client, userdata, message)
     elif message.topic == 'From_ServerEngine/Telescope/track':
         communications.telescope_track(client, userdata, message)
@@ -67,8 +67,8 @@ def _on_connect(client, userdata, flags, rc):
         userdata['comms'] = True
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
-        # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#" and "From_RemControl/#"
-        client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0), ("From_RemControl/#", 0)] )
+        # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
+        client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
     else:
         userdata['comms'] = False
 

@@ -21,7 +21,7 @@ def action(client, userdata, message):
         return
 
     payload = message.payload.decode("utf-8")
-    if (message.topic == 'From_WebServer/Outputs/led') or (message.topic == 'From_ServerEngine/Outputs/led') or (message.topic == 'From_RemControl/Outputs/led'):
+    if (message.topic == 'From_WebServer/Outputs/led') or (message.topic == 'From_ServerEngine/Outputs/led'):
         # led control is on channel control02
         if payload == "ON":
             rconn.publish('control02', 'ON')
@@ -30,7 +30,7 @@ def action(client, userdata, message):
         else:
             # it must be an led status request
             led_status(client, userdata)
-    elif (message.topic == 'From_WebServer/Outputs/door') or (message.topic == 'From_ServerEngine/Outputs/door') or (message.topic == 'From_RemControl/Outputs/door'):
+    elif (message.topic == 'From_WebServer/Outputs/door') or (message.topic == 'From_ServerEngine/Outputs/door'):
         # door control is on channel control01
         if payload == "OPEN":
             rconn.publish('control01', 'OPEN')
