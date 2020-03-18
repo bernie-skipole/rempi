@@ -2,8 +2,8 @@
 "url": "/",
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
-"version": "0.8",
-"skipole": "3.6.3",
+"version": "0.9",
+"skipole": "3.6.4",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
