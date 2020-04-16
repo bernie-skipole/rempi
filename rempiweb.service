@@ -1,11 +1,15 @@
+
 [Unit]
-Description=REMPI web service
+Description=REMPI WEB service
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/projectfiles/rempi/code/rempi.py
+ExecStart=/home/rempi/projectfiles/rempi/code/rempi.py
 
+User=rempi
+
+WorkingDirectory=/home/rempi/projectfiles/rempi/code
 Restart=on-failure
 
 # Connects standard output to /dev/null
@@ -16,4 +20,3 @@ StandardError=journal
 
 [Install]
 WantedBy=multi-user.target
-

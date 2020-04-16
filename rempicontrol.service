@@ -1,11 +1,13 @@
+
 [Unit]
 Description=REMPI control service
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/rempicontrol/picontrol.py
+ExecStart=/home/rempi/rempicontrol/picontrol.py
 
+WorkingDirectory=/home/rempi/rempicontrol
 Restart=on-failure
 
 # Connects standard output to /dev/null

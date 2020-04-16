@@ -1,11 +1,15 @@
+
 [Unit]
 Description=REMPI MQTT service
 After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=/usr/bin/python3 /opt/rempimqtt/pimqtt.py
+ExecStart=/home/rempi/rempimqtt/pimqtt.py
 
+User=rempi
+
+WorkingDirectory=/home/rempi/rempimqtt
 Restart=on-failure
 
 # Connects standard output to /dev/null

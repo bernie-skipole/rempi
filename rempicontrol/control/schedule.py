@@ -17,7 +17,7 @@ import sys, sched, time, logging
 ###  scheduled actions ###
 
 
-def event1(rconn, state):
+def event1(rconn, state, Telescope):
     "event1 is to store temperature"
     temperature = 0.0
     try:
@@ -38,10 +38,10 @@ def event1(rconn, state):
 # motors have not been called for a period, assume the rconn entry should be STOPPED
 
 
-def event2(rconn, state):
+def event2(rconn, state, Telescope):
     "event2 checks if motor1 running"
     now = time.time()
-    motor1 = state['motor1']
+    motor1 = Telescope.motor1
     if now > motor1.running + 180:
         # M1 has not been called for two minutes
         # ensure its status is stopped
@@ -50,10 +50,10 @@ def event2(rconn, state):
         motor1.running = time.time()
 
 
-def event3(rconn, state):
+def event3(rconn, state, Telescope):
     "event3 checks if motor2 running"
     now = time.time()
-    motor2 = state['motor2']
+    motor2 = Telescope.motor2
     if now > motor2.running + 180:
         # M2 has not been called for two minutes
         # ensure its status is stopped
@@ -66,7 +66,7 @@ def event3(rconn, state):
 
 class ScheduledEvents(object):
 
-    def __init__(self, rconn, state):
+    def __init__(self, rconn, state, Telescope):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
 
@@ -82,6 +82,7 @@ class ScheduledEvents(object):
         # sort the list
         self.event_list = sorted(event_list, key=lambda x: x[1])
         self.state = state
+        self.Telescope = Telescope
         self.rconn = rconn
         self.schedule = sched.scheduler(time.time, time.sleep)
 
@@ -114,7 +115,7 @@ class ScheduledEvents(object):
             self.schedule.enterabs(time = nexthour + mins*60,
                                    priority = 1,
                                    action = evt_callback,
-                                   kwargs= {"rconn":self.rconn, "state":self.state}
+                                   kwargs= {"rconn":self.rconn, "state":self.state, "Telescope":self.Telescope}
                                    )
 
         # schedule a final event to occur 5 seconds before the end of nexthour
@@ -152,7 +153,7 @@ class ScheduledEvents(object):
                 self.schedule.enterabs(time = event_time,
                                        priority = 1,
                                        action = evt_callback,
-                                       kwargs= {"rconn":self.rconn, "state":self.state}
+                                       kwargs= {"rconn":self.rconn, "state":self.state, "Telescope":self.Telescope}
                                        )
 
         # schedule a final event to occur 5 seconds before the end of thishour

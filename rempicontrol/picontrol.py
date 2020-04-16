@@ -40,7 +40,7 @@ time.sleep(3)
 
 ####### SET THE LOGFILE LOCATION
 
-#logfile = "/home/rempi/rempi.log"
+#logfile = "/home/rempi/projectfiles/rempi/rempi.log"
 logfile = "/home/bernard/rempi.log"
 handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
@@ -94,7 +94,7 @@ listen.start_loop()
 
 ### create an event schedular to do periodic actions
 
-scheduled_events = schedule.ScheduledEvents(rconn, state)
+scheduled_events = schedule.ScheduledEvents(rconn, state, Telescope)
 # this is a callable which runs scheduled events, it
 # needs to be called in its own thread
 run_scheduled_events = threading.Thread(target=scheduled_events)
