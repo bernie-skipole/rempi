@@ -1,6 +1,19 @@
-"""
-This package will be called by the Skipole framework to access your data.
-"""
+#!/home/rempi/rempivenv/bin/python3
+
+# The above line allows this script to be executed within the previously
+# prepared virtual environment
+
+
+#################################################################
+#
+# rempi.py
+#
+# this script uses the skipole framework to generate local
+# web pages for the pi. These are used for testing purposes only
+#
+#
+#################################################################
+
 
 import os, sys
 
@@ -58,11 +71,6 @@ def start_call(called_ident, skicall):
     "When a call is initially received this function is called."
     if not called_ident:
         return
-    if skicall.environ.get('HTTP_HOST'):
-        # This is used in the information page to insert the host into a displayed url
-        skicall.call_data['HTTP_HOST'] = skicall.environ['HTTP_HOST']
-    else:
-        skicall.call_data['HTTP_HOST'] = skicall.environ['SERVER_NAME']
     # password protected pages
     if called_ident[1] not in _PUBLIC_PAGES:
         # check login
@@ -101,7 +109,7 @@ application = WSGIApplication(project=PROJECT,
                               start_call=start_call,
                               submit_data=submit_data,
                               end_call=end_call,
-                              url="/")
+                              url="/rempi01")
 
 
 
@@ -113,30 +121,42 @@ skis_application = skis.makeapp(PROJECTFILES)
 application.add_project(skis_application, url='/rempi01/lib')
 
 
-
 if __name__ == "__main__":
 
+    # If called as a script, this portion runs the python wsgiref.simple_server
+    # and serves the project. Typically you would do this with the 'skiadmin'
+    # sub project added which can be used to develop pages for your project
 
-    ####### THESE LINES ADD SKIADMIN ### REMOVE WHEN DEPLOYED #####################
-    #                                                                             #
+    ############################### THESE LINES ADD SKIADMIN ######################
+                                                                                  #
     set_debug(True)                                                               #
     skiadmin_code = os.path.join(PROJECTFILES, 'skiadmin', 'code')                #
     if skiadmin_code not in sys.path:                                             #
         sys.path.append(skiadmin_code)                                            #
     import skiadmin                                                               #
     skiadmin_application = skiadmin.makeapp(PROJECTFILES, editedprojname=PROJECT) #
-    application.add_project(skiadmin_application, url='/skiadmin')                #
-    #                                                                             #
+    application.add_project(skiadmin_application, url='/rempi01/skiadmin')       #
+                                                                                  #
     ###############################################################################
 
+    # if using the waitress server
+    # import waitress
+
+    # or the skilift development server
     from skipole import skilift
 
-    # serve the application with the development server from skilift
+    # serve the application
 
     host = "127.0.0.1"
     port = 8000
-    print("Serving %s on port %s." % (PROJECT, port))
+    print("Serving %s on port %s. Call http://localhost:%s/rempi01/skiadmin to edit." % (PROJECT, port, port))
+
+    # using waitress
+    # waitress.serve(application, host=host, port=port)
+
+    # or skilift
     skilift.development_server(host, port, application)
+
 
 
 

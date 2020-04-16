@@ -16,6 +16,8 @@ from time import sleep
 
 from scipy.optimize import curve_fit
 
+from . import motors
+
 # telescope has states:
 
 # slewing - heading fast towards a given alt, az
@@ -36,8 +38,9 @@ def _qcurve(x, a, b, c):
 
 class Telescope(object):
 
-    def __init__(self, rconn):
-        "set up the Telescope state"
+    def __init__(self, rconn, state):
+        "The Telescope instrument"
+        self.state = state
         # info stored to redis
         self.rconn = rconn
         self.curves = {}
@@ -54,6 +57,10 @@ class Telescope(object):
         targettime = datetime.utcnow()
         self.timestamp = int(targettime.replace(tzinfo=timezone.utc).timestamp())
         # this value is subtracted from subsequent timestamps to reduce the size of the numbers
+
+        # the telescope motors
+        self.motor1 = motors.Motor('motor1',rconn)
+        self.motor2 = motors.Motor('motor2',rconn)
 
 
     def goto(self, msg):
@@ -143,6 +150,7 @@ class Telescope(object):
         self.rconn.delete("rempi01_target_name")
         self.rconn.delete("rempi01_target_ra")
         self.rconn.delete("rempi01_target_dec")
+
 
 
     def target_alt_az(self, timestamp):
@@ -254,34 +262,34 @@ class Telescope(object):
         pass
 
 
-def worker(state):
-    "This actually runs the telescope"
-    telescope = state['telescope']
+    def __call__(self): 
+        "This actually runs the telescope, this is a blocking call, so run in a thread"
+        while True:
 
-    while True:
+            # this gets required positions for a given time, which may be useful for getting it at 0.5 seconds into the future
 
-        # this gets required positions for a given time, which may be useful for getting it at 0.5 seconds into the future
+            targettime = datetime.utcnow()
+            timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
+            wanted_position = self.target_alt_az(timestamp)
+            wanted_speed = self.tracking_speed(timestamp)
 
-        targettime = datetime.utcnow()
-        timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
-        wanted_position = telescope.target_alt_az(timestamp)
-        wanted_speed = telescope.tracking_speed(timestamp)
+            print("\nTime: {:1.3f}".format(timestamp))
+            print("Telescope wanted position ALT: {:1.5f}\xb0 AZ: {:1.5f}\xb0".format(*wanted_position))
+            print("Telescope wanted speed  ALT: {:1.5f}\xb0 per second, AZ: {:1.5f}\xb0 per second".format(*wanted_speed))
 
-        print("\nTime: {:1.3f}".format(timestamp))
-        print("Telescope wanted position ALT: {:1.5f}\xb0 AZ: {:1.5f}\xb0".format(*wanted_position))
-        print("Telescope wanted speed  ALT: {:1.5f}\xb0 per second, AZ: {:1.5f}\xb0 per second".format(*wanted_speed))
+            # alternatively, this gets the require positions now, and records them into redis
+            wanted_position_and_speed = self.record_target()
 
-        # alternatively, this gets the require positions now, and records them into redis
-        wanted_position_and_speed = telescope.record_target()
+            # wait ten seconds
+            sleep(10)
 
-        # wait ten seconds
-        sleep(10)
+            ### todo
 
-        ### todo
+            # get actual position/speed of telescope
+            # send instructions to motors to match actual to wanted
 
-        # get actual position/speed of telescope
-        # send instructions to motors to match actual to wanted
-        
+
+
         
 
 

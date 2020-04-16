@@ -1,7 +1,13 @@
+#!/home/rempi/rempivenv/bin/python3
+
+# The above line allows this script to be executed within the previously
+# prepared virtual environment
+
+
 
 #################################################################
 #
-# picontrol
+# picontrol.py
 #
 # this script controls the hardware of the pi
 #
@@ -26,11 +32,15 @@ from logging.handlers import RotatingFileHandler
 
 from redis import StrictRedis
 
-from control import hardware, schedule, door, led, temperature, motors, telescope
+from control import hardware, schedule, door, led, temperature, telescope
+
+# have a pause to ensure various services are up and working
+time.sleep(3)
+
 
 ####### SET THE LOGFILE LOCATION
 
-#logfile = "/opt/projectfiles/rempi/rempi.log"
+#logfile = "/home/rempi/rempi.log"
 logfile = "/home/bernard/rempi.log"
 handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
@@ -50,12 +60,11 @@ rconn = StrictRedis(host='localhost', port=6379)
 state = {
           'door': door.Door(rconn),
           'led': led.LED(rconn),
-          'temperature':temperature.Temperature(rconn),
-          'motor1': motors.Motor('motor1',rconn),
-          'motor2': motors.Motor('motor2',rconn),
-          'telescope': telescope.Telescope(rconn)
+          'temperature':temperature.Temperature(rconn)
         }
 
+# Telescope is the instrument being controlled
+Telescope = telescope.Telescope(rconn, state)
 
 pubsub = rconn.pubsub(ignore_subscribe_messages=True)
 
@@ -64,14 +73,10 @@ pubsub = rconn.pubsub(ignore_subscribe_messages=True)
 pubsub.subscribe(control01=state['door'])
 pubsub.subscribe(control02=state['led'])
 pubsub.subscribe(control03=state['temperature'])
-pubsub.subscribe(motor1control=state['motor1'])
-pubsub.subscribe(motor2control=state['motor2'])
-pubsub.subscribe(goto=state['telescope'].goto)        # calls the goto message of the telescope.Telescope object
-pubsub.subscribe(altaz=state['telescope'].altaz)      # calls the altaz message of the telescope.Telescope object
-
-# run the pubsub with the above handlers in a thread
-pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
-
+pubsub.subscribe(motor1control=Telescope.motor1)  # probably to be removed from here - as motors will be controlled by the Telescope object
+pubsub.subscribe(motor2control=Telescope.motor2)  # directly, and not via redis - allowed here for testing from web server
+pubsub.subscribe(goto=Telescope.goto)        # calls the goto message of the Telescope object
+pubsub.subscribe(altaz=Telescope.altaz)      # calls the altaz message of the Telescope object
 
 ### create input listener callback
 
@@ -97,9 +102,18 @@ run_scheduled_events = threading.Thread(target=scheduled_events)
 run_scheduled_events.start()
 logging.info('picontrol schedular started')
 
-### and run the telescope worker. This is a blocking call, and runs indefinitly
 
-telescope.worker(state)
+### and run the telescope worker. This is a blocking call, so run in thread
+run_telescope = threading.Thread(target=Telescope)
+# and start the telescope
+run_telescope.start()
+logging.info('Telescope control started')
 
+# blocks and listens to redis
+while True:
+    message = pubsub.get_message()
+    if message:
+        print(message)
+    time.sleep(0.1)
 
 

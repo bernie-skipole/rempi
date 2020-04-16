@@ -1,9 +1,9 @@
 {
-"url": "/",
+"url": "/rempi01/",
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.9",
-"skipole": "3.6.4",
+"skipole": "3.6.6",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -79,7 +79,11 @@
 "fields": {
 "clear_error": false,
 "error_class": "",
+"h_class": "",
+"h_style": "",
 "large_text": "",
+"p_class": "",
+"p_style": "",
 "show": true,
 "show_error": "",
 "small_text": "",
@@ -565,6 +569,7 @@
 "last_scroll": true,
 "interval": 10,
 "interval_target": 5002,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#115e18",
 "default_error_widget": [
@@ -871,6 +876,7 @@
 "last_scroll": true,
 "interval": 2,
 "interval_target": 13,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1830,6 +1836,7 @@
 "last_scroll": true,
 "interval": 0,
 "interval_target": null,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -1993,7 +2000,11 @@
 "fields": {
 "clear_error": false,
 "error_class": "w3-panel w3-red",
+"h_class": "",
+"h_style": "",
 "large_text": "",
+"p_class": "",
+"p_style": "",
 "show": true,
 "show_error": "",
 "small_text": "",
@@ -2049,7 +2060,11 @@
 "fields": {
 "clear_error": false,
 "error_class": "",
+"h_class": "",
+"h_style": "",
 "large_text": "",
+"p_class": "",
+"p_style": "",
 "show": true,
 "show_error": "",
 "small_text": "",
@@ -2190,6 +2205,7 @@
 "last_scroll": true,
 "interval": 2,
 "interval_target": "status",
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -2438,7 +2454,7 @@
 "name": "sensors_json",
 "brief": "Links to sensors table json file",
 "fields": {
-"content": "/sensors.json",
+"content": "sensors.json",
 "force_ident": false,
 "get_field1": "",
 "get_field2": "",
@@ -2714,6 +2730,7 @@
 "last_scroll": true,
 "interval": 2,
 "interval_target": 9,
+"catch_to_html": null,
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [

@@ -1,6 +1,27 @@
+#!/home/rempi/rempivenv/bin/python3
 
 
-import sys
+#################################################################
+#
+# pimqtt.py
+#
+# this script communicates with the remote server via MQTT
+#
+# it runs a redis pubsub, to communicate with picontrol which
+# in turn implements the required actions
+# and to rempiweb which allows local control
+#
+# It runs a schedular to maintain a 10 minute MQTT heartbeat,
+# and sends a sensor status messages every fifteen minutes
+#
+#
+#################################################################
+
+
+
+
+
+import sys, time, threading
 
 import paho.mqtt.client as mqtt
 
@@ -8,21 +29,17 @@ from redis import StrictRedis
 
 from rempicomms import communications, schedule
 
-# create redis connection
-rconn = StrictRedis(host='localhost', port=6379)
-
 # mqtt parameters
 
-mqtt_ip = 'localhost'          # mqtt server, change as required, currently 'bernard-HP-Compaq-dc7900-Small-Form-Factor'
+mqtt_ip = '10.100.100.1'          # mqtt server
 mqtt_port = 1883
 mqtt_username = ''
 mqtt_password = ''
 
 userdata = {
-            'comms':True,
+            'comms':False,
             'comms_countdown':4,
-            'from_topic':'From_RemPi01',
-            'rconn':rconn
+            'from_topic':'From_RemPi01'
            }
 
 
@@ -36,6 +53,8 @@ def _on_message(client, userdata, message):
 
     userdata['comms'] = True
     userdata['comms_countdown'] = 4
+
+    print(message.topic)
    
     if message.topic.startswith('From_WebServer/Outputs') or message.topic.startswith('From_ServerEngine/Outputs'):
         communications.action(client, userdata, message)
@@ -69,6 +88,7 @@ def _on_connect(client, userdata, flags, rc):
         # reconnect then subscriptions will be renewed.
         # subscribe to topics "From_WebServer/#" and "From_ServerEngine/#"
         client.subscribe( [("From_WebServer/#", 0), ("From_ServerEngine/#", 0)] )
+        print("MQTT client connected")
     else:
         userdata['comms'] = False
 
@@ -77,33 +97,6 @@ def _on_disconnect(client, userdata, rc):
     "The client has disconnected, set userdata['comms'] = False"
     # userdata is the status_data dictionary
     userdata['comms'] = False
-
-
-
-try:
-
-    # create an mqtt client instance
-    mqtt_client = mqtt.Client(userdata=userdata)
-
-    # attach callback function to client
-    mqtt_client.on_connect = _on_connect
-    mqtt_client.on_disconnect = _on_disconnect
-    mqtt_client.on_message = _on_message
-
-    # If a username/password is set on the mqtt server
-    if mqtt_username and mqtt_password:
-        mqtt_client.username_pw_set(username = mqtt_username, password = mqtt_password)
-    elif mqtt_username:
-        mqtt_client.username_pw_set(username = mqtt_username)
-
-    # connect to the server
-    mqtt_client.connect(host=mqtt_ip, port=mqtt_port)
-
-    # start a threaded loop
-    mqtt_client.loop_start()
-
-except Exception:
-    sys.exit(1)
 
 
 ### redis pubsub handlers, these are 'alerts' received from rempicontrol
@@ -125,21 +118,62 @@ def alert02_handler(msg):
         communications.led_status(mqtt_client, userdata)
 
 
-# subscribe to alert01, alert02.., etc
-pubsub = rconn.pubsub()  
-pubsub.subscribe(alert01 = alert01_handler)
-pubsub.subscribe(alert02 = alert02_handler)
 
-# run the pubsub with the above handlers in a thread
-pubsubthread = pubsub.run_in_thread(sleep_time=0.01)
+if __name__ == "__main__":
+
+    # have a pause to ensure various services are up and working
+    time.sleep(3)
+
+    # create redis connection
+    rconn = StrictRedis(host='localhost', port=6379)
+
+    # set rconn into userdata
+    userdata['rconn'] = rconn
+
+    # create an mqtt client instance
+    mqtt_client = mqtt.Client(userdata=userdata)
+
+    # attach callback function to client
+    mqtt_client.on_connect = _on_connect
+    mqtt_client.on_disconnect = _on_disconnect
+    mqtt_client.on_message = _on_message
+
+    # If a username/password is set on the mqtt server
+    if mqtt_username and mqtt_password:
+        mqtt_client.username_pw_set(username = mqtt_username, password = mqtt_password)
+    elif mqtt_username:
+        mqtt_client.username_pw_set(username = mqtt_username)
+
+    # connect to the server
+    mqtt_client.connect(host=mqtt_ip, port=mqtt_port)
+
+    # start a threaded loop
+    mqtt_client.loop_start()
+
+    print("MQTT loop started")
+
+    ### create an event schedular to do periodic actions
+    scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)
+    # this is a callable which runs scheduled events, it
+    # needs to be called in its own thread
+    run_scheduled_events = threading.Thread(target=scheduled_events)
+    # and start the scheduled thread
+    run_scheduled_events.start()
+
+    print("Scheduled events started")
 
 
-### create an event schedular to do periodic actions
+    # subscribe to alert01, alert02.., etc
+    pubsub = rconn.pubsub()  
+    pubsub.subscribe(alert01 = alert01_handler)
+    pubsub.subscribe(alert02 = alert02_handler)
 
-scheduled_events = schedule.ScheduledEvents(mqtt_client, userdata)
-# this is a callable which runs scheduled events
-# it is a blocking call, and runs here indefinitly
-scheduled_events()
+    print("redis pubsub started")
 
-
+    # blocks and listens to redis
+    while True:
+        message = pubsub.get_message()
+        if message:
+            print(message)
+        time.sleep(0.1)
 
