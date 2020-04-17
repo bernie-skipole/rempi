@@ -1,3 +1,5 @@
+#!/home/rempi/rempivenv/bin/python3
+
 # Python3 program to display a terminal status and control menu
 # for the Astronomy Centre REMSCOPE
 
