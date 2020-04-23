@@ -18,19 +18,17 @@ import sys, sched, time, logging
 
 
 def event1(rconn, state, Telescope):
-    "event1 is to store temperature"
+    "event1 is to read hardware and store the temperature into redis"
     temperature = 0.0
     try:
-        # the get_temperature method logs the temperature to redis
-        temperature = state['temperature'].get_temperature()
+        # the temperature object stored in state is a callable
+        # to read and set the temperature into redis
+        temperature = state['temperature']()
     except Exception:
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event1')
         return
-    if temperature is None:
-        logging.error('Failed to read the temperature')
-    else:
-        logging.info("Temperature recorded to redis %s" % (temperature,))
+    logging.info("Temperature recorded to redis %s" % (temperature,))
 
 
 # If the rconn motor*status flags are left in a funny state - not 'STOPPED'

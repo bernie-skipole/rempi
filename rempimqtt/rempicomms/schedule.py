@@ -22,8 +22,6 @@ from . import communications
 
 def event1(mqtt_client, userdata):
     "event1 is to publish status"
-    if not userdata['comms']:
-        return
     try:
         communications.status_request(mqtt_client, userdata)
     except Exception:
@@ -34,8 +32,6 @@ def event1(mqtt_client, userdata):
 def event2(mqtt_client, userdata):
     """event2 is called every ten minutes to maintain a communications heartbeat
        decrements userdata['comms_countdown'], and checks if zero or less"""
-    if not userdata['comms']:
-        return
     if userdata['comms_countdown'] < 1:
         userdata['comms'] = False
         return

@@ -19,8 +19,6 @@
 
 
 
-
-
 import sys, time, threading
 
 import paho.mqtt.client as mqtt
@@ -69,13 +67,6 @@ def _on_message(client, userdata, message):
         payload = message.payload.decode("utf-8")
         if payload == 'status_request':
             communications.status_request(client, userdata)
-    elif message.topic == 'From_RemControl/status':
-        # a status request from the terminal remscope control program
-        payload = message.payload.decode("utf-8")
-        if payload == 'led':
-            communications.led_status(client, userdata)
-        elif payload == 'door':
-            communications.door_status(client, userdata)
 
 
 def _on_connect(client, userdata, flags, rc):

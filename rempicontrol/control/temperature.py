@@ -16,17 +16,27 @@ class Temperature(object):
         # info will be stored to redis
         self.rconn = rconn
         # Ensure the hardware values are read on startup
-        self.get_temperature()
+        temperature = self.get_temperature()
+        self.set_temperature(temperature)
 
 
     def __call__(self, msg):
-        "Handles the pubsub msg"
+        """get and store the temperature, returns the temperature
+           generally called at intervals by event1 of the schedule module"""
+        # sets hardware temperature into redis
+        temperature = self.get_temperature()
+        self.set_temperature(temperature)
+        return temperature
+
+
+    def handle(self, msg):
+        """Handles the control03 pubsub msg
+           If payload requests status, get and store the temperature"""
         message = msg['data']
         if message == b"status":
             # sets hardware temperature into redis
             temperature = self.get_temperature()
-            if temperature is None:
-                logging.error('Failed to read the temperature')
+            self.set_temperature(temperature)
 
 
     def pin_changed(self,input_name):
@@ -36,24 +46,23 @@ class Temperature(object):
 
 
     def get_temperature(self):
-        "Called to get the temperature from the hardware, saves it in redis"
+        "Called to get the temperature from the hardware"
         # the temperature input is called 'input03' in the hardware module
         try:
             temperature = hardware.get_input("input03")
-        except RuntimeError as e:
-            self.rconn.set('rempi01_temperature', 0.0)
-            logging.error(str(e))
-            return
-        except Exception:
-            self.rconn.set('rempi01_temperature', 0.0)
-            return
+        except Exception as e:
+            logging.error('Failed to read the temperature')
+            return 0.0
         if temperature is None:
-            self.rconn.set('rempi01_temperature', 0.0)
-            return
+            return 0.0
         # round to one digit
-        temperature = round(float(temperature), 1)
+        return round(temperature, 1)
+
+
+    def set_temperature(self, temperature):
+        "Called to set the temperature into redis"
         self.rconn.set('rempi01_temperature', temperature)
-        return temperature
+
 
 
 

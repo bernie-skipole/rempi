@@ -72,7 +72,7 @@ pubsub = rconn.pubsub(ignore_subscribe_messages=True)
 
 pubsub.subscribe(control01=state['door'])
 pubsub.subscribe(control02=state['led'])
-pubsub.subscribe(control03=state['temperature'])
+pubsub.subscribe(control03=state['temperature'].handle)  # handle is a method which gets tempearture and store it to redis
 pubsub.subscribe(motor1control=Telescope.motor1)  # probably to be removed from here - as motors will be controlled by the Telescope object
 pubsub.subscribe(motor2control=Telescope.motor2)  # directly, and not via redis - allowed here for testing from web server
 pubsub.subscribe(goto=Telescope.goto)        # calls the goto message of the Telescope object

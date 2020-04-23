@@ -74,8 +74,6 @@ def telescope_altaz(client, userdata, message):
 
 def led_status(client, userdata):
     "Get the led status from redis and publish it via MQTT"
-    if not userdata['comms']:
-        return
     rconn = userdata['rconn']
     # get led status from redis
     led_status = rconn.get('rempi01_led')
@@ -88,8 +86,6 @@ def led_status(client, userdata):
 
 def temperature_status(client, userdata):
     "Get the temperature from redis and publish it via MQTT"
-    if not userdata['comms']:
-        return
     rconn = userdata['rconn']
     # get temperature from redis
     temperature = rconn.get('rempi01_temperature')
@@ -103,8 +99,6 @@ def temperature_status(client, userdata):
 
 def door_status(client, userdata):
     "Get the door from redis and publish it via MQTT"
-    if not userdata['comms']:
-        return
     rconn = userdata['rconn']
     # get door status from redis
     status = rconn.get('rempi01_door_status')
