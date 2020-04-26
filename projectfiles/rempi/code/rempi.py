@@ -41,6 +41,7 @@ _PUBLIC_PAGES = [1,  # index
                  7,  # sensors.json
                  9,  # sensors_refresh
                 11,  # status called from information page
+                15,  # refresh index page
                 21,  # rempi.log.1
                 22,  # rempi.log.2
                 23,  # rempi.log.3

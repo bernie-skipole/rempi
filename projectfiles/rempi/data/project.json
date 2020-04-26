@@ -1834,9 +1834,9 @@
 "TemplatePage": {
 "show_backcol": false,
 "last_scroll": true,
-"interval": 0,
-"interval_target": null,
-"catch_to_html": null,
+"interval": 5,
+"interval_target": 15,
+"catch_to_html": "home",
 "lang": "en",
 "backcol": "#ffffff",
 "default_error_widget": [
@@ -3149,6 +3149,26 @@
 "information_page"
 ],
 "target_ident": 2004
+},
+"original_fields": {}
+}
+},
+"refresh_index": {
+"ident": 15,
+"brief": "Refreshes home page with JSON call",
+"RespondPage": {
+"class": "SubmitData",
+"original_args": {
+"allowed_callers": [
+2001
+],
+"fail_ident": "general_json",
+"submit_list": [
+"rempi_packages",
+"home",
+"index_page"
+],
+"target_ident": "general_json"
 },
 "original_fields": {}
 }
