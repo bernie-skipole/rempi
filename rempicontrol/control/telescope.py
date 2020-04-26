@@ -38,6 +38,15 @@ def _qcurve(x, a, b, c):
 
 class Telescope(object):
 
+    MAX_SPEED = 4  # degrees per second
+
+    MAX_ACCELERATION = 1.5 # degrees per second squared
+
+    TIME_INTERVAL = 0.5 # seconds
+
+    DECELERATION_DISTANCE = 10.0 # degrees
+
+
     def __init__(self, rconn, state):
         "The Telescope instrument"
         self.state = state
@@ -229,6 +238,9 @@ class Telescope(object):
         if timestamp is None:
             targettime = datetime.utcnow()
             timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
+
+        if isinstance(timestamp, datetime):
+            timestamp = timestamp.replace(tzinfo=timezone.utc).timestamp()
         
         wanted_position = self.target_alt_az(timestamp)
         wanted_speed = self.tracking_speed(timestamp)
@@ -262,31 +274,126 @@ class Telescope(object):
         pass
 
 
+    def get_speed(self, current_pos, speed, target_pos, target_speed):
+        """Return speed for the next time interval - used to slew and track
+
+        target_pos is the expected target position at the end of the time interval
+        current_pos is position at the start
+        target_speed is the target speed at the end
+        speed is speed over the previous time interval"""
+
+        if target_pos<60.0 and current_pos>300.0:
+            target_pos = target_pos + 360
+
+        if current_pos<60.0 and target_pos>300.0:
+            current_pos = current_pos + 360
+
+        # delta_distance is the distance to move in this time interval
+        # the returned speed will be delta_distance/TIME_INTERVAL
+
+        # get max delta distance
+        max_delta_distance = self.MAX_SPEED * self.TIME_INTERVAL
+
+        # previous interval distance
+        previous_distance = speed * self.TIME_INTERVAL
+
+        # distance to the target, from the beginning of the interval.
+        # as target_pos is at the end of the interval, we need
+        # target_pos - target_speed*TIME_INTERVAL
+        # to be target position at the start of the interval
+        # the required distance is the difference between this and current_pos
+
+        distance = target_pos - target_speed*self.TIME_INTERVAL - current_pos
+
+        # the value 'DECELERATION_DISTANCE' is the distance over which deceleration occurs
+        # it may have to be 'tuned'
+
+        # if distance to move is greater than this deceleration distance,
+        # make distance to move the max_delta_distance
+        # otherwise make distance to move proportional to 'distance'
+
+        if distance > self.DECELERATION_DISTANCE:
+             delta_distance = max_delta_distance
+        elif distance < -1*self.DECELERATION_DISTANCE:
+            delta_distance =  -1 * max_delta_distance
+        else:
+            # as distance goes to zero, so does delta_distance
+            delta_distance = max_delta_distance * distance / self.DECELERATION_DISTANCE
+            # as the target is moving, add the target movement to delta_distance
+            delta_distance +=  target_speed*self.TIME_INTERVAL
+            if abs(delta_distance) > max_delta_distance:
+                if delta_distance > 0:
+                    delta_distance = max_delta_distance
+                else:
+                    delta_distance = -1 * max_delta_distance
+
+        # so delta_distance worked out, but does the speed change
+        # break the maximum acceleration
+
+        while True:
+            newspeed = delta_distance/self.TIME_INTERVAL
+            acceleration = (newspeed - speed)/self.TIME_INTERVAL
+            if abs(acceleration) < self.MAX_ACCELERATION:
+                # all ok
+                break
+            # acceleration is too great, make delta_distance closer to previous_distance
+            # which reduces acceleration, and test again
+            delta_distance = (5*delta_distance + previous_distance)/6.0
+
+        return newspeed
+
+
     def __call__(self): 
         "This actually runs the telescope, this is a blocking call, so run in a thread"
+        current_alt = 0
+        speed_alt = 0
+        current_az = 0
+        speed_az = 0
+
+        # target_* is the expected target position at the end of the time interval
+        # current_* is position at the start
+        # target_speed_* is the target speed at the end
+        # speed_* is speed over the previous time interval
+
+
         while True:
 
-            # this gets required positions for a given time, which may be useful for getting it at 0.5 seconds into the future
+            # returns wanted target (alt, az, alt_speed, az_speed) at TIME_INTERVAL in the future
+            # and also records these target positions to redis
 
-            targettime = datetime.utcnow()
-            timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
-            wanted_position = self.target_alt_az(timestamp)
-            wanted_speed = self.tracking_speed(timestamp)
+            target_alt, target_az, target_speed_alt, target_speed_az = self.record_target(datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL))
 
-            print("\nTime: {:1.3f}".format(timestamp))
-            print("Telescope wanted position ALT: {:1.5f}\xb0 AZ: {:1.5f}\xb0".format(*wanted_position))
-            print("Telescope wanted speed  ALT: {:1.5f}\xb0 per second, AZ: {:1.5f}\xb0 per second".format(*wanted_speed))
+            # get speed for the next time interval, where target_*, target_speed_* are taken for TIME_INTERVAL time in the future
+            speed_alt = self.get_speed(current_alt, speed_alt, target_alt, target_speed_alt)
+            speed_az = self.get_speed(current_az, speed_az, target_az, target_speed_az)
 
-            # alternatively, this gets the require positions now, and records them into redis
-            wanted_position_and_speed = self.record_target()
+            sleep(self.TIME_INTERVAL)
 
-            # wait ten seconds
-            sleep(10)
+            # get new position after the time interval,
+            # this will, in due course, be measured from scope sensors
+            current_alt = current_alt + speed_alt * self.TIME_INTERVAL
+            current_az = current_az + speed_az * self.TIME_INTERVAL
 
-            ### todo
+            if current_az > 360.0:
+                current_az = current_az - 360.0
+            if current_az < 0.0:
+                current_az = current_az + 360.0
 
-            # get actual position/speed of telescope
-            # send instructions to motors to match actual to wanted
+            if current_alt > 90.0:
+                current_alt = 90.0
+            if current_alt < -90.0:
+                current_alt = -90.0
+
+            self.rconn.set("rempi01_current_alt", "{:1.5f}".format(current_alt))
+            self.rconn.set("rempi01_current_az", "{:1.5f}".format(current_az))
+
+            # current positions should now be equal to the previous target positions for the end of the time interval
+            error_alt = target_alt - current_alt
+            error_az = target_az - current_az
+
+            # print(error_alt, error_az)
+    
+
 
 
 

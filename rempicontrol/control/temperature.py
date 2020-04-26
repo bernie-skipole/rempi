@@ -20,7 +20,7 @@ class Temperature(object):
         self.set_temperature(temperature)
 
 
-    def __call__(self, msg):
+    def __call__(self):
         """get and store the temperature, returns the temperature
            generally called at intervals by event1 of the schedule module"""
         # sets hardware temperature into redis
