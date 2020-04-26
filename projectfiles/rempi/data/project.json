@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.9",
-"skipole": "3.6.6",
+"skipole": "3.7.2",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,
@@ -2174,6 +2174,25 @@
 "class": "paras.DivPara",
 "name": "target",
 "brief": "Shows scope target",
+"fields": {
+"clear_error": false,
+"error_class": "w3-red",
+"para_class": "",
+"para_text": "",
+"pre_line": true,
+"show": true,
+"show_error": "",
+"widget_class": "w3-section",
+"widget_style": ""
+}
+}
+],
+[
+"Widget",
+{
+"class": "paras.DivPara",
+"name": "actual",
+"brief": "Shows actual scope position",
 "fields": {
 "clear_error": false,
 "error_class": "w3-red",

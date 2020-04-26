@@ -361,7 +361,9 @@ class Telescope(object):
             # returns wanted target (alt, az, alt_speed, az_speed) at TIME_INTERVAL in the future
             # and also records these target positions to redis
 
-            target_alt, target_az, target_speed_alt, target_speed_az = self.record_target(datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL))
+            future_time = datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL)
+
+            target_alt, target_az, target_speed_alt, target_speed_az = self.record_target(future_time)
 
             # get speed for the next time interval, where target_*, target_speed_* are taken for TIME_INTERVAL time in the future
             speed_alt = self.get_speed(current_alt, speed_alt, target_alt, target_speed_alt)
@@ -384,6 +386,7 @@ class Telescope(object):
             if current_alt < -90.0:
                 current_alt = -90.0
 
+            self.rconn.set("rempi01_current_time", future_time.strftime("%H:%M:%S.%f"))
             self.rconn.set("rempi01_current_alt", "{:1.5f}".format(current_alt))
             self.rconn.set("rempi01_current_az", "{:1.5f}".format(current_az))
 

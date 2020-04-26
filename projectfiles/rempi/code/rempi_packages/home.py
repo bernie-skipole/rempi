@@ -50,6 +50,17 @@ def index_page(skicall):
     if target_text:
         skicall.page_data['target', 'para_text'] = target_text
 
+    current_time = redis.get("rempi01_current_time")
+    current_alt = redis.get("rempi01_current_alt")
+    current_az = redis.get("rempi01_current_az")
+    if current_time and current_alt and current_az:
+        current_text = """
+Measured at : {}
+Actual ALT : {}
+Actual AZ : {}""".format(current_time.decode("utf-8"), current_alt.decode("utf-8"), current_az.decode("utf-8"))
+        skicall.page_data['actual', 'para_text'] = current_text
+
+
 
 def _ra_dec_conversion(ra, dec):
     """Given ra and dec in degrees, convert to (rahr, ramin, rasec, decsign, decdeg, decmin, decsec)

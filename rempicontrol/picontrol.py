@@ -40,8 +40,8 @@ time.sleep(3)
 
 ####### SET THE LOGFILE LOCATION
 
-#logfile = "/home/rempi/projectfiles/rempi/rempi.log"
-logfile = "/home/bernard/rempi.log"
+logfile = "/home/rempi/projectfiles/rempi/rempi.log"
+#logfile = "/home/bernard/rempi.log"
 handler = RotatingFileHandler(logfile, maxBytes=10000, backupCount=5)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s', handlers= [handler])
 logging.info('picontrol started')
