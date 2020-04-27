@@ -29,7 +29,8 @@ from rempicomms import communications, schedule
 
 # mqtt parameters
 
-mqtt_ip = '10.100.100.1'          # mqtt server
+#mqtt_ip = '10.100.100.1'          # mqtt server
+mqtt_ip = '10.34.167.1'           # development mqtt server
 mqtt_port = 1883
 mqtt_username = ''
 mqtt_password = ''
