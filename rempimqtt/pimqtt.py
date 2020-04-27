@@ -93,6 +93,7 @@ def _on_disconnect(client, userdata, rc):
 ### redis pubsub handlers, these are 'alerts' received from rempicontrol
 ### and requesting that info be published via mqtt
 
+
 def alert01_handler(msg):
     "Handles the pubsub msg for alert01 - this sends info about the door"
     message = msg['data']
@@ -155,16 +156,31 @@ if __name__ == "__main__":
 
 
     # subscribe to alert01, alert02.., etc
-    pubsub = rconn.pubsub()  
+    pubsub = rconn.pubsub()
     pubsub.subscribe(alert01 = alert01_handler)
     pubsub.subscribe(alert02 = alert02_handler)
 
     print("redis pubsub started")
 
-    # blocks and listens to redis
+    # create loop which blocks and listens to redis.
+    # Every two seconds, send scope position of packed structure: timestamp, alt, az
+
+    count = 0
+
     while True:
+        # loop to get redis pubsub messages
         message = pubsub.get_message()
-        if message:
-            print(message)
+        # uncomment for diagnostics
+        #if message:
+        #    print(message)
         time.sleep(0.1)
+        count += 1
+        if count > 20:
+            # 2 seconds have passed
+            count = 0
+            telescope_topic = userdata['from_topic'] + '/Telescope/position'
+            telescope_position = rconn.get('telescope_position')
+            if telescope_position:
+                mqtt_client.publish(topic=telescope_topic, payload=telescope_position)
+
 

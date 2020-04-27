@@ -386,15 +386,22 @@ class Telescope(object):
             if current_alt < -90.0:
                 current_alt = -90.0
 
+            # set values into redis for reading by the web service, and also
+            # pack timestamp,alt,az into a structure of three floats, for sending
+            # to remote server 
             self.rconn.set("rempi01_current_time", future_time.strftime("%H:%M:%S.%f"))
             self.rconn.set("rempi01_current_alt", "{:1.5f}".format(current_alt))
             self.rconn.set("rempi01_current_az", "{:1.5f}".format(current_az))
+            timestamp = future_time.replace(tzinfo=timezone.utc).timestamp()
+            self.rconn.set("telescope_position", pack("ddd", timestamp, current_alt, current_az))
 
             # current positions should now be equal to the previous target positions for the end of the time interval
             error_alt = target_alt - current_alt
             error_az = target_az - current_az
 
             # print(error_alt, error_az)
+
+
     
 
 
