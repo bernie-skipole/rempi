@@ -376,9 +376,9 @@ class Telescope(object):
             current_alt = current_alt + speed_alt * self.TIME_INTERVAL
             current_az = current_az + speed_az * self.TIME_INTERVAL
 
-            if current_az > 360.0:
+            while current_az >= 360.0:
                 current_az = current_az - 360.0
-            if current_az < 0.0:
+            while current_az < 0.0:
                 current_az = current_az + 360.0
 
             if current_alt > 90.0:

@@ -182,6 +182,7 @@ if __name__ == "__main__":
             telescope_topic = userdata['from_topic'] + '/Telescope/position'
             telescope_position = rconn.get('telescope_position')
             if telescope_position:
+                print(telescope_topic)
                 mqtt_client.publish(topic=telescope_topic, payload=telescope_position)
 
 
