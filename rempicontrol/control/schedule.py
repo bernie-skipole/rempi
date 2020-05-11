@@ -60,6 +60,13 @@ def event3(rconn, state, Telescope):
         motor2.running = time.time()
 
 
+def event4(rconn, state, Telescope):
+    "event4 logs current telescope position every two minutes"
+    alt = rconn.get('rempi01_current_alt')
+    az = rconn.get('rempi01_current_alt')
+    logging.info('ALT:%s AZ:%s' % (alt.decode("utf-8"), az.decode("utf-8")))
+
+
 ### scheduled actions to occur at set times each hour ###
 
 class ScheduledEvents(object):
@@ -68,14 +75,15 @@ class ScheduledEvents(object):
         "Stores the mqtt_clent and creates the schedule of hourly events"
         # create a list of event callbacks and minutes past the hour for each event in turn
 
-        # initially start with event1 occurring every five minutes (on minutes 1,6,11,16....56)
         event_list = []
-        for mins in range(1, 61, 5):
+        for mins in range(1, 61, 5):              # event1 occurring every five minutes (on minutes 1,6,11,16....56)
             event_list.append((event1,mins))
         for mins in range(2, 62, 5):              # event2 occurring every five minutes (on minutes 2,7,12,17....57)
             event_list.append((event2,mins))
         for mins in range(3, 63, 5):               # event3 occurring every five minutes (on minutes 3,8,13,18....58)
             event_list.append((event3,mins))
+        for mins in range(1, 61, 2):               # event4 occurring every two minutes (on minutes 1,3,5,7....59)
+            event_list.append((event4,mins))
         # add further events in format event_list.append((event2,mins)) etc.,
         # sort the list
         self.event_list = sorted(event_list, key=lambda x: x[1])

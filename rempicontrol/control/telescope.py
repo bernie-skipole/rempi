@@ -79,6 +79,7 @@ class Telescope(object):
         self.target_name = positions[0].rstrip(b'\x00').decode("utf-8")
         self.ra = positions[1]
         self.dec = positions[2]
+        logging.info('Goto received RA %s DEC %s' % (self.ra.decode("utf-8"), self.dec.decode("utf-8")))
         # goto just received, so no tracking yet
         self.rconn.delete('rempi01_track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
@@ -150,6 +151,7 @@ class Telescope(object):
     def altaz(self, msg):
         "Handles the pubsub msg to move to a particular alt, az point, but then does not track"
         self.alt, self.az = unpack("dd", msg['data'])
+        logging.info('AltAz received ALT %s AZ %s' % (self.alt.decode("utf-8"), self.az.decode("utf-8")))
         # no tracking
         self.curves = {}
         self.rconn.delete('rempi01_track')
