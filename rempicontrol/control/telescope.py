@@ -232,6 +232,7 @@ class Telescope(object):
         # note positions[3:] is used as the first three elements are the name, ra and dec
         time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         self.curves = self.createcurves(time_altaz)
+        logging.info('Tracking data received for RA %s DEC %s' % (self.ra.decode("utf-8"), self.dec.decode("utf-8")))
         return True
 
 

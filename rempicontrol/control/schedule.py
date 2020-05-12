@@ -28,7 +28,7 @@ def event1(rconn, state, Telescope):
         # return without action if any failure occurs
         logging.error('Exception during scheduled Event1')
         return
-    logging.info("Temperature recorded to redis %s" % (temperature,))
+    logging.info("Temperature %s" % (temperature,))
 
 
 # If the rconn motor*status flags are left in a funny state - not 'STOPPED'
@@ -64,7 +64,7 @@ def event4(rconn, state, Telescope):
     "event4 logs current telescope position every two minutes"
     alt = rconn.get('rempi01_current_alt')
     az = rconn.get('rempi01_current_alt')
-    logging.info('ALT:%s AZ:%s' % (alt.decode("utf-8"), az.decode("utf-8")))
+    logging.info('Current ALT:%s AZ:%s' % (alt.decode("utf-8"), az.decode("utf-8")))
 
 
 ### scheduled actions to occur at set times each hour ###
