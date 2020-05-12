@@ -63,7 +63,7 @@ def event3(rconn, state, Telescope):
 def event4(rconn, state, Telescope):
     "event4 logs current telescope position every two minutes"
     alt = rconn.get('rempi01_current_alt')
-    az = rconn.get('rempi01_current_alt')
+    az = rconn.get('rempi01_current_az')
     logging.info('Current ALT:%s AZ:%s' % (alt.decode("utf-8"), az.decode("utf-8")))
 
 

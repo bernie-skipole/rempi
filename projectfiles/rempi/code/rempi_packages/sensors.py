@@ -6,14 +6,14 @@ from skipole import FailPage, GoTo, ValidateError, ServerError
 
 def sensor_table(skicall):
     """sets three lists for sensor table into page data"""
-    skicall.page_data['sensors', 'col1'] = ["LED", "DOOR", "TEMPERATURE"]
+    skicall.page_data['sensors', 'col1'] = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ"]
     skicall.page_data['sensors', 'col2'] = _get_sensor_values(skicall.proj_data['redis'])
-    skicall.page_data['sensors', 'col3'] = ["LED attached to pi", "Observatory door", "Temperature from probe"]
+    skicall.page_data['sensors', 'col3'] = ["LED attached to pi", "Observatory door", "Temperature from probe", "Telescope Altitude", "Telescope Azimuth"]
 
 
 def sensors_json_api(skicall):
     "Returns sensors dictionary"
-    sensors = ["LED", "DOOR", "TEMPERATURE"]
+    sensors = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ"]
     values = _get_sensor_values(skicall.proj_data['redis'])
     return collections.OrderedDict(zip(sensors,values))
 
@@ -54,6 +54,21 @@ def _get_sensor_values(redis):
         values.append("0.0")
     else:
         values.append(value.decode("utf-8"))
+
+    # get altitude
+    alt = redis.get('rempi01_current_alt')
+    if alt is None:
+        values.append("UNKNOWN")
+    else:
+        values.append(alt.decode("utf-8"))
+
+    # get azimuth
+    az = redis.get('rempi01_current_az')
+    if az is None:
+        values.append("UNKNOWN")
+    else:
+        values.append(az.decode("utf-8"))
+
     return values
 
 
@@ -67,3 +82,4 @@ def status(skicall):
         temperature = temperature.decode("utf-8")
     skicall.page_data["tmeter", "measurement"] = temperature
     skicall.page_data["tvalue", "text"] = "Temperature : %s" % (temperature,)
+

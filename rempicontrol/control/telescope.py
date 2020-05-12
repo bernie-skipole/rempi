@@ -75,11 +75,12 @@ class Telescope(object):
     def goto(self, msg):
         "Handles the pubsub msg - receives a target set of alt,az values"
         # positions consists of target_name, ra, dec and 20 sets of timestamp,alt,az which is a string and 62 floats,
+        # these alt and az values are for ten minutes (twenty half minutes), every 30 seconds
         positions = unpack("10s"+"d"*62, msg['data'])
         self.target_name = positions[0].rstrip(b'\x00').decode("utf-8")
         self.ra = positions[1]
         self.dec = positions[2]
-        logging.info('Goto received RA %s DEC %s' % (self.ra.decode("utf-8"), self.dec.decode("utf-8")))
+        logging.info('Goto received RA %s DEC %s' % (self.ra, self.dec))
         # goto just received, so no tracking yet
         self.rconn.delete('rempi01_track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
@@ -90,6 +91,8 @@ class Telescope(object):
         self.curves = self.createcurves(time_altaz)
         self.alt = None
         self.az = None
+        self.last_alt = None
+        self.last_az = None
  
 
     def createcurves(self, time_altaz):
@@ -114,6 +117,9 @@ class Telescope(object):
         # last five timestamps
         # dictionary records the curve coefficients
         curves[timelist[15]] = self.curve_maker(timelist[15:], time_altaz)
+
+        # so this last covers from timelist[15] to a further five timesamples (to timelist 20)
+        # each sample is 30 seconds, so this curve expires after a further 5*30 seconds - one minute
 
         return curves
 
@@ -151,7 +157,7 @@ class Telescope(object):
     def altaz(self, msg):
         "Handles the pubsub msg to move to a particular alt, az point, but then does not track"
         self.alt, self.az = unpack("dd", msg['data'])
-        logging.info('AltAz received ALT %s AZ %s' % (self.alt.decode("utf-8"), self.az.decode("utf-8")))
+        logging.info('AltAz received ALT %s AZ %s' % (self.alt, self.az))
         # no tracking
         self.curves = {}
         self.rconn.delete('rempi01_track')
@@ -161,19 +167,35 @@ class Telescope(object):
         self.rconn.delete("rempi01_target_name")
         self.rconn.delete("rempi01_target_ra")
         self.rconn.delete("rempi01_target_dec")
-
+        self.last_alt = self.alt
+        self.last_az = self.az
 
 
     def target_alt_az(self, timestamp):
         "Returns the wanted target alt, az at the given timestamp"
         reduced_time = timestamp - self.timestamp
         if not self.curves:
+            # no tracking
             return self.alt, self.az
         # get the right interpolation curve for the given timestamp
         curvetimes = list(self.curves.keys())
         curvetimes.sort()
-        if reduced_time >= curvetimes[3]:
-            # check if more positions have been given, if so load them
+        if reduced_time > curvetimes[3]+60:
+            # curves have expired, another goto is required to create new curves
+            self.curves = {}
+            self.rconn.delete('rempi01_track')
+            self.target_name = ''
+            self.ra = None
+            self.dec = None
+            self.rconn.delete("rempi01_target_name")
+            self.rconn.delete("rempi01_target_ra")
+            self.rconn.delete("rempi01_target_dec")
+            self.alt = self.last_alt
+            self.az = self.last_az
+            logging.error('Tracking stopped - no tracking data being received')
+            return self.alt, self.az
+        elif reduced_time >= curvetimes[3]:
+            # one minute before curves expire, check if more positions have been given, if so load them
             if self.loadpositions():
                 # self.curves has been updated, so call this function again
                 return self.target_alt_az(timestamp)
@@ -195,6 +217,8 @@ class Telescope(object):
             az = az - 360.0
         if az < 0:
             az = 360.0 + az
+        self.last_alt = alt
+        self.last_az = az
         return alt, az
 
 
@@ -232,7 +256,7 @@ class Telescope(object):
         # note positions[3:] is used as the first three elements are the name, ra and dec
         time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         self.curves = self.createcurves(time_altaz)
-        logging.info('Tracking data received for RA %s DEC %s' % (self.ra.decode("utf-8"), self.dec.decode("utf-8")))
+        logging.info('Tracking data received for RA %s DEC %s' % (self.ra, self.dec))
         return True
 
 

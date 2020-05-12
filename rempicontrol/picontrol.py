@@ -108,6 +108,7 @@ run_telescope = threading.Thread(target=Telescope)
 # and start the telescope
 run_telescope.start()
 logging.info('Telescope control started')
+print("picontrol started")
 
 # blocks and listens to redis
 while True:
