@@ -52,20 +52,19 @@ class Telescope(object):
         self.state = state
         # info stored to redis
         self.rconn = rconn
+        # curves is a dictionary of timestamp:curve
         self.curves = {}
+        # curvetimes is a sorted list of the curve timestamps
+        self.curvetimes = []
+        self.tracking = False
         self.alt = 0.0           # initial conditions, could be changed to a 'parking' state
         self.az = 0.0
         self.target_name = ''
         self.ra = None
         self.dec = None
-        self.rconn.delete('rempi01_track')
         self.rconn.delete("rempi01_target_name")
         self.rconn.delete("rempi01_target_ra")
         self.rconn.delete("rempi01_target_dec")
-
-        targettime = datetime.utcnow()
-        self.timestamp = int(targettime.replace(tzinfo=timezone.utc).timestamp())
-        # this value is subtracted from subsequent timestamps to reduce the size of the numbers
 
         # the telescope motors
         self.motor1 = motors.Motor('motor1',rconn)
@@ -73,7 +72,9 @@ class Telescope(object):
 
 
     def goto(self, msg):
-        "Handles the pubsub msg - receives a target set of alt,az values"
+        "Handles the pubsub msg - receives a target set of alt,az values and creates the curves"
+        # Set tracking False, to stop previous tracking
+        self.tracking = False
         # positions consists of target_name, ra, dec and 20 sets of timestamp,alt,az which is a string and 62 floats,
         # these alt and az values are for ten minutes (twenty half minutes), every 30 seconds
         positions = unpack("10s"+"d"*62, msg['data'])
@@ -81,18 +82,17 @@ class Telescope(object):
         self.ra = positions[1]
         self.dec = positions[2]
         logging.info('Goto received RA %s DEC %s' % (self.ra, self.dec))
-        # goto just received, so no tracking yet
-        self.rconn.delete('rempi01_track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
-        # timestamp has self.timestamp subtracted to reduce number size
         # note positions[3:] is used as the first three elements are the name, ra and dec
-        time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
+        time_altaz = { tstmp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         # create a dictionary of curves for interpolation
         self.curves = self.createcurves(time_altaz)
-        self.alt = None
-        self.az = None
-        self.last_alt = None
-        self.last_az = None
+        self.curvetimes = list(self.curves.keys())
+        self.curvetimes.sort()
+        # set the received positions into the redis tracking key
+        self.rconn.set('rempi01_track', msg['data'])
+        # set tracking True to let telescope know to use these curves
+        self.tracking = True
  
 
     def createcurves(self, time_altaz):
@@ -156,76 +156,70 @@ class Telescope(object):
 
     def altaz(self, msg):
         "Handles the pubsub msg to move to a particular alt, az point, but then does not track"
+        # disable tracking
+        self.tracking = False
+        self.last_alt = self.alt
+        self.last_az = self.az
         self.alt, self.az = unpack("dd", msg['data'])
         logging.info('AltAz received ALT %s AZ %s' % (self.alt, self.az))
-        # no tracking
-        self.curves = {}
-        self.rconn.delete('rempi01_track')
         self.target_name = ''
         self.ra = None
         self.dec = None
         self.rconn.delete("rempi01_target_name")
         self.rconn.delete("rempi01_target_ra")
         self.rconn.delete("rempi01_target_dec")
-        self.last_alt = self.alt
-        self.last_az = self.az
 
 
-    def target_alt_az(self, timestamp):
-        "Returns the wanted target alt, az at the given timestamp"
-        reduced_time = timestamp - self.timestamp
-        if not self.curves:
-            # no tracking
+
+    def target_alt_az(self, timestamp, secondcall=False):
+        """Returns the wanted target alt, az at the given timestamp
+           secondcall is to stop a loop occuring with the self.loadpositions function"""
+        if not self.tracking:
+            # no tracking, return the static alt, az
             return self.alt, self.az
         # get the right interpolation curve for the given timestamp
-        curvetimes = list(self.curves.keys())
-        curvetimes.sort()
-        if reduced_time > curvetimes[3]+60:
+        if timestamp > self.curvetimes[3]+60:
             # curves have expired, another goto is required to create new curves
-            self.curves = {}
-            self.rconn.delete('rempi01_track')
             self.target_name = ''
             self.ra = None
             self.dec = None
             self.rconn.delete("rempi01_target_name")
             self.rconn.delete("rempi01_target_ra")
             self.rconn.delete("rempi01_target_dec")
-            self.alt = self.last_alt
-            self.az = self.last_az
             logging.error('Tracking stopped - no tracking data being received')
+            self.tracking = False
             return self.alt, self.az
-        elif reduced_time >= curvetimes[3]:
+        elif timestamp >= self.curvetimes[3]:
             # one minute before curves expire, check if more positions have been given, if so load them
-            if self.loadpositions():
+            if (not secondcall) and self.loadpositions():
                 # self.curves has been updated, so call this function again
-                return self.target_alt_az(timestamp)
-            popt_alt, popt_az = self.curves[curvetimes[3]]
-        elif reduced_time >= curvetimes[2]:
-            popt_alt, popt_az = self.curves[curvetimes[2]]
-        elif reduced_time >= curvetimes[1]:
-            popt_alt, popt_az = self.curves[curvetimes[1]]
+                # but this time with secondcall True, so multiple calls to loadpositions do not occur
+                return self.target_alt_az(timestamp, True)
+            popt_alt, popt_az = self.curves[self.curvetimes[3]]
+        elif timestamp >= self.curvetimes[2]:
+            popt_alt, popt_az = self.curves[self.curvetimes[2]]
+        elif timestamp >= self.curvetimes[1]:
+            popt_alt, popt_az = self.curves[self.curvetimes[1]]
         else:
-           popt_alt, popt_az = self.curves[curvetimes[0]]
+           popt_alt, popt_az = self.curves[self.curvetimes[0]]
         # now get alt, az from the curve
-        alt = _qcurve(reduced_time, *popt_alt)
+        alt = _qcurve(timestamp, *popt_alt)
         if alt > 90.0:
             alt = 90.0
         if alt < -90.0:
             alt = -90.0
-        az =  _qcurve(reduced_time, *popt_az)
+        az =  _qcurve(timestamp, *popt_az)
         if az > 360.0:
             az = az - 360.0
         if az < 0:
             az = 360.0 + az
-        self.last_alt = alt
-        self.last_az = az
         return alt, az
 
 
     def tracking_speed(self, timestamp):
         "Returns alt_speed, az_speed which are the angular speeds the telescope should be moving at in degrees per second at the given timestamp"
         # gets positions at timestamp - 5 and timestamp +5 and takes difference / 10.0 as the speeds
-        if not self.curves:
+        if not self.tracking:
             return (0.0, 0.0)
         pos1 = self.target_alt_az(timestamp - 5.0)
         pos2 = self.target_alt_az(timestamp + 5.0)
@@ -243,20 +237,23 @@ class Telescope(object):
 
     def loadpositions(self):
         "Checks if new positions have been received, since lasttime, if so return True, if not, False"
+        if not self.tracking:
+            # only bother with tracking data if self.tracking is True
+            # that is, if a goto has been received
+            return False
         payload = self.rconn.get('rempi01_track')
         if not payload:
             return False
-        self.rconn.delete('rempi01_track')
         positions = unpack("10s"+"d"*62, payload)
-        self.target_name = positions[0].rstrip(b'\x00').decode("utf-8")
-        self.ra = positions[1]
-        self.dec = positions[2]
+        # delete the payload to avoid multiple reads of it
+        self.rconn.delete('rempi01_track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
-        # timestamp has self.timestamp subtracted to reduce number size
         # note positions[3:] is used as the first three elements are the name, ra and dec
-        time_altaz = { tstmp - self.timestamp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
+        time_altaz = { tstmp : (altdeg, azdeg) for tstmp, altdeg, azdeg in zip(*[iter(positions[3:])]*3) }
         self.curves = self.createcurves(time_altaz)
-        logging.info('Tracking data received for RA %s DEC %s' % (self.ra, self.dec))
+        self.curvetimes = list(self.curves.keys())
+        self.curvetimes.sort()
+        logging.info('Reading tracking data for RA %s DEC %s' % (self.ra, self.dec))
         return True
 
 
@@ -377,6 +374,8 @@ class Telescope(object):
         current_az = 0
         speed_az = 0
 
+        # current_alt and az should eventually be taken by hardware measurement
+
         # target_* is the expected target position at the end of the time interval
         # current_* is position at the start
         # target_speed_* is the target speed at the end
@@ -388,13 +387,19 @@ class Telescope(object):
             # returns wanted target (alt, az, alt_speed, az_speed) at TIME_INTERVAL in the future
             # and also records these target positions to redis
 
-            future_time = datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL)
+            self.last_alt = self.alt
+            self.last_az = self.az
+            self.alt = current_alt
+            self.az = current_az
 
+            future_time = datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL)
             target_alt, target_az, target_speed_alt, target_speed_az = self.record_target(future_time)
 
             # get speed for the next time interval, where target_*, target_speed_* are taken for TIME_INTERVAL time in the future
             speed_alt = self.get_speed(current_alt, speed_alt, target_alt, target_speed_alt)
             speed_az = self.get_speed(current_az, speed_az, target_az, target_speed_az)
+
+            ######## call motor control with speed_alt, speed_az  ##########
 
             sleep(self.TIME_INTERVAL)
 
@@ -425,7 +430,6 @@ class Telescope(object):
             # current positions should now be equal to the previous target positions for the end of the time interval
             error_alt = target_alt - current_alt
             error_az = target_az - current_az
-
             # print(error_alt, error_az)
 
 
