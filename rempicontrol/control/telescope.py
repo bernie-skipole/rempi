@@ -275,7 +275,7 @@ class Telescope(object):
             logging.error('Tracking stopped - no tracking data being received')
             self.tracking = False
             # timestamp is set to be end of last curve
-            self.alt, self.az = alt_az_from_curve(self.curvetimes[3]+180, popt_alt, popt_az)
+            self.alt, self.az = self.alt_az_from_curve(self.curvetimes[3]+180, popt_alt, popt_az)
             return self.alt, self.az
         elif timestamp >= self.curvetimes[3]:
             # three minutes before curves expire, check if more positions have been given, if so load them
@@ -292,10 +292,10 @@ class Telescope(object):
         else:
            popt_alt, popt_az = self.curves[self.curvetimes[0]]
         # now get alt, az from the curve
-        return alt_az_from_curve(timestamp, popt_alt, popt_az)
+        return self.alt_az_from_curve(timestamp, popt_alt, popt_az)
   
 
-    def alt_az_from_curve(timestamp, popt_alt, popt_az):
+    def alt_az_from_curve(self, timestamp, popt_alt, popt_az):
         """Return alt, az from the _qcurve given timestamp and popt_alt, popt_az"""
         alt = _qcurve(timestamp, *popt_alt)
         if alt > 90.0:
