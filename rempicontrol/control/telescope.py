@@ -119,7 +119,7 @@ class Telescope(object):
         curves[timelist[15]] = self.curve_maker(timelist[15:], time_altaz)
 
         # so this last covers from timelist[15] to a further five timesamples (to timelist 20)
-        # each sample is 30 seconds, so this curve expires after a further 5*30 seconds - one minute
+        # each sample is 30 seconds, so this curve expires after a further 5*30 seconds - 2.5 minutes
 
         return curves
 
@@ -178,8 +178,8 @@ class Telescope(object):
             # no tracking, return the static alt, az
             return self.alt, self.az
         # get the right interpolation curve for the given timestamp
-        if timestamp > self.curvetimes[3]+60:
-            # curves have expired, another goto is required to create new curves
+        if timestamp > self.curvetimes[3]+120:
+            # assume after two minuts, the curves has expired, another goto is required to create new curves
             self.target_name = ''
             self.ra = None
             self.dec = None
