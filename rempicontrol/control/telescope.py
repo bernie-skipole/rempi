@@ -245,6 +245,9 @@ class Telescope(object):
         if not payload:
             return False
         positions = unpack("10s"+"d"*62, payload)
+        self.target_name = positions[0].rstrip(b'\x00').decode("utf-8")
+        self.ra = positions[1]
+        self.dec = positions[2]
         # delete the payload to avoid multiple reads of it
         self.rconn.delete('rempi01_track')
         # create a dictionary of {timestamp:(alt,az), timestamp:(alt,az),....}
