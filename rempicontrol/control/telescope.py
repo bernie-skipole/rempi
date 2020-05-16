@@ -67,6 +67,9 @@ class Telescope(object):
         self.motor1 = motors.Motor('motor1',rconn)
         self.motor2 = motors.Motor('motor2',rconn)
 
+        # max distance which can be moved in a time interval, which is limited by the maximum speed allowed
+        self.max_delta_distance = self.MAX_SPEED * self.TIME_INTERVAL
+
 
     @property
     def target_name(self):
@@ -190,8 +193,6 @@ class Telescope(object):
         # timestamp[18]                 540 seconds
         #                  30 seconds
         # timestamp[19]                 570 seconds                              +++++++
-
-
 
 
         # first set of six timestamps  (5 intervals = 2.5 minutes)
@@ -354,85 +355,83 @@ class Telescope(object):
         return True
 
 
-    def record_target(self, timestamp=None):
-        "Records the target information into redis for the current time, returns wanted target (alt, az, alt_speed, az_speed)"
-        if timestamp is None:
-            targettime = datetime.utcnow()
-            timestamp = targettime.replace(tzinfo=timezone.utc).timestamp()
-        elif isinstance(timestamp, datetime):
-            timestamp = timestamp.replace(tzinfo=timezone.utc).timestamp()
-        
-        wanted_position = self.target_alt_az(timestamp)
-        wanted_speed = self.tracking_speed(timestamp)
-
-        # these values are recorded for status, and web displays
-        self.rconn.set("rempi01_target_alt", "{:1.5f}".format(wanted_position[0]))
-        self.rconn.set("rempi01_target_az", "{:1.5f}".format(wanted_position[1]))
-        self.rconn.set("rempi01_target_alt_speed", "{:1.5f}".format(wanted_speed[0]))
-        self.rconn.set("rempi01_target_az_speed", "{:1.5f}".format(wanted_speed[1]))
-        return wanted_position + wanted_speed
-
-
     def pin_changed(self,input_name):
         "Check if input_name is relevant, and if so, do appropriate actions"
         pass
 
 
-    def get_speed(self, current_pos, speed, target_pos, target_speed):
+    def get_speed(self, current_pos, speed, old_target_pos, target_pos, target_speed):
         """Return speed for the next time interval - used to slew and track
-
+        old_target_pos is the target position at the start of the time interval
         target_pos is the expected target position at the end of the time interval
         current_pos is position at the start
         target_speed is the target speed at the end
         speed is speed over the previous time interval"""
 
-        if target_pos<60.0 and current_pos>300.0:
-            target_pos = target_pos + 360
+        # This function derives delta_distance which is the distance to move in this
+        # time interval the returned speed will be delta_distance/TIME_INTERVAL
 
-        if current_pos<60.0 and target_pos>300.0:
+        if (target_pos<60.0 or old_target_pos<60) and current_pos>300.0:
+            target_pos = target_pos + 360
+            old_target_pos = old_target_pos + 360
+
+        if current_pos<60.0 and (target_pos>300.0 or old_target_pos>300.0):
             current_pos = current_pos + 360
 
-        # delta_distance is the distance to move in this time interval
-        # the returned speed will be delta_distance/TIME_INTERVAL
 
-        # get max delta distance
-        max_delta_distance = self.MAX_SPEED * self.TIME_INTERVAL
+        # the distance between scope and target at the start of the interval
+        # this is an 'error distance'
 
-        # previous interval distance
-        previous_distance = speed * self.TIME_INTERVAL
+        distance = old_target_pos - current_pos
 
-        # distance to the target, from the beginning of the interval.
-        # as target_pos is at the end of the interval, we need
-        # target_pos - target_speed*TIME_INTERVAL
-        # to be target position at the start of the interval
-        # the required distance is the difference between this and current_pos
+        # in calculating speed, if this distance is zero, then speed will be
+        # equal to the target speed only.  However the greater this distance, then
+        # the scope speed needs to catch up.
 
-        distance = target_pos - target_speed*self.TIME_INTERVAL - current_pos
+        # delta_distance will now be calculated, and will be the actual distance moved
+        # in the time interval. As this defines the speed of the scope, it has to be
+        # limited to provide the maximum velocity.
 
-        # the value 'DECELERATION_DISTANCE' is the distance over which deceleration occurs
-        # it may have to be 'tuned'
+        # the value 'DECELERATION_DISTANCE' is the distance over which deceleration occurs.
+        # If distance to move is greater than this deceleration distance; the cope is far
+        # from the target, then the delta_distance can be the self.max_delta_distance
+        # and hence the scope moves as fast as possible
 
-        # if distance to move is greater than this deceleration distance,
-        # make distance to move the max_delta_distance
-        # otherwise make distance to move proportional to 'distance'
 
         if distance > self.DECELERATION_DISTANCE:
-             delta_distance = max_delta_distance
+             delta_distance = self.max_delta_distance
         elif distance < -1*self.DECELERATION_DISTANCE:
-            delta_distance =  -1 * max_delta_distance
+            delta_distance =  -1 * self.max_delta_distance
         else:
-            # as distance goes to zero, so does delta_distance
-            delta_distance = max_delta_distance * distance / self.DECELERATION_DISTANCE
+            # the distance to move is less than the DECELERATION_DISTANCE, so the speed has to become
+            # lower as the scope nears the target. Hence the delta_distance has to become smaller
+            # as distance goes to zero
+            delta_distance = self.max_delta_distance * distance / self.DECELERATION_DISTANCE
+
+            # the above is zero when distance is zero
+            # and equal to self.max_delta_distance when distance is equal to self.DECELERATION_DISTANCE
+            # so it is a simple ramp down of delta_distance
+
             # as the target is moving, add the target movement to delta_distance
             delta_distance +=  target_speed*self.TIME_INTERVAL
-            if abs(delta_distance) > max_delta_distance:
+
+            # if delta_distance was zero, the above line makes delta_distance, and hence speed
+            # match the target speed
+
+            # the checks below should not be necessary, but provide a final check on any errors that
+            # may occur, by limiting the speed
+
+            if abs(delta_distance) > self.max_delta_distance:
                 if delta_distance > 0:
-                    delta_distance = max_delta_distance
+                    delta_distance = self.max_delta_distance
                 else:
-                    delta_distance = -1 * max_delta_distance
+                    delta_distance = -1 * self.max_delta_distance
 
         # so delta_distance worked out, but does the speed change
         # break the maximum acceleration
+
+        # previous interval distance
+        previous_distance = speed * self.TIME_INTERVAL
 
         while True:
             newspeed = delta_distance/self.TIME_INTERVAL
@@ -450,42 +449,60 @@ class Telescope(object):
     def __call__(self): 
         "This actually runs the telescope, this is a blocking call, so run in a thread"
 
-        # assume initial speed is zero
+        # assume initial speed is zero, this could cause accelerationproblems should it be wrong and
+        # the scope actually moving. Requires some way of finding initial scope position and speed
         speed_alt = 0
         speed_az = 0
 
         # self.alt, self.az are values for a stopped scope, set by altaz method, or when tracking information
         # has stopped. Assume they can be used as the initial value, should eventually be taken by hardware measurement
-
         alt = self.alt
         az = self.az
 
-        # alt, az is the current position at the start of the time interval
+        # get target position
+        now_timestamp = datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()
+        old_target_alt, old_target_az = self.target_alt_az(now_timestamp)
     
-        # target_alt, target_az is the expected target position at the end of the time interval
-
-        # target_speed_* is the target speed at the end
-        # speed_* is speed over the previous time interval
-
         # hopefully, alt and az will become equal to target_alt, target_az at the end of the time interval
 
 
         while True:
 
-            # record alt and az prior to movement over the time interval
-            last_alt = alt
-            last_az = az
+            # alt, az is the current position at the start of the time interval
 
+            # get the target position and speed at TIME_INTERVAL in the future
 
-            # self.record_target returns target position and speed at TIME_INTERVAL in the future
-            # and also records these target positions to redis
-
+            # get the time at TIME_INTERVAL in the future
             future_time = datetime.utcnow()+timedelta(seconds=self.TIME_INTERVAL)
-            target_alt, target_az, target_speed_alt, target_speed_az = self.record_target(future_time)
+            future_timestamp = future_time.replace(tzinfo=timezone.utc).timestamp()
+
+            target_alt, target_az = self.target_alt_az(future_timestamp)
+            target_speed_alt, target_speed_az = self.tracking_speed(future_timestamp)
+
+            # these values are recorded for status, and web displays
+            self.rconn.set("rempi01_target_alt", "{:1.5f}".format(target_alt))
+            self.rconn.set("rempi01_target_az", "{:1.5f}".format(target_az))
+            self.rconn.set("rempi01_target_alt_speed", "{:1.5f}".format(target_speed_alt))
+            self.rconn.set("rempi01_target_az_speed", "{:1.5f}".format(target_speed_az))
+
+            # speed_alt and speed_az are the speeds required over the next time interval, note
+            # they are different to target_speed_alt and target_speed_az which are the speeds
+            # of the target itself at the end of the interval
+
+            # it may be that the target is some distance away, in which case speed_alt and speed_az
+            # have to be faster to catch up with it, or if very close, the speeds will match.
+            # The self.get_speed method works out the required speed, taking max velocities and
+            # acceleration into account
 
             # get speed for the next time interval, where targets are taken for TIME_INTERVAL time in the future
-            speed_alt = self.get_speed(alt, speed_alt, target_alt, target_speed_alt)
-            speed_az = self.get_speed(az, speed_az, target_az, target_speed_az)
+            speed_alt = self.get_speed(alt, speed_alt, old_target_alt, target_alt, target_speed_alt)
+            speed_az = self.get_speed(az, speed_az, old_target_az, target_az, target_speed_az)
+
+            # old_target_alt and old_target_az will (after the next time interval) become the target
+            # position at the beginning of the interval.
+
+            old_target_alt = target_alt
+            old_target_az = target_az
 
             ######## call motor control with speed_alt, speed_az  ##########
 
@@ -512,12 +529,11 @@ class Telescope(object):
             self.rconn.set("rempi01_current_time", future_time.strftime("%H:%M:%S.%f"))
             self.rconn.set("rempi01_current_alt", "{:1.5f}".format(alt))
             self.rconn.set("rempi01_current_az", "{:1.5f}".format(az))
-            timestamp = future_time.replace(tzinfo=timezone.utc).timestamp()
-            self.rconn.set("telescope_position", pack("ddd", timestamp, alt, az))
+            self.rconn.set("telescope_position", pack("ddd", future_timestamp, alt, az))
 
             # current positions should now be equal to the previous target positions for the end of the time interval
-            error_alt = target_alt - alt
-            error_az = target_az - az
+            # error_alt = target_alt - alt
+            # error_az = target_az - az
             # print(error_alt, error_az)
 
 

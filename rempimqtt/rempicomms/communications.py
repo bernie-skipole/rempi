@@ -62,7 +62,6 @@ def telescope_track(client, userdata, message):
     # the track data is set (not published) as the rempicontrol service does not have to act
     # on this immediately, it can read the tracking data as it wants it
 
-
 def telescope_altaz(client, userdata, message):
     """Called to accept From_WebServer/Telescope/altaz topic and publish payload to redis"""
     rconn = userdata['rconn']

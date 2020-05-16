@@ -6,14 +6,20 @@ from skipole import FailPage, GoTo, ValidateError, ServerError
 
 def sensor_table(skicall):
     """sets three lists for sensor table into page data"""
-    skicall.page_data['sensors', 'col1'] = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ"]
+    skicall.page_data['sensors', 'col1'] = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ", "RA", "DEC"]
     skicall.page_data['sensors', 'col2'] = _get_sensor_values(skicall.proj_data['redis'])
-    skicall.page_data['sensors', 'col3'] = ["LED attached to pi", "Observatory door", "Temperature from probe", "Telescope Altitude", "Telescope Azimuth"]
+    skicall.page_data['sensors', 'col3'] = [ "LED attached to pi",
+                                             "Observatory door",
+                                             "Temperature from probe",
+                                             "Telescope Altitude",
+                                             "Telescope Azimuth",
+                                             "Target Right Ascension",
+                                             "Target Declination"]
 
 
 def sensors_json_api(skicall):
     "Returns sensors dictionary"
-    sensors = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ"]
+    sensors = ["LED", "DOOR", "TEMPERATURE", "ALT", "AZ", "RA", "DEC"]
     values = _get_sensor_values(skicall.proj_data['redis'])
     return collections.OrderedDict(zip(sensors,values))
 
@@ -60,14 +66,48 @@ def _get_sensor_values(redis):
     if alt is None:
         values.append("UNKNOWN")
     else:
-        values.append(alt.decode("utf-8"))
+        try:
+            values.append("{:1.3f}".format(float(alt.decode("utf-8"))))
+        except:
+            values.append("UNKNOWN")
+
 
     # get azimuth
     az = redis.get('rempi01_current_az')
     if az is None:
         values.append("UNKNOWN")
     else:
-        values.append(az.decode("utf-8"))
+        try:
+            values.append("{:1.3f}".format(float(az.decode("utf-8"))))
+        except:
+            values.append("UNKNOWN")
+
+
+    # get ra
+    ra = redis.get('rempi01_target_ra')
+    if ra is None:
+        values.append("UNKNOWN")
+    elif ra == b'':
+        values.append("--")
+    else:
+        try:
+            values.append("{:1.3f}".format(float(ra.decode("utf-8"))))
+        except:
+            values.append("UNKNOWN")
+
+
+    # get dec
+    dec = redis.get('rempi01_target_dec')
+    if dec is None:
+        values.append("UNKNOWN")
+    elif dec == b'':
+        values.append("--")
+    else:
+        try:
+            values.append("{:1.3f}".format(float(dec.decode("utf-8"))))
+        except:
+            values.append("UNKNOWN")
+
 
     return values
 
