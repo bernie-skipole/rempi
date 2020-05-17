@@ -3,7 +3,7 @@
 "default_language": "en",
 "brief": "Raspberry pi for remscope",
 "version": "0.9",
-"skipole": "3.7.2",
+"skipole": "3.7.3",
 "specialpages": {
 "control": 3,
 "control_results_json": 13,

@@ -20,8 +20,6 @@ def index_page(skicall):
     target_dec = redis.get("rempi01_target_dec")
     target_alt = redis.get("rempi01_target_alt")
     target_az = redis.get("rempi01_target_az")
-    target_alt_speed = redis.get("rempi01_target_alt_speed")
-    target_az_speed = redis.get("rempi01_target_az_speed")
 
     target_text = ""
 
@@ -40,12 +38,6 @@ def index_page(skicall):
 
     if target_az:
         target_text += "\nTarget AZ : " + target_az.decode("utf-8")
-
-    if target_alt_speed:
-        target_text += "\nTarget ALT speed : " + target_alt_speed.decode("utf-8")
-
-    if target_az_speed:
-        target_text += "\nTarget AZ speed : " + target_az_speed.decode("utf-8")
 
     if target_text:
         skicall.page_data['target', 'para_text'] = target_text
