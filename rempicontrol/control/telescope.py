@@ -360,29 +360,34 @@ class Telescope(object):
         pass
 
 
-    def get_speed(self, current_pos, speed, old_target_pos, target_pos, target_speed):
+    def get_speed(self, current_pos, speed, old_target_pos, target_pos):
         """Return speed for the next time interval - used to slew and track
         old_target_pos is the target position at the start of the time interval
         target_pos is the expected target position at the end of the time interval
         current_pos is position at the start
-        target_speed is the target speed at the end
         speed is speed over the previous time interval"""
 
         # This function derives delta_distance which is the distance to move in this
         # time interval the returned speed will be delta_distance/TIME_INTERVAL
 
-        if (target_pos<60.0 or old_target_pos<60) and current_pos>300.0:
-            target_pos = target_pos + 360
-            old_target_pos = old_target_pos + 360
-
-        if current_pos<60.0 and (target_pos>300.0 or old_target_pos>300.0):
-            current_pos = current_pos + 360
-
+        # target_pos and old_target_pos could span the 360->0 discontinuity
+        target_distance = target_pos - old_target_pos
+        if target_distance > 180:
+            target_distance -= 360        # example tp = 350, otp = 10, so distance is 340
+        elif target_distance < -180:      # this changes distance to 340 - 360, and distance becomes -20
+            target_distance += 360 
+                                          # example tp = 5, otp = 350, so distance is -345
+                                          # this changes distance to -345 + 360, and distance becomes 15
+        
 
         # the distance between scope and target at the start of the interval
-        # this is an 'error distance'
+        # this is an 'error distance', again it could span the 360->0 discontinuity
 
         distance = old_target_pos - current_pos
+        if distance > 180:
+            distance -= 360
+        elif distance < -180:
+            distance += 360
 
         # in calculating speed, if this distance is zero, then speed will be
         # equal to the target speed only.  However the greater this distance, then
@@ -393,13 +398,13 @@ class Telescope(object):
         # limited to provide the maximum velocity.
 
         # the value 'DECELERATION_DISTANCE' is the distance over which deceleration occurs.
-        # If distance to move is greater than this deceleration distance; the cope is far
+        # If distance to move is greater than this deceleration distance; the scope is far
         # from the target, then the delta_distance can be the self.max_delta_distance
         # and hence the scope moves as fast as possible
 
 
         if distance > self.DECELERATION_DISTANCE:
-             delta_distance = self.max_delta_distance
+            delta_distance = self.max_delta_distance
         elif distance < -1*self.DECELERATION_DISTANCE:
             delta_distance =  -1 * self.max_delta_distance
         else:
@@ -410,16 +415,15 @@ class Telescope(object):
 
             # the above is zero when distance is zero
             # and equal to self.max_delta_distance when distance is equal to self.DECELERATION_DISTANCE
-            # so it is a simple ramp down of delta_distance
+            # so it is a simple ramp down of delta_distance.
 
             # as the target is moving, add the target movement to delta_distance
-            delta_distance +=  target_speed*self.TIME_INTERVAL
+            delta_distance +=  target_distance
 
             # if delta_distance was zero, the above line makes delta_distance, and hence speed
             # match the target speed
 
-            # the checks below should not be necessary, but provide a final check on any errors that
-            # may occur, by limiting the speed
+            # the checks below limit the speed
 
             if abs(delta_distance) > self.max_delta_distance:
                 if delta_distance > 0:
@@ -463,12 +467,11 @@ class Telescope(object):
         now_timestamp = datetime.utcnow().replace(tzinfo=timezone.utc).timestamp()
         old_target_alt, old_target_az = self.target_alt_az(now_timestamp)
     
-        # hopefully, alt and az will become equal to target_alt, target_az at the end of the time interval
-
 
         while True:
 
             # alt, az is the current position at the start of the time interval
+            # old_target_alt, old_target_az is the target position at the start of the time interval
 
             # get the target position and speed at TIME_INTERVAL in the future
 
@@ -477,17 +480,19 @@ class Telescope(object):
             future_timestamp = future_time.replace(tzinfo=timezone.utc).timestamp()
 
             target_alt, target_az = self.target_alt_az(future_timestamp)
-            target_speed_alt, target_speed_az = self.tracking_speed(future_timestamp)
+            #target_speed_alt, target_speed_az = self.tracking_speed(future_timestamp)
 
+            #target_speed_alt = (target_alt_old - target_alt)/self.TIME_INTERVAL
+            #target_speed_az = (target_az_old - target_az)/self.TIME_INTERVAL
             # these values are recorded for status, and web displays
             self.rconn.set("rempi01_target_alt", "{:1.5f}".format(target_alt))
             self.rconn.set("rempi01_target_az", "{:1.5f}".format(target_az))
-            self.rconn.set("rempi01_target_alt_speed", "{:1.5f}".format(target_speed_alt))
-            self.rconn.set("rempi01_target_az_speed", "{:1.5f}".format(target_speed_az))
+            #self.rconn.set("rempi01_target_alt_speed", "{:1.5f}".format(target_speed_alt))
+            #self.rconn.set("rempi01_target_az_speed", "{:1.5f}".format(target_speed_az))
 
             # speed_alt and speed_az are the speeds required over the next time interval, note
-            # they are different to target_speed_alt and target_speed_az which are the speeds
-            # of the target itself at the end of the interval
+            # they may be different to target_speed_alt and target_speed_az which are the speeds
+            # of the target itself
 
             # it may be that the target is some distance away, in which case speed_alt and speed_az
             # have to be faster to catch up with it, or if very close, the speeds will match.
@@ -495,8 +500,8 @@ class Telescope(object):
             # acceleration into account
 
             # get speed for the next time interval, where targets are taken for TIME_INTERVAL time in the future
-            speed_alt = self.get_speed(alt, speed_alt, old_target_alt, target_alt, target_speed_alt)
-            speed_az = self.get_speed(az, speed_az, old_target_az, target_az, target_speed_az)
+            speed_alt = self.get_speed(alt, speed_alt, old_target_alt, target_alt)
+            speed_az = self.get_speed(az, speed_az, old_target_az, target_az)
 
             # old_target_alt and old_target_az will (after the next time interval) become the target
             # position at the beginning of the interval.
